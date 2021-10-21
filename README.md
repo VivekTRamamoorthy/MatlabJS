@@ -1,6 +1,6 @@
 # MATLAB functions in Web browser
 
-This is library for common Matlab functions in the web browser
+This is a library for common Matlab functions in the web browser.
 
 ## HOW TO USE?
 Add `Matlab.js` file to your project and include the script tab in your html
