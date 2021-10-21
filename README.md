@@ -3,16 +3,19 @@
 This is a library for common Matlab functions in the web browser.
 
 ## Test it in your browser
-Opening
+Open
 [https://VivekTRamamoorthy.github.io/MatlabJS](https://VivekTRamamoorthy.github.io/MatlabJS) 
 and try the examples in the console.
 
 ## Examples
-    a=linspace(0,1,100) <br>
-    disp(a) <br>
-    b=eye(8); <br>
-    c=rand(8); <br>
-    d=mul(b,c)
+    tic()
+    a=linspace(0,1,100) 
+    disp(a) ;
+    b=eye(4); 
+    c=rand(4); 
+    d=mul(b,c) ;
+    disp(d)
+    toc();
 
 ## How to use?
 Add `Matlab.js` file to your project and include a script tab in your html:
