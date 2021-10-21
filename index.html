@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="Matlab.js"></script>
+    <title>MatlabJS</title>
+    <style>
+        body{
+            font-family: Arial, Helvetica, sans-serif;       }
+            code{
+                /* background-color: lightgray; */
+                /* margin:0px; */
+                /* padding: 20px; */
+                /* display: block; */
+                /* border-radius: 10%; */
+            }
+    </style>
+</head>
+<body>
+    <h1>MatlabJS</h1>
+    <h2>Use common Matlab functions in Javascript</h2>
+    <p> Matlab&reg; and GNUOctave are a high-level programming language used by scientists and engineers.
+        It allows efficient scientific computing in very few lines of code. 
+        <br>
+        <br>
+        For Matlab&reg; / GNU Octave users who are new to Javascript, things may not be easy.
+        Javascript was simply designed for a different purpose!
+        <br>
+        <br>
+        <strong>But no worries!</strong> The purpose of <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a>
+        is to help Matlab users get a jumpstart in Javascript right away with (almost) the same syntax.
+         <br>
+        </p>
+        <h2>Examples:</h2>
+        Try out these examples in the console:<br>
+        <pre>
+            <code>
+                a=linspace(0,1,100) <br>
+                disp(a) <br>
+                b=eye(8); <br>
+                c=rand(8); <br>
+                d=mul(b,c)
+                
+            </code>
+        </pre>
+        <h2>How to use in your project</h2>
+        <li>Add <code>Matlab.js</code> file  from <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a> to your project.</li>
+        <li>Throw in a script tag:</li>
+        <pre>
+            <code>
+                &lt;script src="Matlab.js"&gt;&lt;/script&gt;
+            </code>
+        </pre>
+        <li>Thank me later.</li>
+        <br>
+        <h2>Drawbacks:</h2>
+        <li> Unfortunately, operator overloading is not permitted in JS. <br>
+             so we cannot yet do <code>c=A*b</code> for matrices
+              and instead have to do <code>c=mul(A,b)</code>. </li>
+        <li> The code is not optimised for efficiency.</li>
+        <li> This project is in its primitive stage.<br>
+            More functions will be included as time permits.<br>
+            No guarantees are provided.</li>
+        <br>
+        <h2>License</h2>
+        MIT License 2.0 
+        <br>Vivek T. Ramamoorthy
+    <br>
+    <br>
+    <br>
+    <br>
+
+</body>
+</html>
