@@ -17,12 +17,12 @@ and try the examples in the console.
     disp(d)
     toc();
 
-## How to use?
+## How to use:
 Add `Matlab.js` file to your project and include a script tab in your html:
 
     <script src="Matlab.js"></script>
 ## How to use in your project:
-- Add `Matlab.js`file  [MatlabJS]("https://github.com/VivekTRamamoorthy/MatlabJS") to your project.
+- Add `Matlab.js`file from [MatlabJS]("https://github.com/VivekTRamamoorthy/MatlabJS") to your project.
 - Throw in a script tag:
 ```
     <script src="Matlab.js"></script>
