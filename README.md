@@ -3,12 +3,15 @@
 This is a library for common Matlab functions in the web browser.
 
 ## HOW TO USE?
-Add `Matlab.js` file to your project and include the script tab in your html
+Add `Matlab.js` file to your project and include a script tab in your html:
 
     <script src="Matlab.js"></script>
 
 ## TEST IT
-[Try it](https://VivekTRamamoorthy.github.io/MatlabJS) in your webbrowser.
+Try running on your browser console at
+[https://VivekTRamamoorthy.github.io/MatlabJS]
+(https://VivekTRamamoorthy.github.io/MatlabJS) 
+in your webbrowser.
 
 
 
