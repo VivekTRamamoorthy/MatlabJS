@@ -409,10 +409,10 @@
                 </td>
                 <td>Universal add <br>
                     For <br>
-                    number & number<br>
-                    array & number<br>
-                    array & array <br>
-                    number & matrix
+                    number + number<br>
+                    array + number<br>
+                    array + array <br>
+                    number + matrix
                 </td>
             </tr>
             <tr>
@@ -427,10 +427,10 @@
                 </td>
                 <td>Universal subtract <br>
                     For <br>
-                    number & number<br>
-                    array & number<br>
-                    array & array <br>
-                    number & matrix
+                    number - number<br>
+                    array - number<br>
+                    array - array <br>
+                    number - matrix
                 </td>
             </tr>
             <tr>
@@ -444,14 +444,15 @@
                     disp(mul(ones(4),rand(4)))<br>
                     disp(mul(eye(4),rand(4)))<br>
                     disp(mul(rand(5,4),rand(4,3)))<br>
-                    disp(mul(rand(5),rand(4,3)))<br>
+                    disp(mul(rand(5),rand(5,1)))<br>
+                    disp(mul(rand(1,10),rand(10,1)))<br>
                 </td>
                 <td>Universal multiply <br>
                     For <br>
-                    number & number<br>
-                    array & number<br>
-                    array & array <br>
-                    matrix & matrix
+                    number * number<br>
+                    array * number<br>
+                    array * array <br>
+                    matrix(n by k) * matrix(k by m)
                 </td>
             </tr>
             <tr>
@@ -459,15 +460,16 @@
                 <td>C=dotmul(A,B)</td>
                 <td>disp(dotmul(3,4))<br>
                     A=ones(4)<br>
-                    B=rand(4)
+                    B=rand(4)<br>
+                    disp(dotmul(rand(10,1),rand(10,1)))<br>
                     disp(dotmul(A,B))<br>
                     disp(dotmul(eye(4),B))<br>
                 </td>
                 <td>Elementwise multiply <br>
                     For <br>
-                    number & number<br>
-                    array & array<br>
-                    matrix & matrix
+                    number .* number<br>
+                    array .* array<br>
+                    matrix .* matrix
                 </td>
             </tr>
             <tr>
@@ -482,10 +484,10 @@
                 </td>
                 <td>Universal divide <br>
                     For <br>
-                    number & number<br>
-                    array & number<br>
-                    array & array <br>
-                    number & matrix
+                    number /  number<br>
+                    array /  number<br>
+                    array  / array <br>
+                    number /  matrix
                 </td>
             </tr>
             <tr>
@@ -500,9 +502,9 @@
                 </td>
                 <td>Elementwise divide <br>
                     For <br>
-                    number & number<br>
-                    array & array <br>
-                    matrix & matrix
+                    number ./ number<br>
+                    array ./ array <br>
+                    matrix ./ matrix
                 </td>
             </tr>
             <tr>
@@ -518,10 +520,12 @@
                 </td>
                 <td>Universal power <br>
                     For <br>
-                    number & number<br>
-                    array & number<br>
-                    array & array <br>
-                    number & matrix
+                    number ^ number<br>
+                    array ^ number<br>
+                    array ^ array <br>
+                    number ^ matrix<br>
+                    matrix ^ number<br>
+                    matrix ^  matrix 
                 </td>
             </tr>
             <tr>
