@@ -32,9 +32,16 @@ var toc=function(){
     
 }
 
+
+
 var isfield=function(obj,fieldstr){return obj.hasOwnProperty(fieldstr)}
 
 // ARRAY OPERATIONS
+
+var linspace=function(a,b,n=100){
+    let step= (b-a)/(n-1)
+    return (new Array(n)).fill(0).map((x,i)=>a+i*step);
+}
 
 var size=function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
     if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
@@ -51,12 +58,15 @@ var size=function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,
     
 }
 
+var length=function(a){
+    return a.length;
+}
 
 var find = function(array){
     let found=[];
     for (let i = 0; i < array.length; i++) {
         if(array[i]!=0){
-            found.push(i);
+            found.push(i+1);
         }
         
     }
@@ -292,10 +302,7 @@ var range=function(a,b,c=""){// 1:5 range(1,5) or  1:0.1:5 range(1,0.1,5) Matlab
     return (new Array(n)).fill(0).map((x,i)=>a+i*step);
 }
 
-var linspace=function(a,b,n=2){
-    let step= (b-a)/(n-1)
-    return (new Array(n)).fill(0).map((x,i)=>a+i*step);
-}
+
 
 
 var concatRows=function(A,B)
@@ -366,7 +373,8 @@ var zeros=function(a,b=0){
     
 }
 
-var rand=function(a,b=0){
+var rand=function(a=0,b=0){
+    if(a==0){return Math.random();}
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
@@ -546,10 +554,6 @@ var union=function(A,B){
     
 }
 
-var setdiff=function(A,B){
-    let difference = A.filter(x => !B.includes(x));
-    return difference.sort((a,b)=>a-b)
-}
 
 var unique=function(C){
     let unique=0;
@@ -566,11 +570,16 @@ var unique=function(C){
 
 var sparse=function(iK,jK,sK,m,n){
     let K=zeros(m,n);
+    if(sK[0] instanceof Array){
     for (let i=0;i<iK.length;i++){
         K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i][0]; // the minus ones to consider index starting from 1
     }
-    return K;
-
+    return K;}
+    else{
+        for (let i=0;i<iK.length;i++){
+            K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i]; // the minus ones to consider index starting from 1
+        }
+        return K;}
 }
 
 var colon=function(K){
@@ -603,9 +612,46 @@ var colon=function(K){
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW,
 
 class cx {
-    constructor(a,b,dtype='polar'){
+    constructor(a,b=0){
         this.re=a;
         this.im=b;
+    }
+    add=function(a){
+        if(a instanceof Number){a=new cx(a);}
+        r= new cx(0,0);
+        r.re=this.re+a.re;
+        r.im=this.im+a.im;
+        return r;
+    }
+    sub=function(a){
+        if(a instanceof Number){a=new cx(a);}
+        r= new cx(0,0);
+        r.re=this.re-a.re;
+        r.im=this.im-a.im;
+        return r;
+    }
+    mul=function(a){
+        if(a instanceof Number){a=new cx(a);}
+        r= new cx(0,0);
+        r.re=this.re*a.re-this.im*a.im;
+        r.im=this.re*a.im+this.im*a.re;
+        return r;
+    }
+    div=function(a){
+        if(a instanceof Number){a=new cx(a);}
+        r= new cx(0,0);
+        r=r.mul(r.conj())
+        return r;
+    }
+    conj=function(){
+        r=new cx(0,0);
+        r.re=this.re;
+        r.im=-this.im;
+        return r;
+    }
+    abs=function(){
+        return Math.sqrt(this.re**2+this.im**2)
+
     }
     
 }
@@ -846,6 +892,14 @@ var div=function(a,b){ // universal add function, not fully supported for ndarra
         if(a[0] instanceof cx){ // a is a complex array
             if(b instanceof Array) {return a.map((x,i)=>x.div(b[i])); } // b is  array
             return a.map(x=>x.mul(b)); //  b is number or complex
+        }
+        if(a[0] instanceof Array){ // a is a matrix
+            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij/b));} // b is a number
+            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>new cx(Aij,0).div(b)))} // b is complex
+            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                console.error("Matrix division is not possible"); 
+                return []; 
+            }
         }        
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
@@ -984,8 +1038,16 @@ var deepcopy = function(A){
     }
 }
 
+var copy=deepcopy;
 var disp=display;
 
+
+// LINEAR SOLVE 
+var linsolve=function(A,b){
+    b=transpose(b);
+    x= mldivide(transpose(A),b[0]);
+    return transpose(x);
+}
 
 
 

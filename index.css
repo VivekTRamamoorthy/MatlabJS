@@ -1,0 +1,161 @@
+
+
+body{
+  margin: 0%;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: whitesmoke;
+  font-size:medium;
+}
+
+body a{
+  color: dodgerblue;
+  /* font-size:20px; */
+}
+p{
+  font-size:20px;
+}
+
+body a:hover{
+  color: dodgerblue;
+  background-color: yellow;
+  /* border: 2px solid black; */
+}
+
+
+
+h1 {
+  text-align: center;
+  /*margin-top: 0px;*/
+  /*background-color: #ccc;*/
+  color: Dodgerblue;
+  font-size: xx-large;
+  font-weight: bold;
+  font-family:Verdana, Geneva, Tahoma, sans-serif;
+}
+
+
+h2 {
+  text-align: left;
+  font-size: large;
+  /*background-color: #ddd;*/
+  color: rgb(182, 49, 49);
+
+  
+}
+
+h3 {
+  text-align: left;
+  /*background-color: #eee;*/
+  color: green;
+  font-size: large;
+}
+
+code{
+ 
+  color:#333;
+  border-radius: 10%;
+  font-size: large;
+  
+}
+
+pre{
+  margin-left: 5%;
+  margin-right: 20%;
+  margin-top: 1%;
+  margin-bottom: 1%;
+  border-radius:10%;
+  padding: 5px;
+
+}
+
+.header{
+  /* background-image: url(http://cdn.eso.org/images/screen/eso0932a.jpg) ; */
+  
+  margin:0%;
+  height:10%;
+  width:100%;
+  top:0px;
+  overflow:auto;
+  background-color: #222;
+  color: white;
+  font-size: x-large;
+  font-weight: bold;
+
+
+}
+
+.footer{
+  /* position: fixed; */
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #333;
+  color: white;
+  text-align: center;
+  padding:30px;
+
+}
+
+.content{
+  margin-left:8%;
+  margin-right:8%;
+  padding-left:5%;
+  padding-right:5%;
+  overflow: auto;
+}
+
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  text-align: left;
+  padding: 5px;
+  
+}
+
+
+/* COLUMNS in mobile, tablet and desktop */
+
+/* Create four equal columns that floats next to each other */
+.column {
+  float:left;
+  width: 25%;
+  height:50%;
+  margin:2%;
+  padding:2%;
+  overflow:auto;
+  background-color:bisque;
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 1500px) {
+  .column {
+    width: 100%;
+  }
+  .content{
+    margin-left:3%;
+    margin-right:3%;
+  }
+}
+
+/* On screens that are 992px wide or less, go from four columns to two columns */
+@media screen and (max-width: 992px) {
+  .column {
+    width: 50%;
+  }
+  .content{
+    margin-left:2%;
+    margin-right:2%;
+  }
+}
+
+/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+  }
+  .content{
+    margin-left:1%;
+    margin-right:1%;
+  }
+}

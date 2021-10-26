@@ -5,74 +5,570 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="Matlab.js"></script>
+    <script src="ndarray.js"></script>
+    
+    
     <title>MatlabJS</title>
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;       }
-            code{
-                /* background-color: lightgray; */
-                /* margin:0px; */
-                /* padding: 20px; */
-                /* display: block; */
-                /* border-radius: 10%; */
-            }
-    </style>
+    <link rel="stylesheet" type="text/css" href="index.css">
 </head>
 <body>
-    <h1>MatlabJS</h1>
-    <h2>Use common Matlab functions in Javascript</h2>
-    <p> Matlab&reg; and GNUOctave are high-level programming languages popular among scientists and engineers.
-        <br>
-        They allow efficient development in <strong>very few lines of code</strong>. 
-        <br>
-        <br>
-        For Matlab&reg; / GNU Octave users who are new to Javascript, things may not be easy.
-        <br>Javascript was simply designed for a different purpose!
-        <br>
-        <br>
-        <strong>But no worries!</strong> 
-        <br>
-        The purpose of <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a>
-        is to help Matlab users get a <strong>jumpstart</strong> in Javascript right away with common functions in (almost) the same syntax.
-         <br>
+    
+    <div class="header">
+        <h1>MatlabJS</h1>
+        <center>Javascript functions for Matlab&reg; / GNU Octave users</center>
+        
+    </div>
+    
+    
+    <div class="content">
+        <div class="">
+            <h2>Description</h2>
+            <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a>
+            is a mini-library with common functions for Matlab&reg; / GNU Octave users who are new to Javascript.
+            <br>
         </p>
+    </div>
+    
+    
+    <div class="">
         <h2>Examples:</h2>
-        Try out these examples in the console (righclick > inspect):<br>
+        The library is already loaded in this webpage. <br>
+        Try out these examples in the browser console:<br>
         <pre>
             <code>
-                tic() <br>
-                a=linspace(0,1,100) <br>
-                disp(a) <br>
-                b=eye(8) <br>
-                c=rand(8) <br>
-                d=mul(b,c) <br>
+                tic() 
+                a=linspace(0,1,100) 
+                disp(a)
+                b=eye(8) 
+                c=rand(8) 
+                d=mul(b,c) 
                 toc() 
             </code>
         </pre>
-
-        <h2>How to use in your project:</h2>
-        <li>Add <code>Matlab.js</code> file  from <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a> to your project.</li>
-        <li>Throw in a script tag:</li>
+    </div>  
+    
+    
+    <div class="">
+        <h2>How to use this in your project:</h2>
+        Add <code>Matlab.js</code> file  from <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a> to your project and 
+        and include it using a script tag.
         <pre>
             <code>
                 &lt;script src="Matlab.js"&gt;&lt;/script&gt;
             </code>
         </pre>
-        <li>Thank me later.</li>
-        <br>
-        <h2>Drawbacks:</h2>
-        <li> Unfortunately, operator overloading is not permitted in JS. So we cannot yet write <code>c=A*b</code> for matrices
-              and instead have to write <code>c=mul(A,b)</code>. </li>
-        <li> The code is not optimised for efficiency.</li>
+    </div>
+    
+    
+    
+    <div class="">
+        <h2>Limitations:</h2>
+        <li> Unfortunately, operator overloading is not permitted in JavaScript, and we cannot yet write <code>c=A*b</code> for matrices
+            <br> Instead have to write <code>c=mul(A,b)</code>. 
+        </li> <br>
+        <li> The code is not optimised for efficiency.</li> <br>
         <li> This project is in its primitive stage. More functions will be included as time permits. And no guarantees are provided.</li>
         <br>
-        <h2>License</h2>
-        MIT License 2.0 
-        <br><br>Vivek T. Ramamoorthy
+    </div>
+    
     <br>
-    <br>
-    <br>
-    <br>
+    <div>
+        <h2>Full list of functions:</h2>
+        <table style="width:100%; font-family:courier">
+            <tr>
+                <th>Matlab function</th>
+                <th>MatlabJS equivalent</th> 
+                <th>Example</th> 
+                <th>Description</th> 
+            </tr>
+            <tr>
+                <td>tic</td>
+                <td>tic()</td>
+                <td></td>
+                <td>Starts recording time</td>
+            </tr>
+            <tr>
+                <td>toc</td>
+                <td>toc()</td>
+                <td>tic();<br>
+                    t=toc();
+                </td>
+                <td>Prints elapsed time since start</td>
+            </tr>
+            <tr>
+                <td>clc</td>
+                <td>clc()</td>
+                <td>clc()</td>
+                <td>Clears console</td>
+            </tr>
+            <tr>
+                <td>linspace</td>
+                <td>linspace</td>
+                <td>A=linspace(0,1)<br>
+                    // [0 .1010.. 1]<br>
+                    B=linspace(10,20,3)<br>
+                    // [10,15,20]
+                </td>
+                <td>Produces linearly spaced array. </td>
+            </tr>
+            <tr>
+                <td>disp, display</td>
+                <td>disp, display</td>
+                <td>A=linspace(0,1)<br>
+                    B=linspace(10,20,3)<br>
+                    disp(A)<br>
+                    display(B)<br>
+                </td>
+                <td>Produces linearly spaced array. </td>
+            </tr>
+            <tr>
+                <td>isfield</td>
+                <td>isfield(struc,fieldname) </td>
+                <td>   
+                    struc={x:10,y:100} <br>
+                    isfield(struc,'x') // true <br>
+                    isfield(struc,'a') // false <br>
+                </td>
+                <td> Checks the presence of <br>fieldnames in a structure</td>
+            </tr>
+            <tr>
+                <td>size</td>
+                <td>size(A) </td>
+                <td>
+                    A=[[1,2,3],[3,4,5]] <br>
+                    size(A) // [2,3]
+                </td>
+                <td> Dimensions of a matrix or array </td>
+                
+            </tr>
+            <tr>
+                <td>length</td>
+                <td> A.length <br>
+                    length(A)
+                </td>
+                <td>
+                    A=[1,2,3,3,4,5] <br>
+                    A.length // 6 <br>
+                    length(A) // 6
+                </td>
+                <td> Length of an array </td>
+            </tr>
+            <tr>
+                <td>find</td>
+                <td> find </td>
+                <td>
+                    A=[1,2,0,0,4,5] <br>
+                    find(A) // [1, 2, 5, 6]
+                </td>
+                <td> Find nonzero elements </td>
+            </tr>
+            <tr>
+                <td>sort</td>
+                <td>sort()</td>
+                <td>A=[3,2,1,5,7]<br>sort(A) // [1,2,3,5,7]</td>
+                <td>Sorts ascending</td>
+            </tr>
+            <tr>
+                <td>sum</td>
+                <td>sum</td>
+                <td>A=[1,2,3]<br>sum(A) // 6 <br>B=[1,2,3],[4,5,6],[7,8,9]<br>
+                    disp(sum(B,1)) <br>// column sum [12,15,18]<br>
+                    disp(sum(B,2)) <br>// row sum [[6],[15],[24]] 
+                </td>
+                <td><br> Sum of an array<br><br>Column sum of a matrix<br> Row sum of a matrix</td>
+            </tr>
+            <tr>
+                <td>abs</td>
+                <td>abs</td>
+                <td>A=[1,-2,3]<br>abs(A) // [1,2,3]
+                    <br>B=[[1,-2,3],[-4,5,6],[-7,8,-9]]<br>
+                    disp(abs(B))<br>//[1,2,3],[4,5,6],[7,8,9]
+                </td>
+                <td>Absolute value of <br>num, array or matrix</td>
+            </tr>
+            <tr>
+                <td>sqrt</td>
+                <td>sqrt</td>
+                <td>A=[1,4,2]<br>disp(sqrt(A)) <br>
+                    // [1,2,1.414]
+                    A=rand(4)<br>
+                    disp(A)<br>
+                    disp(sqrt(A))
+                </td>
+                <td>Square root of <br>num, array or matrix</td>
+            </tr>
+            <tr>
+                <td>setdiff</td>
+                <td>setdiff</td>
+                <td>A=[4,3,1,5]<br>B=[5,3,7,8]<br> 
+                    setdiff(A,B) // [1,4]
+                </td>
+                <td>Set difference (sorted)
+                </td>
+            </tr>
+            <tr>
+                <td>min</td>
+                <td>min</td>
+                <td>A=[1,3,-5,9]<br> disp(min(A)) // -5<br>
+                    B=[[1,2,3],[4,5,6],[7,8,9]]<br>
+                    disp(B) <br>
+                    disp(min(B,1)) // elemwise min<br>
+                    disp(min(B,4)) // <br>
+                    disp(min(B,[],1)) // column min<br>
+                    disp(min(B,[],2)) // row min
+                </td>
+                <td>Minimum of array or matrix</td>
+            </tr>
+            <tr>
+                <td>max</td>
+                <td>max</td>
+                <td>Similar to min</td>
+                <td>Maximum of an array or matrix</td>
+            </tr>
+            <tr>
+                <td>a:b:c</td>
+                <td>range(a,b,c)</td>
+                <td>range(2,0.5,4) <br>// [2,2.5,3,3.5,4]</td>
+                <td>Array from a to c in steps of b</td>
+            </tr>
+            <tr>
+                <td>[A, B]</td>
+                <td>concatRows(A,B)</td>
+                <td>A=ones(3,3)<br>
+                    disp(A)<br>
+                    B=rand(3,3)<br>
+                    disp(B)<br>
+                    C=concatRows(A,B) 
+                    <br>disp(C) <br>// 3 x 6 matrix
+                </td>
+                <td>Concatenate rows of two matrices</td>
+            </tr>
+            <tr>
+                <td>[A; B]</td>
+                <td>concatCols(A,B)</td>
+                <td>A=ones(3,3)<br>
+                    disp(A)<br>
+                    B=rand(3,3)<br>
+                    disp(B)<br>
+                    C=concatCols(A,B) <br>disp(C)<br>// 6 x 3 matrix 
+                </td>
+                <td>Concatenate columns of two matrices</td>
+            </tr>
+            <tr>
+                <td>A'</td>
+                <td>transpose(A)</td>
+                <td>A=[[1,2,3],[4,5,6]]<br>
+                    transpose(A) <br>// [[1,4],[2,5],[3,6]]
+                </td>
+                <td>transpose of a matrix</td>
+            </tr>
+            <tr>
+                <td>ones</td>
+                <td>ones</td>
+                <td>disp(ones(3))<br>// 3x3 matrix of 1s<br>
+                    disp(ones(3,2))<br> // 3x2 matrix of 1s<br>
+                    disp(ones(3,1))<br> // column of 1s
+                </td>
+                <td>Matrix of ones</td>
+            </tr>
+            <tr>
+                <td>eye</td>
+                <td>eye</td>
+                <td>disp(eye(3))// 3x3 identity matrix<br>
+                    disp(eye(4)) // 4x4 matrix of 1s<br>
+                    disp(eye(10)) // column of 1s
+                </td>
+                <td>Matrix of ones</td>
+            </tr>
+            <tr>
+                <td>zeros</td>
+                <td>zeros</td>
+                <td>disp(zeros(3))<br>  // 3x3 matrix of 0s<br>
+                    disp(zeros(3,2))<br> // 3x2 matrix of 0s<br>
+                    disp(zeros(3,1))<br> // column of 0s
+                </td>
+                <td>Matrix of zeros</td>
+            </tr>
+            <tr>
+                <td>rand</td>
+                <td>rand</td>
+                <td>disp(rand())<br>// random no in [0,1] <br>
+                    disp(rand(3))<br>// 3x3  random <br>
+                    disp(rand(3,2))<br> // 3x2  random <br>
+                    disp(rand(3,1))<br> // column of random 
+                </td>
+                <td>Matrix of ones</td>
+            </tr>
+            <tr>
+                <td>reshape</td>
+                <td>reshape</td>
+                <td>reshape([1,2,3,4,5,6],2,3)  <br>
+                    // [1,2,3; 4,5,6] 
+                </td>
+                <td>Reshape a vec or matrix</td>
+            </tr>
+            <tr>
+                <td>A(1:3,1:3)</td>
+                <td>get(A,[1,2,3],[1,2,3])</td>
+                <td>A=rand(10,10)  <br>
+                    B=get(A,[1,2,3],[2,5,7])<br>
+                    disp(B)
+                </td>
+                <td>Get a submatrix</td>
+            </tr>
+            <tr>
+                <td>repmat</td>
+                <td>repmat(mat,rows,cols)</td>
+                <td>A=rand(2,3) <br>
+                    B=repmat(A,[4,5)<br>
+                    disp(B)
+                </td>
+                <td>Repeat matrix</td>
+            </tr>
+            <tr>
+                <td>kron</td>
+                <td>kron(X,Y)</td>
+                <td>A=[[1,2,3],[2,3,4]]; <br>
+                    Y=[[1],[1],[1]];<br>
+                    display(kron(A,Y))
+                </td>
+                <td>Kronecker tensor product</td>
+            </tr>
+            <tr>
+                <td>union</td>
+                <td>union(X,Y)</td>
+                <td>A=[1,2,3,4]]; <br>
+                    B=[5,3,10];<br>
+                    display(union(A,B)) <br>
+                    //[1,2,3,4,5,10]
+                </td>
+                <td>Union of two sets</td>
+            </tr>
+            <tr>
+                <td>union</td>
+                <td>union(X,Y)</td>
+                <td>A=[1,2,3,4]]; <br>
+                    B=[5,3,10];<br>
+                    display(union(A,B)) <br>
+                    //[1,2,3,4,5,10]
+                </td>
+                <td>Union of two sets</td>
+            </tr>
+            <tr>
+                <td>unique</td>
+                <td>unique(A)</td>
+                <td>A=[10,2,3,3,4]]; <br>
+                    display(unique(A)) <br>
+                    //[2,3,4,10]
+                </td>
+                <td>Unique items of a set</td>
+            </tr>
+            <tr>
+                <td>sparse(I,J,K)</td>
+                <td>sparse(I,J,K,nRows,nCols)</td>
+                <td>A=sparse([1,2],[1,2],[10,10],10,10);
+                    <br> disp(A)
+                </td>
+                <td>Initiate a sparse matrix <br>
+                    I - row indices<br>
+                    J - column indices<br>
+                    K - element values<br>
+                    nRows - no of rows<br>
+                    nCols - no of cols
+                </td>
+            </tr>
+            <tr>
+                <td>B=A</td>
+                <td>B=copy(A)</td>
+                <td>A=rand(4)<br>
+                    disp(A)<br>
+                    B=A<br>
+                    B[0][0]=20<br>
+                    disp(A)<br>// note: A changes <br>// when B is changed<br>
+                    C=copy(A);
+                    C[0][0]=100<br>
+                    disp(A)<br>
+                    disp(C)
+                </td>
+                <td>IMPORTANT NOTE: <br>
+                    For array and matrices<br>
+                    B=A will not copy A<br>
+                    but only creates a reference <br>
+                    Use B=copy(A) instead.
+                </td>
+            </tr>
+            <tr>
+                <td>C=A+B</td>
+                <td>C=add(A,B)</td>
+                <td>disp(add(3,4))<br>
+                    disp(add(ones(4,1),100))<br>
+                    disp(add(100,rand(1,4)))<br>
+                    disp(add(ones(4),100))<br>
+                    disp(add(100,rand(4)))<br>
+                    disp(add(ones(4),rand(4)))<br>
+                </td>
+                <td>Universal add <br>
+                    For <br>
+                    number & number<br>
+                    array & number<br>
+                    array & array <br>
+                    number & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A-B</td>
+                <td>C=sub(A,B)</td>
+                <td>disp(sub(3,4))<br>
+                    disp(sub(ones(4,1),100))<br>
+                    disp(sub(100,rand(1,4)))<br>
+                    disp(sub(ones(4),100))<br>
+                    disp(sub(100,rand(4)))<br>
+                    disp(sub(ones(4),rand(4)))<br>
+                </td>
+                <td>Universal subtract <br>
+                    For <br>
+                    number & number<br>
+                    array & number<br>
+                    array & array <br>
+                    number & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A*B</td>
+                <td>C=mul(A,B)</td>
+                <td>disp(mul(3,4))<br>
+                    disp(mul(ones(4,1),100))<br>
+                    disp(mul(100,rand(1,4)))<br>
+                    disp(mul(ones(4),100))<br>
+                    disp(mul(100,rand(4)))<br>
+                    disp(mul(ones(4),rand(4)))<br>
+                    disp(mul(eye(4),rand(4)))<br>
+                    disp(mul(rand(5,4),rand(4,3)))<br>
+                    disp(mul(rand(5),rand(4,3)))<br>
+                </td>
+                <td>Universal multiply <br>
+                    For <br>
+                    number & number<br>
+                    array & number<br>
+                    array & array <br>
+                    matrix & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A.*B</td>
+                <td>C=dotmul(A,B)</td>
+                <td>disp(dotmul(3,4))<br>
+                    A=ones(4)<br>
+                    B=rand(4)
+                    disp(dotmul(A,B))<br>
+                    disp(dotmul(eye(4),B))<br>
+                </td>
+                <td>Elementwise multiply <br>
+                    For <br>
+                    number & number<br>
+                    array & array<br>
+                    matrix & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A/B</td>
+                <td>C=div(A,B)</td>
+                <td>disp(div(3,4))<br>
+                    disp(div(ones(4,1),100))<br>
+                    disp(div(100,rand(1,4)))<br>
+                    disp(div(ones(4),100))<br>
+                    disp(div(100,rand(4)))<br>
+                    disp(div(ones(4),rand(4)))<br>
+                </td>
+                <td>Universal divide <br>
+                    For <br>
+                    number & number<br>
+                    array & number<br>
+                    array & array <br>
+                    number & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A./B</td>
+                <td>C=dotdiv(A,B)</td>
+                <td>A=rand(1,4)<br>
+                    B=mul(100,ones(1,4))<br>
+                    disp(dotdiv(A,B))<br>
+                    C=add(rand(10),1)<br>
+                    disp(dotdiv(rand(10),C))<br>
+                    disp(dotdiv(eye(4),rand(4)))<br>
+                </td>
+                <td>Elementwise divide <br>
+                    For <br>
+                    number & number<br>
+                    array & array <br>
+                    matrix & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>C=A^B</td>
+                <td>C=pow(A,B)</td>
+                <td>disp(pow(3,4))<br>
+                    disp(pow(ones(4,1),100))<br>
+                    disp(pow(100,rand(1,4)))<br>
+                    disp(pow(ones(4),100))<br>
+                    disp(pow(100,rand(4)))<br>
+                    disp(pow(ones(4),rand(4)))<br>
+                    disp(pow(eye(4),rand(4)))<br>
+                </td>
+                <td>Universal power <br>
+                    For <br>
+                    number & number<br>
+                    array & number<br>
+                    array & array <br>
+                    number & matrix
+                </td>
+            </tr>
+            <tr>
+                <td>A(:)</td>
+                <td>colon(A)</td>
+                <td>disp(A=rand(4))<br>
+                    disp(colon(A))<br>
+                </td>
+                <td>List all columns as vector <br>
+                    
+                </td>
+            </tr>
+            <tr>
+                <td>x=A\b</td>
+                <td>x=linsolve(A,b)</td>
+                <td>A=[[2,3,4],[1,1,1],[1,0,1]]<br>
+                    b=[[9],[3],[2]]<br>
+                    x=linsolve(A,b)<br>
+                    disp(x)<br>
+                    disp(mul(A,x))
+                </td>
+                <td>Linear solve (or) <br>
+                    mldivide <br>
+                    solve a sys of <br>
+                    linear equations
+                </td>
+            </tr>
+            
+        </table>
+        
+    </div>
+    
+</div>
+<br><br><br><br>
+<br><br><br><br>
+
+
+<div class="footer" >
+    
+    MIT License 2.0 
+    <br><br>
+    Vivek T. Ramamoorthy<br>
+    <a  href="https://VivekTRamamoorthy.github.io" target="_blank">Homepage</a> 
+    | <a href="https://github.com/VivekTRamamoorthy" target="_blank">Github</a> 
+    
+    
+</div>
 
 </body>
 </html>
