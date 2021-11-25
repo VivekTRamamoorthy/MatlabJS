@@ -8,12 +8,13 @@
 var ndarrayToggle=0; // doesn't use ndarray functions for basic operations such as zeros, ones etc
 var complexToggle=0; // doesn't use complex interpretations
 
-
+var help={};
 
 var clc=function(){console.clear()};
+help={};
 
 var ticTime;
-
+help.ticTime="current time";
 
 var tic= function(){
     const d = new Date();
@@ -21,6 +22,7 @@ var tic= function(){
     return ticTime;    
     
 }
+help.tic="Starts recording time";
 
 
 var toc=function(){
@@ -31,11 +33,14 @@ var toc=function(){
     return elTime;
     
 }
+help.toc="Prints time elapsed since tic";
 
 
 
 var isfield=function(obj,fieldstr){return obj.hasOwnProperty(fieldstr)}
-
+help.isfield=function(){
+    console.log("Checks if a fieldname exists in a structure. \nReturns true or false")
+};
 // ARRAY OPERATIONS
 
 var linspace=function(a,b,n=100){
@@ -74,43 +79,52 @@ var find = function(array){
 }
 
 
-var sort=function(array){return array.sort((a,b)=>a-b)}
+var sort=function(array){
+    return array.sort((a,b)=>a-b)
+}
 
+let sortindices=function(array){
+    let indices = new Array(array.length);
+    for (var i = 0; i < array.length; ++i) indices[i] = i;
+    indices.sort(function (a, b) { return array[a] < array[b] ? -1 : array[a] > array[b] ? 1 : 0; });
+    sortedarray=array.sort((a,b)=>a-b) ;    
+    return [sortedarray, indices];
+}
 
 
 
 var sum=function(A,dim=1){ // 1 is column sum and 2 is row sum
     let s=0;
     if(typeof(A[0])=="number"){
-    for (let elem = 0; elem < A.length; elem++) {
-        s+=A[elem];
-        
-
-    }
-    return s;
-}else{ // A is an array
-    if(dim==1){ // column sum
-        let s=zeros(1,A[0].length);
-        for (let col = 0; col < A[0].length; col++) {
-            for (let row = 0; row < A.length; row++) {
-                s[0][col]+=  A[row][col];
-                
-            }
-
+        for (let elem = 0; elem < A.length; elem++) {
+            s+=A[elem];
+            
             
         }
         return s;
-    }
-    if(dim==2){ // row sum
-        let s=zeros(A.length,1)
-        for (let row = 0; row < A.length; row++) {
-        for (let col = 0; col < A[0].length; col++) {
-                s[row][0]+=  A[row][col];
+    }else{ // A is an array
+        if(dim==1){ // column sum
+            let s=zeros(1,A[0].length);
+            for (let col = 0; col < A[0].length; col++) {
+                for (let row = 0; row < A.length; row++) {
+                    s[0][col]+=  A[row][col];
+                    
+                }
+                
+                
             }
+            return s;
         }
-        return s;
+        if(dim==2){ // row sum
+            let s=zeros(A.length,1)
+            for (let row = 0; row < A.length; row++) {
+                for (let col = 0; col < A[0].length; col++) {
+                    s[row][0]+=  A[row][col];
+                }
+            }
+            return s;
+        }
     }
-}
 }
 
 var abs=function(A){
@@ -344,7 +358,7 @@ var transpose=function(A){
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
             // console.log({row,col})
-        B[row][col]=A[col][row];
+            B[row][col]=A[col][row];
         }
     }
     return B;
@@ -361,7 +375,7 @@ var ones=function(a,b=0){
 var eye=function(a){
     let res = new Array(a).fill().map(x=>new Array(a).fill(0))  ;
     return res.map((row,i)=>row.map((x,j)=> (i==j)+0)); // the +0 is  to make true =1 and false=0
-
+    
 }
 
 var zeros=function(a,b=0){
@@ -380,6 +394,34 @@ var rand=function(a=0,b=0){
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
     return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.random()));
+    
+}
+
+var randi=function(n,a=0,b=0){
+    if(a==0){return Math.floor(Math.random()*n);}
+    if(b==0){b=a;};
+    let rows,cols;
+    if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
+    if(typeof(a)== "number"){rows=a;cols=b;};
+    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.floor(Math.random()*n)));
+    
+}
+
+
+var randn_bm=function() {
+    // Standard Normal variate using Box-Muller transform.
+    var u = 0, v = 0;
+    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+}
+var randn=function(a=0,b=0){
+    if(a==0){return randn_bm();}
+    if(b==0){b=a;};
+    let rows,cols;
+    if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
+    if(typeof(a)== "number"){rows=a;cols=b;};
+    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>randn_bm()));
     
 }
 
@@ -435,7 +477,7 @@ var display=function(a){
 
 
 var reshape=function(vec,rows,cols){
-
+    
     
     if (vec.length==rows*cols && typeof(vec[0])=="number"){
         let mat=[];
@@ -448,7 +490,7 @@ var reshape=function(vec,rows,cols){
     }else if(vec.length*vec[0].length==rows*cols){     // for vec of type matrices,  read column by column
         let p=0;
         let mat= new Array(rows).fill().map(x=> new Array(cols).fill().map(x=>0));
-
+        
         for(let col=0; col<cols; col++){
             for(let row=0; row<rows; row++){
                 let vcols=vec[0].length;
@@ -469,37 +511,74 @@ var reshape=function(vec,rows,cols){
 
 
 
-var get=function(mat,rrange,crange){
-    
+var get=function(mat,rrange,crange=':'){
     // array indices in rrange and crange are assumed to start from 1 like in matlab
-    
-    if (rrange==':'){         
-        rrange=range(0,mat.length-1);
-    }
-    if(typeof(rrange)=="number"){   rrange=[rrange];   } // for input of type get(mat,1,2). should be get(mat,[1],[2])
-    rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); // for negative values like -3 to be considered end-3
-    if (crange==':'){
-        crange=range(0,mat[0].length-1);
-    }
-    if(typeof(crange)=="number"){   crange=[crange];   }
-    crange=crange.map((x,i)=>{if(x<1){return mat[0].length+x;} return x}); // x-1 minus one is to use array index starting from 1
-    
-    let res=[];
-    
-    let i=0, j=0;
-    for(let ri=0;ri<rrange.length;ri++){
-        res[i]=[];
-        j=0;
-        for(let ci=0;ci<crange.length; ci++){
-            //  console.log({i,j,ri,ci})
-            res[i][j]=mat[rrange[ri]-1][crange[ci]-1]; // -1 is to use array index starting from 1
-            j++;
+    // B=A(:,[5,6]) ; B=get(A,':',[5,6]);
+    // If mat is an array, converting to a matrix.
+    if(typeof(mat[0])=="number"){
+        res=new Array(rrange.length).fill(0);
+        for (let index = 0; index < rrange.length; index++) {
+            res[index] = mat[rrange[index]-1]; // -1 since rrange array index starts from 1
         }
-        i++
-        
+        return res;
     }
-    return res;
+    // If mat is a matrix
+    if(typeof(mat[0][0])=="number"){
+        // Dealing with all elements
+        if (rrange==':'){ rrange=range(1,mat.length);   }
+        if (crange==':'){ crange=range(1,mat[0].length);}
+        // packing single element indices into an array
+        if(typeof(rrange)=="number"){   rrange=[rrange];   } 
+        if(typeof(crange)=="number"){   crange=[crange];   }
+        // Correcting negative indices
+        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); // for negative values like -3 to be considered end-3
+        crange=crange.map((x,i)=>{if(x<1){return mat[0].length+x;} return x}); // x-1 minus one is to use array index starting from 1
+        
+        let res=zeros(rrange.length,crange.length);
+        
+        for(let ri=0;ri<rrange.length;ri++){
+            for(let ci=0;ci<crange.length; ci++){
+                res[ri][ci]=mat[rrange[ri]-1][crange[ci]-1]; // -1 is to use array index starting from 1
+            }
+        }
+        return res;
+    }
+    console.error("get function not defined for this input type")
     
+}
+
+help.set=function(){console.log("Equivalent of A(1:10,1:20)=B in matlab. Syntax: A=set(A,range(1,10),range(1,20),B)")}
+
+var set=function(mat,rrange=':',crange=':',submat){
+
+    // if mat is an array
+    if(typeof(mat[0])=="number"){
+        for (let index = 0; index < rrange.length; index++) {
+            mat[rrange[index]-1]=crange[index]; // here crange is the sub array
+            return mat;
+        }
+    }
+    // if mat is a matrix
+    if(typeof(mat[0][0])=="number"){
+    let rows=mat.length;
+    let cols=mat[0].length;
+    if (rrange==':'){ rrange=range(1,rows);   }
+    if (crange==':'){ crange=range(1,cols);}
+    // array indices in rrange and crange are assumed to start from 1 like in matlab
+    if(typeof(rrange)=="number"){   rrange=[rrange];   } // for input of type get(mat,1,2). should be get(mat,[1],[2])
+    if(typeof(crange)=="number"){   crange=[crange];   } 
+    rrange=rrange.map((x,i)=>{if(0<=x && x<=rows){ return x};if(x<1 && -rows<=x){return rows+x;}; console.error("get:Index exceeds array bounds"); }); // for negative values like -3 to be considered end-3
+    crange=crange.map((x,i)=>{if(0<=x && x<=cols){ return x};if(x<1 && -cols<=y){return cols+x;}; console.error("get:Index exceeds array bounds"); }); // x-1 minus one is to use array index starting from 1
+    
+    for(let ri=0;ri<rrange.length;ri++){
+        for(let ci=0;ci<crange.length; ci++){
+            mat[rrange[ri]-1][crange[ci]-1]=submat[ri][ci]; // -1 is to use array index starting from 1
+        }
+    }
+    return mat;
+    }
+    console.error("get:First argument must either be an array or a matrix");
+    return null;
 }
 
 
@@ -571,571 +650,571 @@ var unique=function(C){
 var sparse=function(iK,jK,sK,m,n){
     let K=zeros(m,n);
     if(sK[0] instanceof Array){
-    for (let i=0;i<iK.length;i++){
-        K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i][0]; // the minus ones to consider index starting from 1
-    }
-    return K;}
-    else{
         for (let i=0;i<iK.length;i++){
-            K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i]; // the minus ones to consider index starting from 1
+            K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i][0]; // the minus ones to consider index starting from 1
         }
         return K;}
-}
-
-var colon=function(K){
-    let p=0,row=0,col=0;
-    let Kcolon=zeros(K.length*K[0].length,1);
-    for (let i=0;i<Kcolon.length;i++){
-    row=i%K.length;
-    col=Math.floor(i/K[0].length);
-    Kcolon[i]=[K[row][col]];
-    }
-    return Kcolon;
-}
-
-
-
-
-//
-//
-//
-//
-//
-//
-//
-// END OF BASIC FUNCTIONS
-
-
-
-
-
-// UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW,
-
-class cx {
-    constructor(a,b=0){
-        this.re=a;
-        this.im=b;
-    }
-    add=function(a){
-        if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
-        r.re=this.re+a.re;
-        r.im=this.im+a.im;
-        return r;
-    }
-    sub=function(a){
-        if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
-        r.re=this.re-a.re;
-        r.im=this.im-a.im;
-        return r;
-    }
-    mul=function(a){
-        if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
-        r.re=this.re*a.re-this.im*a.im;
-        r.im=this.re*a.im+this.im*a.re;
-        return r;
-    }
-    div=function(a){
-        if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
-        r=r.mul(r.conj())
-        return r;
-    }
-    conj=function(){
-        r=new cx(0,0);
-        r.re=this.re;
-        r.im=-this.im;
-        return r;
-    }
-    abs=function(){
-        return Math.sqrt(this.re**2+this.im**2)
-
-    }
-    
-}
-if(ndarrayToggle==1 &complexToggle==1){
-    
-    
-    
-    
-    var pool=require('ndarray-scratch');
-    var ndarray = require('ndarray');
-    var ops = require('ndarray-ops');
-    var mldivide = require('ndarray-linear-solve');
-    var imshow = require("ndarray-imshow");
-    var array2ndarray=require("ndarray-pack");
-    var ndarray2array=require("ndarray-unpack");
-    var concatCols = require("ndarray-concat-cols");
-    var concatRows = require("ndarray-concat-rows");
-    
-}
-
-
-
-var add=function(a,b){ // universal add function, not fully supported for ndarray vs complex
-    if(typeof(a)=="number"){ // a is number
-        if (typeof(b)=="number"){return a+b}; //b is number
-        if (b instanceof cx){return b.add(a)}; // b is complex
-        if (b instanceof Array){ 
-            if(typeof(b[0])=="number"){return b.map(x=>x+a)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>x.add(a))}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>bij+a))} // b is matrix
-        }
-        if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.adds(c,b,a); return c  }; // b is ndarray
-    }
-    if(a instanceof cx){ // a is complex
-        if (b instanceof Array){return b.map(x=>a.add(x))}; // b is numeric or complex array 
-        return a.add(b); // b is number or complex
-        // no support for a is complex and b is ndarray 
-    }
-    if(a instanceof Array){  // a is an array
-        if(typeof(a[0])=="number"){ // a is a number array
-            if(typeof(b)=="number"){return a.map(x=>x+b);} // b is a number
-            if(b instanceof cx){return a.map(x=>b.add(x));} // b is complex
-            if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x+b[i])};
-                if (b[0] instanceof cx) {return b.map((x,i)=>x.add(a[i]));}
+        else{
+            for (let i=0;i<iK.length;i++){
+                K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i]; // the minus ones to consider index starting from 1
             }
+            return K;}
         }
-        if(a[0] instanceof cx){ // a is a complex array
-            if(b instanceof Array) {return a.map((x,i)=>x.add(b[i])); } // b is  array
-            return a.map(x=>x.add(b)); //  b is number or complex
-        }        
-        if(a[0] instanceof Array){ // a is a matrix
-            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij+b));} // b is a number
-            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>b.add(Aij)))} // b is complex
-            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
-                    return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]+b[row][col]))// a and b are matrices
+        
+        var colon=function(K){
+            let p=0,row=0,col=0;
+            let Kcolon=zeros(K.length*K[0].length,1);
+            for (let i=0;i<Kcolon.length;i++){
+                row=i%K.length;
+                col=Math.floor(i/K[0].length);
+                Kcolon[i]=[K[row][col]];
+            }
+            return Kcolon;
+        }
+        
+        
+        
+        
+        //
+        //
+        //
+        //
+        //
+        //
+        //
+        // END OF BASIC FUNCTIONS
+        
+        
+        
+        
+        
+        // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW,
+        
+        class cx {
+            constructor(a,b=0){
+                this.re=a;
+                this.im=b;
+            }
+            add=function(a){
+                if(a instanceof Number){a=new cx(a);}
+                r= new cx(0,0);
+                r.re=this.re+a.re;
+                r.im=this.im+a.im;
+                return r;
+            }
+            sub=function(a){
+                if(a instanceof Number){a=new cx(a);}
+                r= new cx(0,0);
+                r.re=this.re-a.re;
+                r.im=this.im-a.im;
+                return r;
+            }
+            mul=function(a){
+                if(a instanceof Number){a=new cx(a);}
+                r= new cx(0,0);
+                r.re=this.re*a.re-this.im*a.im;
+                r.im=this.re*a.im+this.im*a.re;
+                return r;
+            }
+            div=function(a){
+                if(a instanceof Number){a=new cx(a);}
+                r= new cx(0,0);
+                r=r.mul(r.conj())
+                return r;
+            }
+            conj=function(){
+                r=new cx(0,0);
+                r.re=this.re;
+                r.im=-this.im;
+                return r;
+            }
+            abs=function(){
+                return Math.sqrt(this.re**2+this.im**2)
+                
+            }
+            
+        }
+        if(ndarrayToggle==1 &complexToggle==1){
+            
+            
+            
+            
+            var pool=require('ndarray-scratch');
+            var ndarray = require('ndarray');
+            var ops = require('ndarray-ops');
+            var mldivide = require('ndarray-linear-solve');
+            var imshow = require("ndarray-imshow");
+            var array2ndarray=require("ndarray-pack");
+            var ndarray2array=require("ndarray-unpack");
+            var concatCols = require("ndarray-concat-cols");
+            var concatRows = require("ndarray-concat-rows");
+            
+        }
+        
+        
+        
+        var add=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+            if(typeof(a)=="number"){ // a is number
+                if (typeof(b)=="number"){return a+b}; //b is number
+                if (b instanceof cx){return b.add(a)}; // b is complex
+                if (b instanceof Array){ 
+                    if(typeof(b[0])=="number"){return b.map(x=>x+a)}; // b is number array
+                    if(b[0] instanceof cx){ return b.map(x=>x.add(a))}; // b is complex array
+                    if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>bij+a))} // b is matrix
                 }
-                else{ console.error("Matrix dimensions must agree"); return [] }
+                if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.adds(c,b,a); return c  }; // b is ndarray
             }
-        }
-    }
-    if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.adds(c,a,b); return c;} // b is number
-        if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.adds(c.re,a,b.re);ops.addseq(c.im,b.im); return c;} // b is complex
-        if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.add(c,a,new ndarray(b)); return c;} // b is array
-            if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>x.im))}; ops.add(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
-        }
-        if(b.hasOwnProperty("stride")){ 
-            if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.zeros(a.shape);ops.add(c,a,b); return a; 
-        }
-    }
-    
-    
-    console.error("universal add has not been implemented for this use case");
-    return "bulb";
-    
-}
-
-
-
-var sub=function(a,b){ // universal add function, not fully supported for ndarray vs complex
-    if(typeof(a)=="number"){ // a is number
-        if (typeof(b)=="number"){return a-b}; //b is number
-        if (b instanceof cx){return b.sub(a)}; // b is complex
-        if (b instanceof Array){ 
-            if(typeof(b[0])=="number"){return b.map(x=>a-x)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>x.neg().add(a))}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a-bij))} // b is matrix
-        }
-        if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.subs(c,b,a); return c }; // b is ndarray
-    }
-    if(a instanceof cx){ // a is complex
-        if (b instanceof Array){return b.map(x=>a.sub(x))}; // b is numeric or complex array 
-        return a.sub(b); // b is number or complex
-        // no support a is complex and b is ndarray 
-    }
-    if(a instanceof Array){  // a is an array
-        if(typeof(a[0])=="number"){ // a is a number array
-            if(typeof(b)=="number"){return a.map(x=>x-b);} // b is a number
-            if(b instanceof cx){return a.map(x=>b.neg().add(x));} // b is complex
-            if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x-b[i])};
-                if (b[0] instanceof cx) {return b.map((x,i)=>x.neg().add(a[i]));}
+            if(a instanceof cx){ // a is complex
+                if (b instanceof Array){return b.map(x=>a.add(x))}; // b is numeric or complex array 
+                return a.add(b); // b is number or complex
+                // no support for a is complex and b is ndarray 
             }
-        }
-        if(a[0] instanceof cx){ // a is a complex array
-            if(b instanceof Array) {return a.map((x,i)=>x.sub(b[i])); } // b is  array
-            return a.map(x=>x.sub(b)); //  b is number or complex
-        }
-        if(a[0] instanceof Array){ // a is a matrix
-            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij-b));} // b is a number
-            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.sub(b)))} // b is complex
-            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
-                    return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]-b[row][col]))// a and b are matrices
-                }
-                else{ console.error("Matrix dimensions must agree"); return [] }
-            }
-        }        
-    }
-    if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.subs(c,a,b); return c;} // b is number
-        if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.subs(c.re,a,b.re);ops.subseq(c.im,b.im); return c;} // b is complex
-        if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.sub(c,a,new ndarray(b)); return c;} // b is array
-            if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>-x.im))}; ops.sub(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
-        }                       // careful with the direct assignment of imaginary part of b to c.im
-        if(b.hasOwnProperty("stride")){ 
-            if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.zeros(a.shape);ops.sub(c,a,b); return c ;
-        }
-    }
-    console.error("universal sub has not been implemented for this use case");
-    return "bulb";
-    
-}
-
-// MULTIPLICATION UNIVERSAL
-
-var mul=function(a,b){ // universal add function, not fully supported for ndarray vs complex
-    if(typeof(a)=="number"){ // a is number
-        if (typeof(b)=="number"){return a*b}; //b is number
-        if (b instanceof cx){return b.mul(a)}; // b is complex
-        if (b instanceof Array){ 
-            if(typeof(b[0])=="number"){return b.map(x=>a*x)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>x.mul(a))}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a*bij))} // b is matrix
-        }
-        if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.muls(c,b,a); return c }; // b is ndarray
-    }
-    if(a instanceof cx){ // a is complex
-        if (b instanceof Array){return b.map(x=>a.mul(x))}; // b is numeric or complex array 
-        return a.mul(b); // b is number or complex
-        // no support a is complex and b is ndarray 
-    }
-    if(a instanceof Array){  // a is an array
-        if(typeof(a[0])=="number"){ // a is a number array
-            if(typeof(b)=="number"){return a.map(x=>x*b);} // b is a number
-            if(b instanceof cx){return a.map(x=>b.mul(x));} // b is complex
-            if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x*b[i])};
-                if (b[0] instanceof cx) {return b.map((x,i)=>x.mul(a[i]));}
-            }
-        }
-        if(a[0] instanceof cx){ // a is a complex array
-            if(b instanceof Array) {return a.map((x,i)=>x.mul(b[i])); } // b is  array
-            return a.map(x=>x.mul(b)); //  b is number or complex
-        }        
-        if(a[0] instanceof Array){ // a is a matrix
-            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij*b));} // b is a number
-            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.mul(b)))} // b is complex
-            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                let c=new Array(a.length).fill().map(x=>new Array(b[0].length).fill().map(x=>0));
-                if(a[0].length==b.length){ // checking dimensions
-                    
-                    for(let row=0;row<a.length;row++){
-                        for(let col=0;col<b[0].length;col++){
-                            presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
-                            // display(presum)
-                            c[row][col]=presum.reduce((a,b)=>a+b);
-                        }
+            if(a instanceof Array){  // a is an array
+                if(typeof(a[0])=="number"){ // a is a number array
+                    if(typeof(b)=="number"){return a.map(x=>x+b);} // b is a number
+                    if(b instanceof cx){return a.map(x=>b.add(x));} // b is complex
+                    if(b instanceof Array) { 
+                        if(typeof(b[0])=="number"){return a.map((x,i)=>x+b[i])};
+                        if (b[0] instanceof cx) {return b.map((x,i)=>x.add(a[i]));}
                     }
-                    return c; // matrix multiplication code
                 }
-                else{ console.error("Matrix dimensions do not agree"); return []; }
-            }
-        }
-    }
-    if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.ones(a.shape); ops.muls(c,a,b); return c;} // b is number
-        if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,b.re);ops.muls(c.im,a,b.im); return c;} // b is complex
-        if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.mul(c,a,new ndarray(b)); return c;} // b is array
-            if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>x.re)),im:new ndarray(b.map(x=>x.im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
-        }                       // careful with the direct assignment of imaginary part of b to c.im
-        if(b.hasOwnProperty("stride")){ 
-            if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.ones(a.shape);ops.mul(c,a,b); return c;
-        }
-    }
-    console.error("universal multiply has not been implemented for this use case");
-    return "bulb";
-    
-}
-
-
-
-// UNIVERSAL DIVISION
-
-var div=function(a,b){ // universal add function, not fully supported for ndarray vs complex
-    if(typeof(a)=="number"){ // a is number
-        if (typeof(b)=="number"){return a*b}; //b is number
-        if (b instanceof cx){return b.div(a)}; // b is complex
-        if (b instanceof Array){ 
-            if(typeof(b[0])=="number"){return b.map(x=>a/x)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>x.inv().mul(a))}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a/bij))} // b is matrix
-        }
-        if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.divs(c,b,a); return c }; // b is ndarray
-    }
-    if(a instanceof cx){ // a is complex
-        if (b instanceof Array){return b.map(x=>a.div(x))}; // b is numeric or complex array 
-        return a.div(b); // b is number or complex
-        // no support a is complex and b is ndarray 
-    }
-    if(a instanceof Array){  // a is an array
-        if(typeof(a[0])=="number"){ // a is a number array
-            if(typeof(b)=="number"){return a.map(x=>x/b);} // b is a number
-            if(b instanceof cx){return a.map(x=>b.inv().mul(x));} // b is complex
-            if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x/b[i])};
-                if (b[0] instanceof cx) {return b.map((x,i)=>x.inv().mul(a[i]));}
-            }
-        }
-        if(a[0] instanceof cx){ // a is a complex array
-            if(b instanceof Array) {return a.map((x,i)=>x.div(b[i])); } // b is  array
-            return a.map(x=>x.mul(b)); //  b is number or complex
-        }
-        if(a[0] instanceof Array){ // a is a matrix
-            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij/b));} // b is a number
-            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>new cx(Aij,0).div(b)))} // b is complex
-            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                console.error("Matrix division is not possible"); 
-                return []; 
-            }
-        }        
-    }
-    if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.ones(a.shape); ops.divs(c,a,b); return c;} // b is number
-        if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,(b.inv()).re);ops.muls(c.im,a,(b.inv()).im); return c;} // b is complex
-        if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.div(c,a,new ndarray(b)); return c;} // b is array
-            if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>(x.inv()).re)),im:new ndarray(b.map(x=>(x.inv()).im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
-        }                       // careful with the direct assignment of imaginary part of b to c.im
-        if(b.hasOwnProperty("stride")){ 
-            if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.ones(a.shape);ops.div(c,a,b); return c;
-        }
-    }
-    console.error("universal div has not been implemented for this use case");
-    return "bulb";
-    
-}
-
-
-// UNIVERSAL POW
-var pow=function(a,b){ // universal add function, not fully supported for ndarray vs complex
-    if(typeof(a)=="number"){ // a is number
-        if (typeof(b)=="number"){return a**b}; //b is number
-        if (b instanceof cx){return (new cx(a,0)).pow(b)}; // b is complex
-        if (b instanceof Array){ 
-            if(typeof(b[0])=="number"){return b.map(x=>a**x)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>(new cx(a,0)).pow(x));}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a**bij))} // b is matrix
-        }
-        if (b.hasOwnProperty("stride")){ c=new ndarray(b.data.map(x=>a**x)); return c }; // b is ndarray
-    }
-    if(a instanceof cx){ // a is complex
-        if (b instanceof Array){return b.map(x=>a.pow(x))}; // b is numeric or complex array 
-        return a.pow(b); // b is number or complex
-        // no support a is complex and b is ndarray 
-    }
-    if(a instanceof Array){  // a is an array
-        if(typeof(a[0])=="number"){ // a is a number array
-            if(typeof(b)=="number"){return a.map(x=>x**b);} // b is a number
-            if(b instanceof cx){return a.map(x=>(new cx(x,0)).pow(b));} // b is complex
-            if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x**b[i])};
-                if (b[0] instanceof cx) {return a.map((x,i)=>(new cx(x,0)).pow(b[i]));}
-            }
-        }
-        if(a[0] instanceof cx){ // a is a complex array
-            if(b instanceof Array) {return a.map((x,i)=>x.pow(b[i])); } // b is  array
-            return a.map(x=>x.pow(b)); //  b is number or complex
-        }        
-        if(a[0] instanceof Array){ // a is a matrix
-            if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij**b));} // b is a number
-            if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>(new cx(Aij,0)).pow(b)))} // b is complex
-            if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
-                    return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]**b[row][col]))// a and b are matrices then performs dot pow
+                if(a[0] instanceof cx){ // a is a complex array
+                    if(b instanceof Array) {return a.map((x,i)=>x.add(b[i])); } // b is  array
+                    return a.map(x=>x.add(b)); //  b is number or complex
+                }        
+                if(a[0] instanceof Array){ // a is a matrix
+                    if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij+b));} // b is a number
+                    if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>b.add(Aij)))} // b is complex
+                    if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                        if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
+                            return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]+b[row][col]))// a and b are matrices
+                        }
+                        else{ console.error("Matrix dimensions must agree"); return [] }
+                    }
                 }
-                else{ console.error("Matrix dimensions must agree"); return [] }
             }
-        }
-    }
-    if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){return new ndarray( a.data.map(x=>x**b) ); } // b is number
-        if(b instanceof cx){
-            let c={
-                re: new ndarray(a.data.map(x=>  ((new cx(x,0)).pow(b)).re ) ),
-                im: new ndarray(a.data.map(x=> ((new cx(x,0)).pow(b)).im ) )
-            } ;
-            return c;
-        } // b is complex
-        if(b instanceof Array){
-            if(typeof(b[0])=="number"){
-                c=new ndarray(   a.data.map((x,i)=> x**b[i])   ); 
-                return c;
-            } // b is array
-            if(b[0] instanceof cx){
-                let c={
-                    re:new ndarray(a.data.map((x,i)=> ((new cx(x.re,0)).pow(b[i])).re  )  ),
-                    im:new ndarray(a.data.map((x,i)=> ((new cx(x.re,0)).pow(b[i])).im  )  ),
-                }; 
-                return c;
-            } // b is complex
-        }                       // careful with the direct assignment of imaginary part of b to c.im
-        if(b.hasOwnProperty("stride")){ 
-            if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree"); return "null"};
-            return new ndarray(  a.data.map((x,i)=> x**b.data[i])  );
-        } // b is complex
-    }
-    console.error("universal pow has not been implemented for this use case");
-    return "bulb";
-    
-} 
-
-
-
-var dotmul = function(A,B){
-    if(A.length==B.length & A[0].length==B[0].length){
-    C=zeros(size(A))
-    for (let row = 0; row < A.length; row++) {
-        for (let col = 0; col < A[0].length; col++) {
-            C[row][col]=A[row][col]*B[row][col];
+            if(a.hasOwnProperty("stride")){ // a is an ndarray
+                if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.adds(c,a,b); return c;} // b is number
+                if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.adds(c.re,a,b.re);ops.addseq(c.im,b.im); return c;} // b is complex
+                if(b instanceof Array){
+                    if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.add(c,a,new ndarray(b)); return c;} // b is array
+                    if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>x.im))}; ops.add(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
+                }
+                if(b.hasOwnProperty("stride")){ 
+                    if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
+                    c=pool.zeros(a.shape);ops.add(c,a,b); return a; 
+                }
+            }
+            
+            
+            console.error("universal add has not been implemented for this use case");
+            return "bulb";
             
         }
         
-    }
-    return C;}
-    console.error('Matrix dimensions do not agree for dot multiplication')
-}
-
-
-var dotdiv = function(A,B){
-    if(A.length==B.length & A[0].length==B[0].length){
-    C=zeros(size(A))
-    for (let row = 0; row < A.length; row++) {
-        for (let col = 0; col < A[0].length; col++) {
-            C[row][col]=A[row][col]/B[row][col];
+        
+        
+        var sub=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+            if(typeof(a)=="number"){ // a is number
+                if (typeof(b)=="number"){return a-b}; //b is number
+                if (b instanceof cx){return b.sub(a)}; // b is complex
+                if (b instanceof Array){ 
+                    if(typeof(b[0])=="number"){return b.map(x=>a-x)}; // b is number array
+                    if(b[0] instanceof cx){ return b.map(x=>x.neg().add(a))}; // b is complex array
+                    if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a-bij))} // b is matrix
+                }
+                if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.subs(c,b,a); return c }; // b is ndarray
+            }
+            if(a instanceof cx){ // a is complex
+                if (b instanceof Array){return b.map(x=>a.sub(x))}; // b is numeric or complex array 
+                return a.sub(b); // b is number or complex
+                // no support a is complex and b is ndarray 
+            }
+            if(a instanceof Array){  // a is an array
+                if(typeof(a[0])=="number"){ // a is a number array
+                    if(typeof(b)=="number"){return a.map(x=>x-b);} // b is a number
+                    if(b instanceof cx){return a.map(x=>b.neg().add(x));} // b is complex
+                    if(b instanceof Array) { 
+                        if(typeof(b[0])=="number"){return a.map((x,i)=>x-b[i])};
+                        if (b[0] instanceof cx) {return b.map((x,i)=>x.neg().add(a[i]));}
+                    }
+                }
+                if(a[0] instanceof cx){ // a is a complex array
+                    if(b instanceof Array) {return a.map((x,i)=>x.sub(b[i])); } // b is  array
+                    return a.map(x=>x.sub(b)); //  b is number or complex
+                }
+                if(a[0] instanceof Array){ // a is a matrix
+                    if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij-b));} // b is a number
+                    if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.sub(b)))} // b is complex
+                    if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                        if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
+                            return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]-b[row][col]))// a and b are matrices
+                        }
+                        else{ console.error("Matrix dimensions must agree"); return [] }
+                    }
+                }        
+            }
+            if(a.hasOwnProperty("stride")){ // a is an ndarray
+                if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.subs(c,a,b); return c;} // b is number
+                if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.subs(c.re,a,b.re);ops.subseq(c.im,b.im); return c;} // b is complex
+                if(b instanceof Array){
+                    if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.sub(c,a,new ndarray(b)); return c;} // b is array
+                    if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>-x.im))}; ops.sub(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
+                }                       // careful with the direct assignment of imaginary part of b to c.im
+                if(b.hasOwnProperty("stride")){ 
+                    if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
+                    c=pool.zeros(a.shape);ops.sub(c,a,b); return c ;
+                }
+            }
+            console.error("universal sub has not been implemented for this use case");
+            return "bulb";
             
         }
         
-    }
-    return C;}
-    console.error('Matrix dimensions do not agree for dot division')
-}
-
-var deepcopy = function(A){
-    if(A instanceof Array){
-        let B=[];
-        for (let index = 0; index < A.length; index++) {
-            B[index] = deepcopy( A[index]); // recursive copy for all subarrays
+        // MULTIPLICATION UNIVERSAL
+        
+        var mul=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+            if(typeof(a)=="number"){ // a is number
+                if (typeof(b)=="number"){return a*b}; //b is number
+                if (b instanceof cx){return b.mul(a)}; // b is complex
+                if (b instanceof Array){ 
+                    if(typeof(b[0])=="number"){return b.map(x=>a*x)}; // b is number array
+                    if(b[0] instanceof cx){ return b.map(x=>x.mul(a))}; // b is complex array
+                    if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a*bij))} // b is matrix
+                }
+                if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.muls(c,b,a); return c }; // b is ndarray
+            }
+            if(a instanceof cx){ // a is complex
+                if (b instanceof Array){return b.map(x=>a.mul(x))}; // b is numeric or complex array 
+                return a.mul(b); // b is number or complex
+                // no support a is complex and b is ndarray 
+            }
+            if(a instanceof Array){  // a is an array
+                if(typeof(a[0])=="number"){ // a is a number array
+                    if(typeof(b)=="number"){return a.map(x=>x*b);} // b is a number
+                    if(b instanceof cx){return a.map(x=>b.mul(x));} // b is complex
+                    if(b instanceof Array) { 
+                        if(typeof(b[0])=="number"){return a.map((x,i)=>x*b[i])};
+                        if (b[0] instanceof cx) {return b.map((x,i)=>x.mul(a[i]));}
+                    }
+                }
+                if(a[0] instanceof cx){ // a is a complex array
+                    if(b instanceof Array) {return a.map((x,i)=>x.mul(b[i])); } // b is  array
+                    return a.map(x=>x.mul(b)); //  b is number or complex
+                }        
+                if(a[0] instanceof Array){ // a is a matrix
+                    if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij*b));} // b is a number
+                    if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.mul(b)))} // b is complex
+                    if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                        let c=new Array(a.length).fill().map(x=>new Array(b[0].length).fill().map(x=>0));
+                        if(a[0].length==b.length){ // checking dimensions
+                            
+                            for(let row=0;row<a.length;row++){
+                                for(let col=0;col<b[0].length;col++){
+                                    presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
+                                    // display(presum)
+                                    c[row][col]=presum.reduce((a,b)=>a+b);
+                                }
+                            }
+                            return c; // matrix multiplication code
+                        }
+                        else{ console.error("Matrix dimensions do not agree"); return []; }
+                    }
+                }
+            }
+            if(a.hasOwnProperty("stride")){ // a is an ndarray
+                if(typeof(b)=="number"){c=pool.ones(a.shape); ops.muls(c,a,b); return c;} // b is number
+                if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,b.re);ops.muls(c.im,a,b.im); return c;} // b is complex
+                if(b instanceof Array){
+                    if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.mul(c,a,new ndarray(b)); return c;} // b is array
+                    if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>x.re)),im:new ndarray(b.map(x=>x.im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
+                }                       // careful with the direct assignment of imaginary part of b to c.im
+                if(b.hasOwnProperty("stride")){ 
+                    if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
+                    c=pool.ones(a.shape);ops.mul(c,a,b); return c;
+                }
+            }
+            console.error("universal multiply has not been implemented for this use case");
+            return "bulb";
+            
         }
-        return B;
-    }
-    else{
-        B=A;
-        return B;
-    }
-}
-
-var copy=deepcopy;
-var disp=display;
-
-
-// LINEAR SOLVE 
-var linsolve=function(A,b){
-    b=transpose(b);
-    x= mldivide(transpose(A),b[0]);
-    return transpose(x);
-}
-
-
-
-// module.exports ={tic, toc,  isfield, size, setdiff, min, max ,find, sort, abs, range,
-// pool, ones, zeros, display ,ndarray, ops, mldivide ,imshow, array2ndarray, ndarray2array, concatCols, concatRows,
-// cx, add, sub, mul, div, pow }
-
-
-// MATLAB	JavaScript	Notes http://scijs.net/packages/#scijs/scijs-ndarray-for-matlab-users
-// ndims(a)	a.dimension	get the number of dimensions of a
-// numel(a)	a.size	get the number of elements of an arary
-// size(a)	a.shape	get the size of the array
-// size(a,n)	a.shape[n-1]	get the number of elements of the n-th dimension of array a
-// [1 2 3; 4 5 6 ]	ndarray([1,2,3,4,5,6],[2,3])	2×3 matrix literal (using Array type)
-// ndarray(new Float64Array([1,2,3,4,5,6]),[2,3])	2×3 matrix literal (using 64-bit typed array)	
-// pack([[1,2,3],[4,5,6]])	2×3 matrix literal from nested array	
-// a(end)	a.get(a.shape[0]-1)	access last element in the 1×n matrix a
-// a(2, 5)	a.get(1, 4)	access element in second row, fifth column
-// a(2, :)	a.pick(1, null)	entire second row of a
-// a(1:5, :)	a.hi(5, null)	the first five rows of a
-// a(end-4:end, :)	a.lo(a.shape[0]-5, null)	the last five rows of a
-// a(1:3, 5:9)	a.hi(3, 9).lo(0, 4)	rows one to three and columns five to nine of a
-// a([2, 4, 5], [1, 3])		rows 2, 4, and 5 and columns 1 and 3.
-// a(3:2:21, :)	a.hi(21, null).lo(2, null).step(2, 1)	every other row of a, starting with the third and going to the twenty-first
-// a(1:2:end, :)	a.step(2, 1)	every other row of a, starting with the first
-// a(end:-1:1, :) or flipup(a)	a.step(-1, 1)	a with rows in reverse order
-// a([1:end 1], :)		a with copy of the first rows appended to the end
-// a.'	a.transpose(1, 0)	transpose of a
-// a'		conjugate transpose of a
-// c = a * b	gemm(c, a, b)	matrix multiply
-// c = a + b	ops.add(c, a, b)	matrix addition
-// c = a + 2	ops.adds(c, a, 2)	matrix + scalar addition
-// a += b (not available in MATLAB)	ops.addeq(a, b)	in-place matrix addition
-// c = a .* b	ops.mul(c, a, b)	element-wise multiply
-// a = a .* b	ops.muleq(a, b)	element-wise multiply (in-place)
-// c = a ./ b	ops.div(c, a, b)	element-wise division
-// a = a ./ b	ops.diveq(a, b)	element-wise division (in-place)
-// a.^3	ops.pows(a, 3)	element-wise scalar exponentiation
-// (a>0.5)		matrix whose i,jth element is (a_ij > 0.5)
-// find(a>0.5)		find the indices where (a > 0.5)
-// a(:, find(v>0.5))		extract the columns of a where vector v > 0.5
-// a(a<0.5)=0		a with elements less than 0.5 zeroed out
-// a .* (a>0.5)		a with elements less than 0.5 zeroed out
-// a(:) = 3	ops.assigns(a, 3)	set all values to the same scalar value
-// y = x	y =pool.clone(x)	clone by value
-// y = x(2, :)	y = x.pick(1, null)	slices are by reference
-// 1:10		create an increasing vector
-// 0:9		create an increasing vector
-// zeros(3, 4)	pool.zeros([3, 4], 'float64')	3×4 rand-2 array full of 64-bit floating point zeros
-// zeros(3, 4, 5)	pool.zeros([3, 4, 5], 'float64')	3×4×5 rank-3 array full of 64-bit floating point zeros
-// ones(3, 4)	pool.ones([3, 4], 'float64')	3×4 rank-2 array full of 64-bit floating point ones
-// eye(3)	pool.eye([3, 3], 'float64')	3×3 identity matrix with 64-bit floating point precision
-// diag(a)	diag(a)	vector of diagonal elements of a (returns diagonal by reference)
-// diag(a, 0)	b =pool.zeros(a.shape)
-// ops.assign(diag(b),diag(a))	square diagonal matrix whose nonzero values are the elements of a
-// rand(3, 4)	fill(pool.zeros([3, 4]), Math.random)	random 3×4 matrix
-// linspace(1, 3, 4)	linspace(1, 3, 4)	4 equally spaced samples between 1 and 3, inclusive
-// [x, y] = meshgrid(0:8, 0:5)		two 2D arrays: one of x values, one of y values
-// [x, y] = meshgrid([1, 2, 4], [2, 4, 5])		
-// repmat(a, m, n)	tile(a, [m, n])	create m×n copies of a
-// [a b]	concatCols([a, b])	concatenate columns of a and b
-// [a; b]	concatRows([a, b])	concatenate rows of a and b
-// max(max(a))		maximum element of a
-// max(a)	ops.max(a)	maximum element in a
-// norm(v)	ops.norm2(v)	L2 norm of vector v
-// c = a & b	ops.band(c, a, b)	element-by-element AND operator
-// c = a	b	ops.bor(c, a, b)	element-by-element OR operator
-// inv(a)		inverse of square matrix a
-// pinv(a)		pseudo-inverse of matrix a
-// rank(a)		rank of matrix a
-// a\b	lup(a, a, P)
-// solve(a, a, P, b)	solution of a x = b for x
-// b/a		solution of x a = b for x
-// chol(a)	chol(a, L)	cholesky factorization of matrix
-// [V, D] = eig(a)		eigenvalues and eigenvectors of a
-// [V, D] = eig(a, b)		eigenvalues and eigenvectors of a, b
-// [Q, R, P] = qr(a, 0)	qr.factor(A, d)
-// qr.constructQ(A, Q)	QR decomposition. (Depending on the use, you can likely use Q without constructing explicitly. See documentation.)
-// [L, U, P] = lu(a)	lup(A, L, P)	LU decomposition
-// fft(a)	fft(1, ar, ai)	Fourier transform of a. Javascript does not have a complex type so real and imaginary parts must be passed separately.
-// ifft(a)	fft(-1, ar, ai)	inverse Fourier transform of a
-// [b, I] = sortrows(a, i)	sort(a)	sort the rows of the matrix
-// sort(a.transpose(1, 0))	sort the column of the matrix	
-// regress(y, X)	qr.factor( A, d );
-// qr.solve( A, d, y );	multilinear regression
-// decimate(x, q)	resample(output, input)	downsample with low-pass filtering (resample downsamples by a factor of two)
-// unique		
-// squeeze(a)	squeeze(a)	Remove singleton dimensions of a
-
-
-
+        
+        
+        
+        // UNIVERSAL DIVISION
+        
+        var div=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+            if(typeof(a)=="number"){ // a is number
+                if (typeof(b)=="number"){return a*b}; //b is number
+                if (b instanceof cx){return b.div(a)}; // b is complex
+                if (b instanceof Array){ 
+                    if(typeof(b[0])=="number"){return b.map(x=>a/x)}; // b is number array
+                    if(b[0] instanceof cx){ return b.map(x=>x.inv().mul(a))}; // b is complex array
+                    if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a/bij))} // b is matrix
+                }
+                if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.divs(c,b,a); return c }; // b is ndarray
+            }
+            if(a instanceof cx){ // a is complex
+                if (b instanceof Array){return b.map(x=>a.div(x))}; // b is numeric or complex array 
+                return a.div(b); // b is number or complex
+                // no support a is complex and b is ndarray 
+            }
+            if(a instanceof Array){  // a is an array
+                if(typeof(a[0])=="number"){ // a is a number array
+                    if(typeof(b)=="number"){return a.map(x=>x/b);} // b is a number
+                    if(b instanceof cx){return a.map(x=>b.inv().mul(x));} // b is complex
+                    if(b instanceof Array) { 
+                        if(typeof(b[0])=="number"){return a.map((x,i)=>x/b[i])};
+                        if (b[0] instanceof cx) {return b.map((x,i)=>x.inv().mul(a[i]));}
+                    }
+                }
+                if(a[0] instanceof cx){ // a is a complex array
+                    if(b instanceof Array) {return a.map((x,i)=>x.div(b[i])); } // b is  array
+                    return a.map(x=>x.mul(b)); //  b is number or complex
+                }
+                if(a[0] instanceof Array){ // a is a matrix
+                    if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij/b));} // b is a number
+                    if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>new cx(Aij,0).div(b)))} // b is complex
+                    if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                        console.error("Matrix division is not possible"); 
+                        return []; 
+                    }
+                }        
+            }
+            if(a.hasOwnProperty("stride")){ // a is an ndarray
+                if(typeof(b)=="number"){c=pool.ones(a.shape); ops.divs(c,a,b); return c;} // b is number
+                if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,(b.inv()).re);ops.muls(c.im,a,(b.inv()).im); return c;} // b is complex
+                if(b instanceof Array){
+                    if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.div(c,a,new ndarray(b)); return c;} // b is array
+                    if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>(x.inv()).re)),im:new ndarray(b.map(x=>(x.inv()).im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
+                }                       // careful with the direct assignment of imaginary part of b to c.im
+                if(b.hasOwnProperty("stride")){ 
+                    if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
+                    c=pool.ones(a.shape);ops.div(c,a,b); return c;
+                }
+            }
+            console.error("universal div has not been implemented for this use case");
+            return "bulb";
+            
+        }
+        
+        
+        // UNIVERSAL POW
+        var pow=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+            if(typeof(a)=="number"){ // a is number
+                if (typeof(b)=="number"){return a**b}; //b is number
+                if (b instanceof cx){return (new cx(a,0)).pow(b)}; // b is complex
+                if (b instanceof Array){ 
+                    if(typeof(b[0])=="number"){return b.map(x=>a**x)}; // b is number array
+                    if(b[0] instanceof cx){ return b.map(x=>(new cx(a,0)).pow(x));}; // b is complex array
+                    if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a**bij))} // b is matrix
+                }
+                if (b.hasOwnProperty("stride")){ c=new ndarray(b.data.map(x=>a**x)); return c }; // b is ndarray
+            }
+            if(a instanceof cx){ // a is complex
+                if (b instanceof Array){return b.map(x=>a.pow(x))}; // b is numeric or complex array 
+                return a.pow(b); // b is number or complex
+                // no support a is complex and b is ndarray 
+            }
+            if(a instanceof Array){  // a is an array
+                if(typeof(a[0])=="number"){ // a is a number array
+                    if(typeof(b)=="number"){return a.map(x=>x**b);} // b is a number
+                    if(b instanceof cx){return a.map(x=>(new cx(x,0)).pow(b));} // b is complex
+                    if(b instanceof Array) { 
+                        if(typeof(b[0])=="number"){return a.map((x,i)=>x**b[i])};
+                        if (b[0] instanceof cx) {return a.map((x,i)=>(new cx(x,0)).pow(b[i]));}
+                    }
+                }
+                if(a[0] instanceof cx){ // a is a complex array
+                    if(b instanceof Array) {return a.map((x,i)=>x.pow(b[i])); } // b is  array
+                    return a.map(x=>x.pow(b)); //  b is number or complex
+                }        
+                if(a[0] instanceof Array){ // a is a matrix
+                    if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij**b));} // b is a number
+                    if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>(new cx(Aij,0)).pow(b)))} // b is complex
+                    if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
+                        if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
+                            return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]**b[row][col]))// a and b are matrices then performs dot pow
+                        }
+                        else{ console.error("Matrix dimensions must agree"); return [] }
+                    }
+                }
+            }
+            if(a.hasOwnProperty("stride")){ // a is an ndarray
+                if(typeof(b)=="number"){return new ndarray( a.data.map(x=>x**b) ); } // b is number
+                if(b instanceof cx){
+                    let c={
+                        re: new ndarray(a.data.map(x=>  ((new cx(x,0)).pow(b)).re ) ),
+                        im: new ndarray(a.data.map(x=> ((new cx(x,0)).pow(b)).im ) )
+                    } ;
+                    return c;
+                } // b is complex
+                if(b instanceof Array){
+                    if(typeof(b[0])=="number"){
+                        c=new ndarray(   a.data.map((x,i)=> x**b[i])   ); 
+                        return c;
+                    } // b is array
+                    if(b[0] instanceof cx){
+                        let c={
+                            re:new ndarray(a.data.map((x,i)=> ((new cx(x.re,0)).pow(b[i])).re  )  ),
+                            im:new ndarray(a.data.map((x,i)=> ((new cx(x.re,0)).pow(b[i])).im  )  ),
+                        }; 
+                        return c;
+                    } // b is complex
+                }                       // careful with the direct assignment of imaginary part of b to c.im
+                if(b.hasOwnProperty("stride")){ 
+                    if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree"); return "null"};
+                    return new ndarray(  a.data.map((x,i)=> x**b.data[i])  );
+                } // b is complex
+            }
+            console.error("universal pow has not been implemented for this use case");
+            return "bulb";
+            
+        } 
+        
+        
+        
+        var dotmul = function(A,B){
+            if(A.length==B.length & A[0].length==B[0].length){
+                C=zeros(size(A))
+                for (let row = 0; row < A.length; row++) {
+                    for (let col = 0; col < A[0].length; col++) {
+                        C[row][col]=A[row][col]*B[row][col];
+                        
+                    }
+                    
+                }
+                return C;}
+                console.error('Matrix dimensions do not agree for dot multiplication')
+            }
+            
+            
+            var dotdiv = function(A,B){
+                if(A.length==B.length & A[0].length==B[0].length){
+                    C=zeros(size(A))
+                    for (let row = 0; row < A.length; row++) {
+                        for (let col = 0; col < A[0].length; col++) {
+                            C[row][col]=A[row][col]/B[row][col];
+                            
+                        }
+                        
+                    }
+                    return C;}
+                    console.error('Matrix dimensions do not agree for dot division')
+                }
+                
+                var deepcopy = function(A){
+                    if(A instanceof Array){
+                        let B=[];
+                        for (let index = 0; index < A.length; index++) {
+                            B[index] = deepcopy( A[index]); // recursive copy for all subarrays
+                        }
+                        return B;
+                    }
+                    else{
+                        B=A;
+                        return B;
+                    }
+                }
+                
+                var copy=deepcopy;
+                var disp=display;
+                
+                
+                // LINEAR SOLVE 
+                var linsolve=function(A,b){
+                    b=transpose(b);
+                    x= mldivide(transpose(A),b[0]);
+                    return transpose(x);
+                }
+                
+                
+                
+                // module.exports ={tic, toc,  isfield, size, setdiff, min, max ,find, sort, abs, range,
+                // pool, ones, zeros, display ,ndarray, ops, mldivide ,imshow, array2ndarray, ndarray2array, concatCols, concatRows,
+                // cx, add, sub, mul, div, pow }
+                
+                
+                // MATLAB	JavaScript	Notes http://scijs.net/packages/#scijs/scijs-ndarray-for-matlab-users
+                // ndims(a)	a.dimension	get the number of dimensions of a
+                // numel(a)	a.size	get the number of elements of an arary
+                // size(a)	a.shape	get the size of the array
+                // size(a,n)	a.shape[n-1]	get the number of elements of the n-th dimension of array a
+                // [1 2 3; 4 5 6 ]	ndarray([1,2,3,4,5,6],[2,3])	2×3 matrix literal (using Array type)
+                // ndarray(new Float64Array([1,2,3,4,5,6]),[2,3])	2×3 matrix literal (using 64-bit typed array)	
+                // pack([[1,2,3],[4,5,6]])	2×3 matrix literal from nested array	
+                // a(end)	a.get(a.shape[0]-1)	access last element in the 1×n matrix a
+                // a(2, 5)	a.get(1, 4)	access element in second row, fifth column
+                // a(2, :)	a.pick(1, null)	entire second row of a
+                // a(1:5, :)	a.hi(5, null)	the first five rows of a
+                // a(end-4:end, :)	a.lo(a.shape[0]-5, null)	the last five rows of a
+                // a(1:3, 5:9)	a.hi(3, 9).lo(0, 4)	rows one to three and columns five to nine of a
+                // a([2, 4, 5], [1, 3])		rows 2, 4, and 5 and columns 1 and 3.
+                // a(3:2:21, :)	a.hi(21, null).lo(2, null).step(2, 1)	every other row of a, starting with the third and going to the twenty-first
+                // a(1:2:end, :)	a.step(2, 1)	every other row of a, starting with the first
+                // a(end:-1:1, :) or flipup(a)	a.step(-1, 1)	a with rows in reverse order
+                // a([1:end 1], :)		a with copy of the first rows appended to the end
+                // a.'	a.transpose(1, 0)	transpose of a
+                // a'		conjugate transpose of a
+                // c = a * b	gemm(c, a, b)	matrix multiply
+                // c = a + b	ops.add(c, a, b)	matrix addition
+                // c = a + 2	ops.adds(c, a, 2)	matrix + scalar addition
+                // a += b (not available in MATLAB)	ops.addeq(a, b)	in-place matrix addition
+                // c = a .* b	ops.mul(c, a, b)	element-wise multiply
+                // a = a .* b	ops.muleq(a, b)	element-wise multiply (in-place)
+                // c = a ./ b	ops.div(c, a, b)	element-wise division
+                // a = a ./ b	ops.diveq(a, b)	element-wise division (in-place)
+                // a.^3	ops.pows(a, 3)	element-wise scalar exponentiation
+                // (a>0.5)		matrix whose i,jth element is (a_ij > 0.5)
+                // find(a>0.5)		find the indices where (a > 0.5)
+                // a(:, find(v>0.5))		extract the columns of a where vector v > 0.5
+                // a(a<0.5)=0		a with elements less than 0.5 zeroed out
+                // a .* (a>0.5)		a with elements less than 0.5 zeroed out
+                // a(:) = 3	ops.assigns(a, 3)	set all values to the same scalar value
+                // y = x	y =pool.clone(x)	clone by value
+                // y = x(2, :)	y = x.pick(1, null)	slices are by reference
+                // 1:10		create an increasing vector
+                // 0:9		create an increasing vector
+                // zeros(3, 4)	pool.zeros([3, 4], 'float64')	3×4 rand-2 array full of 64-bit floating point zeros
+                // zeros(3, 4, 5)	pool.zeros([3, 4, 5], 'float64')	3×4×5 rank-3 array full of 64-bit floating point zeros
+                // ones(3, 4)	pool.ones([3, 4], 'float64')	3×4 rank-2 array full of 64-bit floating point ones
+                // eye(3)	pool.eye([3, 3], 'float64')	3×3 identity matrix with 64-bit floating point precision
+                // diag(a)	diag(a)	vector of diagonal elements of a (returns diagonal by reference)
+                // diag(a, 0)	b =pool.zeros(a.shape)
+                // ops.assign(diag(b),diag(a))	square diagonal matrix whose nonzero values are the elements of a
+                // rand(3, 4)	fill(pool.zeros([3, 4]), Math.random)	random 3×4 matrix
+                // linspace(1, 3, 4)	linspace(1, 3, 4)	4 equally spaced samples between 1 and 3, inclusive
+                // [x, y] = meshgrid(0:8, 0:5)		two 2D arrays: one of x values, one of y values
+                // [x, y] = meshgrid([1, 2, 4], [2, 4, 5])		
+                // repmat(a, m, n)	tile(a, [m, n])	create m×n copies of a
+                // [a b]	concatCols([a, b])	concatenate columns of a and b
+                // [a; b]	concatRows([a, b])	concatenate rows of a and b
+                // max(max(a))		maximum element of a
+                // max(a)	ops.max(a)	maximum element in a
+                // norm(v)	ops.norm2(v)	L2 norm of vector v
+                // c = a & b	ops.band(c, a, b)	element-by-element AND operator
+                // c = a	b	ops.bor(c, a, b)	element-by-element OR operator
+                // inv(a)		inverse of square matrix a
+                // pinv(a)		pseudo-inverse of matrix a
+                // rank(a)		rank of matrix a
+                // a\b	lup(a, a, P)
+                // solve(a, a, P, b)	solution of a x = b for x
+                // b/a		solution of x a = b for x
+                // chol(a)	chol(a, L)	cholesky factorization of matrix
+                // [V, D] = eig(a)		eigenvalues and eigenvectors of a
+                // [V, D] = eig(a, b)		eigenvalues and eigenvectors of a, b
+                // [Q, R, P] = qr(a, 0)	qr.factor(A, d)
+                // qr.constructQ(A, Q)	QR decomposition. (Depending on the use, you can likely use Q without constructing explicitly. See documentation.)
+                // [L, U, P] = lu(a)	lup(A, L, P)	LU decomposition
+                // fft(a)	fft(1, ar, ai)	Fourier transform of a. Javascript does not have a complex type so real and imaginary parts must be passed separately.
+                // ifft(a)	fft(-1, ar, ai)	inverse Fourier transform of a
+                // [b, I] = sortrows(a, i)	sort(a)	sort the rows of the matrix
+                // sort(a.transpose(1, 0))	sort the column of the matrix	
+                // regress(y, X)	qr.factor( A, d );
+                // qr.solve( A, d, y );	multilinear regression
+                // decimate(x, q)	resample(output, input)	downsample with low-pass filtering (resample downsamples by a factor of two)
+                // unique		
+                // squeeze(a)	squeeze(a)	Remove singleton dimensions of a
+                
+                
+                
