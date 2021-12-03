@@ -1,4 +1,4 @@
-# A JAVASCRIPT MINI-LIBRARY FOR MATLAB USERS
+# A Javascript mini-library for MATLAB users
 
 When I started to convert some of my Matlab projects to Javascript to deploy in the web, I could not find any easy to use library. Although many excellent libraries exist (ndarray, scijs), they are not very ready to use. I had to write my own functions to ease the process and I thought I should share it with others. This mini-library gives you some essential array and matrix functions for easing code convertion from Matlab or Octave to Javascript, or deploy your own scientific computing projects with less pain. 
 
@@ -40,6 +40,8 @@ The webpage also contains a cheatsheet.
 ## LICENSE
 
 MIT License 2.0 
+
 (Free to use without limitations and no guarantee is provided.)
+
 Vivek Thaminni Ramamoorthy
 
