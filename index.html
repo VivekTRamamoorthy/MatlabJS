@@ -33,7 +33,7 @@
     <div class="">
         <h2>Examples:</h2>
         The library is already loaded in this webpage. <br>
-        Open the browser console using <code>ctrl<code> + <code>shift<code> + <code>i<code> in Windows or <code>cmd<code> + <code>shift<code> + <code>i<code> in Mac.<br>
+        Open the browser console using <code>right-click</code>+<code>inspect</code>.<br>
         Try out these examples: <br>
         <pre>
             <code>
@@ -51,6 +51,13 @@
     
     <div class="">
         <h2>How to use this in your project:</h2>
+        <h3>CDN:</h3>
+        Include the following script tag in your html head.
+        <pre><code>
+
+            &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"&gt;&lt;/script&gt;
+        </code></pre>
+        <h3>File:</h3>
         Add <code>Matlab.js</code> file  from <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a> to your project and 
         and include it using a script tag.
         <pre>
@@ -79,7 +86,7 @@
             <tr>
                 <th>Matlab function</th>
                 <th>MatlabJS equivalent</th> 
-                <th>Example</th> 
+                <th>Example usage</th> 
                 <th>Description</th> 
             </tr>
             <tr>
@@ -120,7 +127,7 @@
                     disp(A)<br>
                     display(B)<br>
                 </td>
-                <td>Produces linearly spaced array. </td>
+                <td>Displays matrices and arrays in console </td>
             </tr>
             <tr>
                 <td>isfield</td>
@@ -166,8 +173,8 @@
             <tr>
                 <td>sort</td>
                 <td>sort()</td>
-                <td>A=[3,2,1,5,7]<br>sort(A) // A=[1,2,3,5,7] <br>[sorted,indices]=sort(A) // get indices <br> // Caution: This also sorts A in-place</td>
-                <td>Sorts ascending</td>
+                <td>A=[3,2,1,5,7];<br>[sortedA,indices]=sort(A); <br> disp(sortedA); // [1,2,3,5,7] <br> disp(indices); // [3,2,1,4,5] </td>
+                <td>Sorts numbers ascending</td>
             </tr>
             <tr>
                 <td>sum</td>
@@ -279,7 +286,7 @@
                     disp(eye(4)) // 4x4 matrix of 1s<br>
                     disp(eye(10)) // column of 1s
                 </td>
-                <td>Matrix of ones</td>
+                <td>Generates identity matrices</td>
             </tr>
             <tr>
                 <td>zeros</td>
@@ -288,7 +295,7 @@
                     disp(zeros(3,2))<br> // 3x2 matrix of 0s<br>
                     disp(zeros(3,1))<br> // column of 0s
                 </td>
-                <td>Matrix of zeros</td>
+                <td>Generates zero matrices</td>
             </tr>
             <tr>
                 <td>rand</td>
@@ -298,7 +305,24 @@
                     disp(rand(3,2))<br> // 3x2  random <br>
                     disp(rand(3,1))<br> // column of random 
                 </td>
-                <td>Matrix of ones</td>
+                <td>Generates matrix of random numbers in [0,1]</td>
+            </tr>
+            <tr>
+                <td>randi</td>
+                <td>randi(N,rows,cols)</td>
+                <td>disp(randi(5))<br>// random integer in {1,2...5} <br>
+                    disp(randi(5,3))<br>//3x3 matrix of random integers in {1,2...5} <br>
+                    disp(randi(5,3,2))<br> // 3x2  random in {1,2...5}<br>
+                </td>
+                <td>Generate random integer matrices</td>
+            </tr>
+            <tr>
+                <td>diag</td>
+                <td>diag(D)</td>
+                <td>
+                    disp(diag([5,3,2]))<br> // returns: <br> [ [5, 0, 0],<br>   [0, 3, 0],<br>   [0, 0, 2] ]
+                </td>
+                <td>Diagonal matrix from an array</td>
             </tr>
             <tr>
                 <td>reshape</td>
@@ -306,16 +330,53 @@
                 <td>reshape([1,2,3,4,5,6],2,3)  <br>
                     // [1,2,3; 4,5,6] 
                 </td>
-                <td>Reshape a vec or matrix</td>
+                <td>Reshape a vector or a matrix</td>
             </tr>
             <tr>
-                <td>A(1:3,1:3)</td>
-                <td>get(A,[1,2,3],[1,2,3])</td>
-                <td>A=rand(10,10)  <br>
+                <td>A(rowrange,colrange)<br>A(1:3,1:3)<br>A(10,10)<br>A(end,end-1)</td>
+                <td>get(A,rowrange,colrange)<br>get(A,[1,2,3],[1,2,3])<br>get(A,10,10)<br>get(A,0,-1)</td>
+                <td>A=rand(10,10);disp(A)  <br>
                     B=get(A,[1,2,3],[2,5,7])<br>
-                    disp(B)
+                    disp(B)<br>
+                    B=get(A,':',[1,2,3])<br>
+                    disp(B) // gets all rows & first 3 cols
                 </td>
                 <td>Get a submatrix</td>
+            </tr>
+            <tr>
+                <td>A(rowrange,colrange)=B<br>
+                    A(1:3,1:3)=B<br>
+                    A(end-5:end,:)=2<br>
+                    a(arrayrange)=b<br>
+                    a(1:3)=[10 20 30]<br>
+                    a(1)=10<br>
+                    a(end-2)=8<br><br>
+                    <br><br><br><br>
+                </td>
+                <td>set(A,rowrange,colrange,B)<br>
+                    set(A,[1,2,3],[1,2,3],B)<br>
+                    set(A,range(-5,0),':',2) <br>
+                    set(a,arrayrange,b)<br>
+                    set(a,[1,2,3],[10,20,30])<br>
+                    set(a,1,10)<br>
+                    set(a,-2,8)<br><br>
+                    B can be a matrix or a number<br>
+                    rrange and crange can be number or arrays or ':'
+                </td>
+                <td>Matrix example: <br>
+                    A=rand(5,5)  <br>
+                    set(A,range(1,3),range(1,3),0)<br>
+                    disp(A) <br> // sets first 3 rows and cols to 0
+                    set(A,range(1,3),range(1,3),randi(2,3,3))<br>
+                    disp(A) <br> // sets first 3 rows and cols to random in {1,2} <br><br>
+                    Array example:<br>
+                    A=[1,2,3,4,5,6]<br>
+                    set(A,2,10)// A(2)=10 :: sets 2nd elem to 10 <br>
+                    set(A,0,100) // A(end)=20 :: sets last elem to 100 <br>
+                    set(A,-1,20) // A(end-1)=20 :: sets end-1 (last but one) elem to 20 <br>
+                    disp(A) // [1, 10, 3, 4, 20, 100]
+                </td>
+                <td>Set a submatrix or a subarray</td>
             </tr>
             <tr>
                 <td>repmat</td>
@@ -391,9 +452,9 @@
                     disp(A)<br>
                     disp(C)
                 </td>
-                <td>IMPORTANT NOTE: <br>
+                <td>
                     For array and matrices<br>
-                    B=A will not copy A<br>
+                    B=A;  will not actually copy A<br>
                     but only creates a reference <br>
                     Use B=copy(A) instead.
                 </td>
@@ -409,7 +470,7 @@
                     disp(add(ones(4),rand(4)))<br>
                 </td>
                 <td>Universal add <br>
-                    For <br>
+                    for <br>
                     number + number<br>
                     array + number<br>
                     array + array <br>
@@ -427,7 +488,7 @@
                     disp(sub(ones(4),rand(4)))<br>
                 </td>
                 <td>Universal subtract <br>
-                    For <br>
+                    for <br>
                     number - number<br>
                     array - number<br>
                     array - array <br>
@@ -449,7 +510,7 @@
                     disp(mul(rand(1,10),rand(10,1)))<br>
                 </td>
                 <td>Universal multiply <br>
-                    For <br>
+                    for <br>
                     number * number<br>
                     array * number<br>
                     array * array <br>
@@ -467,7 +528,7 @@
                     disp(dotmul(eye(4),B))<br>
                 </td>
                 <td>Elementwise multiply <br>
-                    For <br>
+                    for <br>
                     number .* number<br>
                     array .* array<br>
                     matrix .* matrix
@@ -484,7 +545,7 @@
                     disp(div(ones(4),rand(4)))<br>
                 </td>
                 <td>Universal divide <br>
-                    For <br>
+                    for <br>
                     number /  number<br>
                     array /  number<br>
                     array  / array <br>
@@ -502,7 +563,7 @@
                     disp(dotdiv(eye(4),rand(4)))<br>
                 </td>
                 <td>Elementwise divide <br>
-                    For <br>
+                    for <br>
                     number ./ number<br>
                     array ./ array <br>
                     matrix ./ matrix
@@ -520,7 +581,7 @@
                     disp(pow(eye(4),rand(4)))<br>
                 </td>
                 <td>Universal power <br>
-                    For <br>
+                    for <br>
                     number ^ number<br>
                     array ^ number<br>
                     array ^ array <br>

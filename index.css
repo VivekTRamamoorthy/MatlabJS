@@ -1,4 +1,7 @@
-
+*{
+  margin:0;
+  padding:0;
+}
 
 body{
   margin: 0%;
@@ -71,12 +74,12 @@ pre{
 .header{
   /* background-image: url(http://cdn.eso.org/images/screen/eso0932a.jpg) ; */
   
-  margin:0%;
+  margin:0 0;
+  margin-right:0;
   height:10%;
-  width:100%;
   top:0px;
-  overflow:auto;
-  background-color: #222;
+  width:100%;
+  background-color: #333;
   color: white;
   font-size: x-large;
   font-weight: bold;
@@ -125,6 +128,11 @@ table, th, td {
   padding:2%;
   overflow:auto;
   background-color:bisque;
+}
+
+table {
+  margin:1px;
+  padding: 1px;
 }
 
 /* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */

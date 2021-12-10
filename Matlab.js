@@ -6,17 +6,18 @@
 // Updated: 2021 November
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
-var clc=function(){console.clear()};
+var clc = function(){console.clear()};
 
 var ticTime;
 
-var tic= function(){
+var tic = function(){
     const d = new Date();
     ticTime=d.getTime();
-    return ticTime;    
+    console.log("Started recording time.")
+   return 0;
 }
 
-var toc=function(){
+var toc = function(){
     const d = new Date();
     var tocTime = d.getTime();
     const elTime=(tocTime-ticTime)/1000;
@@ -24,14 +25,14 @@ var toc=function(){
     return elTime;
 }
 
-var isfield=function(obj,fieldstr){return obj.hasOwnProperty(fieldstr)}
+var isfield = function(obj,fieldstr){return obj.hasOwnProperty(fieldstr)}
 
-var linspace=function(a,b,n=100){
+var linspace = function(a,b,n=100){
     let step= (b-a)/(n-1)
     return (new Array(n)).fill(0).map((x,i)=>a+i*step);
 }
 
-var size=function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
+var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
     if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
     if(a instanceof Array){
         if(dim==0){
@@ -45,7 +46,7 @@ var size=function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,
     return [];
 }
 
-var length=function(a){
+var length = function(a){
     return a.length;
 }
 
@@ -60,18 +61,18 @@ var find = function(array){
 }
 
 
-var sort=function(array){ // index starts from 1 // warning: also sorts the array in place
+var sort = function(array){ // index starts from 1 // warning: also sorts the array in place
     let indices = new Array(array.length);
     for (var i = 0; i < array.length; ++i) {indices[i] = i;}
     indices=indices.sort(function (a, b) { return array[a] < array[b] ? -1 : array[a] > array[b] ? 1 : 0; });
     indices=indices.map(x=>x+1);
-    let sortedarray=array.sort((a,b)=>a-b) ;    
+    let sortedarray=[...array].sort((a,b)=>a-b) ;    
     return [sortedarray, indices];
 }
 
 
 
-var sum=function(A,dim=1){ // 1 is column sum and 2 is row sum
+var sum = function(A,dim=1){ // 1 is column sum and 2 is row sum
     let s=0;
     if(typeof(A[0])=="number"){
         for (let elem = 0; elem < A.length; elem++) {
@@ -100,7 +101,7 @@ var sum=function(A,dim=1){ // 1 is column sum and 2 is row sum
     }
 }
 
-var abs=function(A){
+var abs = function(A){
     if(typeof(A)=="number"){return Math.abs(A);} // A is a number
     if(typeof(A[0])=="number"){return A.map(x=>Math.abs(x));} // A is an array
     if(typeof(A[0][0])=="number"){return A.map(subarr=>subarr.map(x=>Math.abs(x)));  } //  A is a matrix
@@ -108,7 +109,7 @@ var abs=function(A){
     return [];
 }
 
-var sqrt=function(A){
+var sqrt = function(A){
     if(typeof(A)=="number"){return Math.sqrt(A);} // A is a number
     if(typeof(A[0])=="number"){return A.map(x=>Math.sqrt(x));} // A is an array
     if(typeof(A[0][0])=="number"){return A.map(subarr=>subarr.map(x=>Math.sqrt(x)));  } //  A is a matrix
@@ -116,7 +117,7 @@ var sqrt=function(A){
     return [];
 }
 
-var setdiff=function(arr1,arr2){
+var setdiff = function(arr1,arr2){
     let result=[arr1[0]], indices=[1],donotinclude, current;
     for (let i = 1; i < arr1.length; i++) {
         current=arr1[i];
@@ -139,7 +140,7 @@ var setdiff=function(arr1,arr2){
     return result
 }
 
-var min=function(A,B=[],dim=1){ 
+var min = function(A,B=[],dim=1){ 
     if(typeof(A)=="number"){ // A is a number
         if(typeof(B)=="number"){return Math.min(A,B);}
         if(typeof(B[0])=="number"){return B.map(x=>Math.min(x,A));}
@@ -204,7 +205,7 @@ var min=function(A,B=[],dim=1){
     return [];
 }
 
-var max=function(A,B=[],dim=1){ 
+var max = function(A,B=[],dim=1){ 
     if(typeof(A)=="number"){ // A is a number
         if(typeof(B)=="number"){return Math.max(A,B);}
         if(typeof(B[0])=="number"){return B.map(x=>Math.max(x,A));}
@@ -268,7 +269,7 @@ var max=function(A,B=[],dim=1){
     return [];
 }
 
-var range=function(a,b=NaN,c=NaN){// 1:5 range(1,5) or  1:0.1:5 range(1,0.1,5) Matlab's colon and double colon
+var range = function(a,b=NaN,c=NaN){// 1:5 range(1,5) or  1:0.1:5 range(1,0.1,5) Matlab's colon and double colon
     let n,step;
     if(!isNaN(c)){step=b;n=Math.floor((c-a)/b)+1} // three inputs
     else if(!isNaN(b)) {step=1;n=Math.max(Math.round((b-a)/step)+1,0);} //  two inputs
@@ -277,7 +278,7 @@ var range=function(a,b=NaN,c=NaN){// 1:5 range(1,5) or  1:0.1:5 range(1,0.1,5) M
     return (new Array(n)).fill(0).map((x,i)=>a+i*step);
 }
 
-var concatRows=function(A,B)
+var concatRows = function(A,B)
 {
     if(A.length==B.length)
     {
@@ -295,7 +296,7 @@ var concatRows=function(A,B)
     }
 }
 
-var concatCols=function(A,B){
+var concatCols = function(A,B){
     
     if(A[0].length==B[0].length){
         
@@ -307,7 +308,7 @@ var concatCols=function(A,B){
 }
 
 
-var transpose=function(A){
+var transpose = function(A){
     if(typeof(A[0])=="number"){
         B=A.map(x=>[x]);
         return B;
@@ -322,7 +323,7 @@ var transpose=function(A){
     return B;
 }
 
-var ones=function(a,b=0){
+var ones = function(a,b=0){
     if(b==0){b=a;};
     let rows,cols;
     if(typeof(a)== "object"){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
@@ -330,13 +331,13 @@ var ones=function(a,b=0){
     return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>1));
 }
 
-var eye=function(a){
+var eye = function(a){
     let res = new Array(a).fill().map(x=>new Array(a).fill(0))  ;
     return res.map((row,i)=>row.map((x,j)=> (i==j)+0)); // the +0 is  to make true =1 and false=0
     
 }
 
-var zeros=function(a,b=0){
+var zeros = function(a,b=0){
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
@@ -344,7 +345,7 @@ var zeros=function(a,b=0){
     return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>0));
 }
 
-var rand=function(a=0,b=0){
+var rand = function(a=0,b=0){
     if(a==0){return Math.random();}
     if(b==0){b=a;};
     let rows,cols;
@@ -353,7 +354,7 @@ var rand=function(a=0,b=0){
     return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.random()));
 }
 
-var randi=function(n,a=0,b=0){
+var randi = function(n,a=0,b=0){
     if(a==0){return Math.floor(Math.random()*n);}
     if(b==0){b=a;};
     let rows,cols;
@@ -363,7 +364,7 @@ var randi=function(n,a=0,b=0){
 }
 
 
-var randn_bm=function() {
+var randn_bm = function() {
     // Standard Normal variate using Box-Muller transform.
     var u = 0, v = 0;
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
@@ -371,7 +372,7 @@ var randn_bm=function() {
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
 }
 
-var randn=function(a=0,b=0){
+var randn = function(a=0,b=0){
     if(a==0){return randn_bm();}
     if(b==0){b=a;};
     let rows,cols;
@@ -380,17 +381,34 @@ var randn=function(a=0,b=0){
     return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>randn_bm()));
 }
 
+var diag = function(D){
+    if (typeof(D)=="number") {return D}
+    if (D instanceof Array) {
+        let diagonalMatrix=[];
+        for (let row = 0; row < D.length; row++) {
+            diagonalMatrix[row]=[];
+            for (let col = 0; col < D.length; col++) {
+                if (row==col){
+                    diagonalMatrix[row][col]=D[row];
+                }
+                else{
+                    diagonalMatrix[row][col]=0;
+                }
+            }
+        }
+        return diagonalMatrix;
+    }
+}
 
 
-
-var display=function(a){
+var display = function(a){
     if(typeof(a)=="number"){ // a is number
         console.log(a)
-        return 0;
+        return;
     }
     if(a instanceof cx){ // a is complex
         console.log("ans:\n"+a.re+" + 1i*"+a.im); 
-        return 0;
+        return;
     }
     if(a instanceof Array){  // a is an array
         if(typeof(a[0])=="number"){ // a is a number array
@@ -398,14 +416,14 @@ var display=function(a){
             for(let i=0;i<a.length;i++){displayText=displayText.concat("  "+ a[i]+"  ")}
             displayText=displayText.concat(" ]");
             console.log(displayText);
-            return 0;
+            return;
         }
         if(a[0] instanceof cx){ // a is a complex array
             let displayText="\n [ ";
             for(let i=0;i<a.length;i++){displayText=displayText.concat("  "+a[i].re+" + 1i*"+a[i].im+"   ")}
             displayText=displayText.concat(" ]")
             console.log(displayText);
-            return 0;
+            return;
         }        
         if(a[0] instanceof Array){ // a is a matrix
             let displayText="  \n";
@@ -417,21 +435,21 @@ var display=function(a){
             }
             displayText=displayText.concat("  \n ");
             console.log(displayText);
-            return 0;
+            return;
         }
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
         var show=require("ndarray-show");
         let result=show(a);
         console.log(result);
-        return result;
+        return;
     }
-    console.error("display cannot print this data");
-    return 0;
+    console.log({a});
+    
 }
 
 
-var reshape=function(vec,rows,cols){
+var reshape = function(vec,rows,cols){
     if (vec.length==rows*cols && typeof(vec[0])=="number"){
         let mat=[];
         for(let row=0;row<rows;row++){
@@ -461,11 +479,15 @@ var reshape=function(vec,rows,cols){
     return [];
 }
 
-var get=function(mat,rrange,crange=':'){
+var get = function(mat,rrange,crange=':'){
     // array indices in rrange and crange are assumed to start from 1 like in matlab
     // B=A(:,[5,6]) ; B=get(A,':',[5,6]);
     // If mat is an array, converting to a matrix.
     if(typeof(mat[0])=="number"){
+        if (!(rrange==':' || typeof(rrange)=="number" || rrange instanceof Array)){ console.error("Get function: Invalid range, range should be ':' or number or array"); return}
+        if (rrange==':'){ rrange=range(1,mat.length);   }
+        if(typeof(rrange)=="number"){   rrange=[rrange];   } 
+        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); // for negative values like -3 to be considered end-3
         res=new Array(rrange.length).fill(0);
         for (let index = 0; index < rrange.length; index++) {
             res[index] = mat[rrange[index]-1]; // -1 since rrange array index starts from 1
@@ -474,6 +496,8 @@ var get=function(mat,rrange,crange=':'){
     }
     // If mat is a matrix
     if(typeof(mat[0][0])=="number"){
+        if (!(rrange==':' || typeof(rrange)=="number" || rrange instanceof Array)){ console.error("Get function: Invalid row range, should be ':' or number or array"); return}
+        if (!(crange==':' || typeof(crange)=="number" || crange instanceof Array)){ console.error("Get function: Invalid col range, should be ':' or number or array"); return}
         // Dealing with all elements
         if (rrange==':'){ rrange=range(1,mat.length);   }
         if (crange==':'){ crange=range(1,mat[0].length);}
@@ -483,9 +507,7 @@ var get=function(mat,rrange,crange=':'){
         // Correcting negative indices
         rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); // for negative values like -3 to be considered end-3
         crange=crange.map((x,i)=>{if(x<1){return mat[0].length+x;} return x}); // x-1 minus one is to use array index starting from 1
-        
         let res=zeros(rrange.length,crange.length);
-        
         for(let ri=0;ri<rrange.length;ri++){
             for(let ci=0;ci<crange.length; ci++){
                 res[ri][ci]=mat[rrange[ri]-1][crange[ci]-1]; // -1 is to use array index starting from 1
@@ -496,9 +518,24 @@ var get=function(mat,rrange,crange=':'){
     console.error("get function not defined for this input type")
 }
 
-var set=function(mat,rrange=':',crange=':',submat){
-    // if mat is an array
+var set = function(mat,rrange=':',crange=':',submat){
+    // if mat is an array then rrange is the range and crange is the input
+    // array indices in rrange and crange are assumed to start from 1 like in matlab
     if(typeof(mat[0])=="number"){
+        // range sanity check
+        if (!(rrange==':' || typeof(rrange)=="number" || rrange instanceof Array)){ console.error("Get function: Invalid range, range should be ':' or number or array"); return}
+        // dealing with all elements ':'
+        if (rrange==':'){ rrange=range(1,rows);   }
+        // dealing with number input
+        if (typeof(rrange)=="number"){ rrange= [rrange] }
+        // dealing with negative numbers : for negative values like -3 to be considered end-3
+        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); 
+        if (typeof(crange)=="number"){ // if the input is a number
+            for (let index = 0; index < rrange.length; index++) {
+                mat[rrange[index]-1]=crange; // here crange is the number
+            }
+            return mat;
+        }
         for (let index = 0; index < rrange.length; index++) {
             mat[rrange[index]-1]=crange[index]; // here crange is the sub array
             return mat;
@@ -508,13 +545,30 @@ var set=function(mat,rrange=':',crange=':',submat){
     if(typeof(mat[0][0])=="number"){
         let rows=mat.length;
         let cols=mat[0].length;
+        // range sanity check
+        if (!(rrange==':' || typeof(rrange)=="number" || rrange instanceof Array)){ console.error("Get function: Invalid row range, should be ':' or number or array"); return}
+        if (!(crange==':' || typeof(crange)=="number" || crange instanceof Array)){ console.error("Get function: Invalid col range, should be ':' or number or array"); return}
+        // Dealing with all elements colon ':'
         if (rrange==':'){ rrange=range(1,rows);   }
         if (crange==':'){ crange=range(1,cols);   }
-        // array indices in rrange and crange are assumed to start from 1 like in matlab
-        if(typeof(rrange)=="number"){   rrange=[rrange];   } // for input of type get(mat,1,2). should be get(mat,[1],[2])
+        // for input of type get(mat,1,2) to be get(mat,[1],[2])
+        if(typeof(rrange)=="number"){   rrange=[rrange];   } 
         if(typeof(crange)=="number"){   crange=[crange];   } 
-        rrange=rrange.map((x,i)=>{if(0<=x && x<=rows){ return x};if(x<1 && -rows<=x){return rows+x;}; console.error("get:Index exceeds array bounds"); }); // for negative values like -3 to be considered end-3
-        crange=crange.map((x,i)=>{if(0<=x && x<=cols){ return x};if(x<1 && -cols<=y){return cols+x;}; console.error("get:Index exceeds array bounds"); }); // x-1 minus one is to use array index starting from 1
+        // for negative values like -3 to be considered end-3
+        rrange=rrange.map((x,i)=>{if(0<=x && x<=rows){ return x};if(x<1 && -rows<=x){return rows+x;}; console.error("get:Index exceeds matrix bounds"); }); 
+        crange=crange.map((x,i)=>{if(0<=x && x<=cols){ return x};if(x<1 && -cols<=y){return cols+x;}; console.error("get:Index exceeds matrix bounds"); }); 
+        if (typeof(submat)=="number"){
+            for(let ri=0;ri<rrange.length;ri++){
+                for(let ci=0;ci<crange.length; ci++){
+                    mat[rrange[ri]-1][crange[ci]-1]=submat; // -1 is to use array index starting from 1
+                }
+            }
+            return mat;
+        }
+        // sanity check: submatrix
+        if(size(submat,1)!=rrange.length || size(submat,2) !=crange.length){
+            console.error("Size of submatrix to be set does agree with input matrix")
+        }
         for(let ri=0;ri<rrange.length;ri++){
             for(let ci=0;ci<crange.length; ci++){
                 mat[rrange[ri]-1][crange[ci]-1]=submat[ri][ci]; // -1 is to use array index starting from 1
@@ -522,8 +576,8 @@ var set=function(mat,rrange=':',crange=':',submat){
         }
         return mat;
     }
-    console.error("get:First argument must either be an array or a matrix");
-    return null;
+    console.error("Error using get function: First argument must either be an array or a matrix");
+    return;
 }
 
 var repmat= function(mat,rows,cols){
@@ -560,14 +614,14 @@ var kron= function(X,Y){ // Kronecker tensor product
 
 
 
-var union=function(A,B){
+var union = function(A,B){
     let  C=A.concat(B);
     C=C.sort((a,b)=>a-b);
     return unique(C);    
 }
 
 
-var unique=function(C){
+var unique = function(C){
     let unique=0;
     let UniqueC=[];
     for(let i=0; i<C.length-1; i++){
@@ -580,7 +634,7 @@ var unique=function(C){
     return UniqueC;
 }
 
-var sparse=function(iK,jK,sK,m,n){
+var sparse = function(iK,jK,sK,m,n){
     let K=zeros(m,n);
     if(sK[0] instanceof Array){
         for (let i=0;i<iK.length;i++){
@@ -596,7 +650,7 @@ var sparse=function(iK,jK,sK,m,n){
     }
 }
 
-var colon=function(K){
+var colon = function(K){
     let p=0,row=0,col=0;
     let Kcolon=zeros(K.length*K[0].length,1);
     for (let i=0;i<Kcolon.length;i++){
@@ -622,40 +676,40 @@ class cx {
         this.re=a;
         this.im=b;
     }
-    add=function(a){
+    add = function(a){
         if(a instanceof Number){a=new cx(a);}
         r= new cx(0,0);
         r.re=this.re+a.re;
         r.im=this.im+a.im;
         return r;
     }
-    sub=function(a){
+    sub = function(a){
         if(a instanceof Number){a=new cx(a);}
         r= new cx(0,0);
         r.re=this.re-a.re;
         r.im=this.im-a.im;
         return r;
     }
-    mul=function(a){
+    mul = function(a){
         if(a instanceof Number){a=new cx(a);}
         r= new cx(0,0);
         r.re=this.re*a.re-this.im*a.im;
         r.im=this.re*a.im+this.im*a.re;
         return r;
     }
-    div=function(a){
+    div = function(a){
         if(a instanceof Number){a=new cx(a);}
         r= new cx(0,0);
         r=r.mul(r.conj())
         return r;
     }
-    conj=function(){
+    conj = function(){
         r=new cx(0,0);
         r.re=this.re;
         r.im=-this.im;
         return r;
     }
-    abs=function(){
+    abs = function(){
         return Math.sqrt(this.re**2+this.im**2)
         
     }
@@ -665,7 +719,7 @@ class cx {
 
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW
 
-var add=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+var add = function(a,b){ // universal add function, not fully supported for ndarray vs complex
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a+b}; //b is number
         if (b instanceof cx){return b.add(a)}; // b is complex
@@ -726,7 +780,7 @@ var add=function(a,b){ // universal add function, not fully supported for ndarra
 
 
 // UNIVERSAL SUBTRACT 
-var sub=function(a,b){ 
+var sub = function(a,b){ 
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a-b}; //b is number
         if (b instanceof cx){return b.sub(a)}; // b is complex
@@ -785,7 +839,7 @@ var sub=function(a,b){
 
 // UNIVERSAL MULTIPLICATION 
 
-var mul=function(a,b){ 
+var mul = function(a,b){ 
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a*b}; //b is number
         if (b instanceof cx){return b.mul(a)}; // b is complex
@@ -855,7 +909,7 @@ var mul=function(a,b){
 
 // UNIVERSAL DIVISION
 
-var div=function(a,b){ 
+var div = function(a,b){ 
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a*b}; //b is number
         if (b instanceof cx){return b.div(a)}; // b is complex
@@ -912,7 +966,7 @@ var div=function(a,b){
 
 // UNIVERSAL POW
 
-var pow=function(a,b){ // universal add function, not fully supported for ndarray vs complex
+var pow = function(a,b){ // universal add function, not fully supported for ndarray vs complex
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a**b}; //b is number
         if (b instanceof cx){return (new cx(a,0)).pow(b)}; // b is complex
@@ -1036,7 +1090,7 @@ var disp=display;
 
 
 // LINEAR SOLVE 
-var linsolve=function(A,b){
+var linsolve = function(A,b){
     b=transpose(b);
     x= mldivide(transpose(A),b[0]);
     return transpose(x);
