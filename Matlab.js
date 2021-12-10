@@ -6,14 +6,7 @@
 // Updated: 2021 November
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
-
-var ndarrayToggle=0; // doesn't use ndarray functions for basic operations such as zeros, ones etc
-var complexToggle=0; // doesn't use complex interpretations
-
-var help={};
-
 var clc=function(){console.clear()};
-var help={};
 
 var ticTime;
 
@@ -669,18 +662,6 @@ class cx {
     
 }
 
-if(ndarrayToggle==1 &complexToggle==1){
-    var pool=require('ndarray-scratch');
-    var ndarray = require('ndarray');
-    var ops = require('ndarray-ops');
-    var mldivide = require('ndarray-linear-solve');
-    var imshow = require("ndarray-imshow");
-    var array2ndarray=require("ndarray-pack");
-    var ndarray2array=require("ndarray-unpack");
-    var concatCols = require("ndarray-concat-cols");
-    var concatRows = require("ndarray-concat-rows");
-}
-
 
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW
 
@@ -929,8 +910,8 @@ var div=function(a,b){
     
 }
 
-
 // UNIVERSAL POW
+
 var pow=function(a,b){ // universal add function, not fully supported for ndarray vs complex
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a**b}; //b is number
@@ -992,7 +973,7 @@ var pow=function(a,b){ // universal add function, not fully supported for ndarra
                 }; 
                 return c;
             } // b is complex
-        }                       // careful with the direct assignment of imaginary part of b to c.im
+        }   // careful with the direct assignment of imaginary part of b to c.im
         if(b.hasOwnProperty("stride")){ 
             if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree"); return "null"};
             return new ndarray(  a.data.map((x,i)=> x**b.data[i])  );
