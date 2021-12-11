@@ -72,15 +72,25 @@ var sort = function(array){ // index starts from 1 // warning: also sorts the ar
 
 
 
-var sum = function(A,dim=1){ // 1 is column sum and 2 is row sum
+var sum = function(A,dim=0){ // 1 is column sum and 2 is row sum
     let s=0;
     if(typeof(A[0])=="number"){
         for (let elem = 0; elem < A.length; elem++) {
             s+=A[elem];
         }
         return s;
-    }else{ // A is an array
-        if(dim==1){ // column sum
+    }else{ 
+        if(dim==0){ // if A is a row vector or a column vector
+            if(size(A,1)==1){ return sum(A[0])}
+            if(size(A,2)==1){ 
+                for (let elem = 0; elem < A.length; elem++) {
+                    s+=A[elem][0];
+                }
+                return s;
+            }
+        }
+        // A is a matrix
+        if(dim==1 || dim ==0){ // column sum
             let s=zeros(1,A[0].length);
             for (let col = 0; col < A[0].length; col++) {
                 for (let row = 0; row < A.length; row++) {
@@ -100,6 +110,14 @@ var sum = function(A,dim=1){ // 1 is column sum and 2 is row sum
         }
     }
 }
+
+var norm = function(V,p=2){
+    if(typeof(V)=="number"){return V}
+    if(size(V,1)==1 || size(V,2)==1){
+      return pow(sum(pow(V,p)),1/p)
+    }
+    console.error("norm is undefined for this input type")
+  }
 
 var abs = function(A){
     if(typeof(A)=="number"){return Math.abs(A);} // A is a number
@@ -309,6 +327,7 @@ var concatCols = function(A,B){
 
 
 var transpose = function(A){
+    let B;
     if(typeof(A[0])=="number"){
         B=A.map(x=>[x]);
         return B;
@@ -360,7 +379,7 @@ var randi = function(n,a=0,b=0){
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.floor(Math.random()*n)));
+    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.ceil(Math.random()*(n-1))));
 }
 
 
@@ -400,6 +419,15 @@ var diag = function(D){
     }
 }
 
+var triu = function(matrix,diagonal=0){
+    let upperTriangularMatrix=deepcopy(matrix);
+    for (let row = 0; row < matrix.length; row++) {
+        for (let col = 0; col < Math.min(row  + diagonal,matrix[0].length); col++) {
+            upperTriangularMatrix[row][col]=0;
+        }
+    }
+    return upperTriangularMatrix;
+}
 
 var display = function(a){
     if(typeof(a)=="number"){ // a is number
@@ -1042,7 +1070,7 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
 
 var dotmul = function(A,B){
     if(A.length==B.length & A[0].length==B[0].length){
-        C=zeros(size(A))
+        let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
             for (let col = 0; col < A[0].length; col++) {
                 C[row][col]=A[row][col]*B[row][col];
@@ -1058,7 +1086,7 @@ var dotmul = function(A,B){
 
 var dotdiv = function(A,B){
     if(A.length==B.length & A[0].length==B[0].length){
-        C=zeros(size(A))
+        let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
             for (let col = 0; col < A[0].length; col++) {
                 C[row][col]=A[row][col]/B[row][col];
@@ -1092,7 +1120,7 @@ var disp=display;
 // LINEAR SOLVE 
 var linsolve = function(A,b){
     b=transpose(b);
-    x= mldivide(transpose(A),b[0]);
+    let x= mldivide(transpose(A),b[0]);
     return transpose(x);
 }
 
