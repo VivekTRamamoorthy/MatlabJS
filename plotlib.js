@@ -120,7 +120,6 @@ const plot = function(x,y,...args) {
         figure.lines=[];
         figure.lines[0]=line;
     }
-    figure.draw()
     if(args!=null){
         args.forEach((argument,index) =>{
             switch (argument) {
@@ -136,12 +135,17 @@ const plot = function(x,y,...args) {
                 case 'yscale':
                     figure.yscale = args[index+1]
                     break;
+                case 'title':
+                    figure.title = args[index+1]
+                    break;
             
                 default:
                     break;
             }
 
         })
+    figure.draw()
+
     }
 
 
@@ -261,30 +265,31 @@ class Figure{
         // x Ticks
         let xspan = xlim[1] - xlim[0];
         let yspan = ylim[1] - ylim[0];
-        let noOfxTicks = Math.round((this.width-2*this.padding)/(5*this.fontSize))
-        let xTicks;
-        if (this.xscale =='linear'){
-            xTicks=range(xlim[0],xspan/noOfxTicks,xlim[1])
-        }else if(this.xscale == 'log'){
+        let noOfxTicks = Math.max(2,Math.round((this.width-2*this.padding)/(5*this.fontSize)))
+        let xTicks=range(xlim[0],xspan/noOfxTicks,xlim[1])
+        if(this.xscale == 'log'){
             xTicks=logspace(xlim[0],xlim[1],noOfxTicks)
         }
         for (let i = 0; i < xTicks.length; i++) {
             let xvalue = xTicks[i];
-            c.moveTo( this.xtoPx(xvalue),this.ytoPx(ylim[0]+.01*yspan )) ;
-            c.lineTo( this.xtoPx(xvalue),this.ytoPx(ylim[0]-.01*yspan ) );
-            c.fillText(xvalue.toPrecision(4), this.xtoPx(xvalue),this.ytoPx(ylim[0]-.01*yspan)+fontSizePx );
+            c.moveTo( this.xtoPx(xvalue),this.ytoPx(ylim[0])+.01*this.height) ;
+            c.lineTo( this.xtoPx(xvalue),this.ytoPx(ylim[0])-.01*this.height );
+            c.fillText(xvalue.toPrecision(4), this.xtoPx(xvalue),this.ytoPx(ylim[0])+.01*this.height+fontSizePx );
             c.stroke();
             
         }
         
         // y Ticks
-        let noOfyTicks = Math.round((this.height-2*this.padding)/(5*this.fontSize))
+        let noOfyTicks = Math.max(2,Math.round((this.height-2*this.padding)/(5*this.fontSize)))
         let yTicks=range(ylim[0],yspan/noOfyTicks,ylim[1])
+        if(this.yscale == 'log'){
+            yTicks=logspace(ylim[0],ylim[1],noOfyTicks)
+        }
         for (let i = 0; i < yTicks.length; i++) {
             let yvalue = yTicks[i];
-            c.moveTo( this.xtoPx(xlim[0]-.01*xspan),this.ytoPx( yvalue)) ;
-            c.lineTo( this.xtoPx(xlim[0]+.01*xspan),this.ytoPx( yvalue) );
-            c.fillText(yvalue.toPrecision(4), this.xtoPx(xlim[0]-.01*xspan)-fontSizePx, this.ytoPx(yvalue),);
+            c.moveTo( this.xtoPx(xlim[0])+.01*this.width,this.ytoPx( yvalue)) ;
+            c.lineTo( this.xtoPx(xlim[0])-.01*this.width,this.ytoPx( yvalue) );
+            c.fillText(yvalue.toPrecision(4), this.xtoPx(xlim[0])-.01*this.width-fontSizePx, this.ytoPx(yvalue),);
             
         }
         c.stroke();
@@ -293,21 +298,19 @@ class Figure{
     xtoPx(xvalue){
         let xlim = this.xlim;
         let paddingPx = this.padding;
-        if(this.xscale == 'linear'){
-            return (xvalue - xlim[0])/(xlim[1]-xlim[0])*(this.width-2*paddingPx)+paddingPx
-        }else if( this.xscale == 'log'){
+        if( this.xscale == 'log'){
             return (Math.log(xvalue) - Math.log(xlim[0]))/(Math.log(xlim[1])-Math.log(xlim[0]))*(this.width-2*paddingPx)+paddingPx
         }
+        return (xvalue - xlim[0])/(xlim[1]-xlim[0])*(this.width-2*paddingPx)+paddingPx
     }
     
     ytoPx(yvalue){
         let ylim = this.ylim;
         let paddingPx = this.padding;
-        if(this.yscale == 'linear'){
-            return this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx)
-        }else if( this.yscale == 'log'){
+        if( this.yscale == 'log'){
             return this.height -((Math.log(yvalue) - Math.log(ylim[0]))/(Math.log(ylim[1])-Math.log(ylim[0]))*(this.height-2*paddingPx)+paddingPx)
         }
+        return this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx)
     }
 
     drawLine(line){
