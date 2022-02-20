@@ -191,10 +191,9 @@ class Figure{
     draw(){
         this.clf()
         this.axisUpdate()
-        this.lines.forEach(line => this.drawLine(line));
         this.drawAxes()
+        this.lines.forEach(line => this.drawLine(line));
     }
-
     axisUpdate(){
         let xLowerLimit = this.xlim[0];
         let xUpperLimit = this.xlim[1];
@@ -263,7 +262,12 @@ class Figure{
         let xspan = xlim[1] - xlim[0];
         let yspan = ylim[1] - ylim[0];
         let noOfxTicks = Math.round((this.width-2*this.padding)/(5*this.fontSize))
-        let xTicks=range(xlim[0],xspan/noOfxTicks,xlim[1])
+        let xTicks;
+        if (this.xscale =='linear'){
+            xTicks=range(xlim[0],xspan/noOfxTicks,xlim[1])
+        }else if(this.xscale == 'log'){
+            xTicks=logspace(xlim[0],xlim[1],noOfxTicks)
+        }
         for (let i = 0; i < xTicks.length; i++) {
             let xvalue = xTicks[i];
             c.moveTo( this.xtoPx(xvalue),this.ytoPx(ylim[0]+.01*yspan )) ;
@@ -289,13 +293,21 @@ class Figure{
     xtoPx(xvalue){
         let xlim = this.xlim;
         let paddingPx = this.padding;
-        return (xvalue - xlim[0])/(xlim[1]-xlim[0])*(this.width-2*paddingPx)+paddingPx;
+        if(this.xscale == 'linear'){
+            return (xvalue - xlim[0])/(xlim[1]-xlim[0])*(this.width-2*paddingPx)+paddingPx
+        }else if( this.xscale == 'log'){
+            return (Math.log(xvalue) - Math.log(xlim[0]))/(Math.log(xlim[1])-Math.log(xlim[0]))*(this.width-2*paddingPx)+paddingPx
+        }
     }
     
     ytoPx(yvalue){
         let ylim = this.ylim;
         let paddingPx = this.padding;
-        return this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx);
+        if(this.yscale == 'linear'){
+            return this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx)
+        }else if( this.yscale == 'log'){
+            return this.height -((Math.log(yvalue) - Math.log(ylim[0]))/(Math.log(ylim[1])-Math.log(ylim[0]))*(this.height-2*paddingPx)+paddingPx)
+        }
     }
 
     drawLine(line){
