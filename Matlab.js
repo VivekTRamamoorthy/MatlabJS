@@ -3,8 +3,18 @@
 // The purpose of this is to aid rapid prototyping of projects and they are NOT optimised for efficiency. 
 // By Vivek T R 
 // MIT License 2.0
-// Updated: 2021 November
+// Updated: 2022 February
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
+
+
+const MATLABJS_VERSION={
+    dateUpdated: "2022 February",
+    version: "0.0.31",
+    url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
+    documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
+    newfeatures: "plotlib"
+
+}
 
 var clc = function(){console.clear()};
 
