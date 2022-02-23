@@ -111,14 +111,22 @@ const figure = function(figureNo = null,parentElementId = null){
 const plot = function(x,y,...args) {
     let figureNo = gcf();
     let canvasId = PLOT_GLOBAL_CONTROLS.figureCanvasIds[figureNo-1]
-    let figure = new Figure(canvasId);
-    let line = new Line(x,y);
-    
+    let figure, line
+    if (PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1] instanceof Figure){
+        figure = PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]
+    }else{
+        figure = new Figure(canvasId);
+    }
+    line = new Line(x,y);
+
+    line.color = PLOT_GLOBAL_CONTROLS.colors[figure.lines.length]
+
+ 
+
     if(args!=null){
         args.forEach((argument,index) =>{
             switch (argument) {
                 case 'linewidth':
-                figure.lineWidth = args[index+1]
                 line.lineWidth = args[index+1]
                 break;
                 case 'padding':
@@ -135,7 +143,7 @@ const plot = function(x,y,...args) {
                 break;
                 case 'axis':
                 figure.axis = args[index+1]
-
+                
                 break;
                 case 'xlabel':
                 figure.xlabel = args[index+1]
@@ -152,6 +160,7 @@ const plot = function(x,y,...args) {
             }
             
         })
+
         if (figure.hold){
             figure.append(line)
         }
@@ -159,16 +168,20 @@ const plot = function(x,y,...args) {
             figure.lines=[];
             figure.lines[0]=line;
         }
+        
+
+
         if(figure.axis == 'auto' || figure.axis == 'fixed'){
             figure.axisUpdate()
         }
 
+        
         figure.draw()
         
     }
     
     
-    
+    PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]=figure;
     
     return figure;    
 }
@@ -193,7 +206,8 @@ class Figure{
         this.c = canvaselem.getContext('2d')
         this.width = canvaselem.width;
         this.height = canvaselem.height;
-        this.lineWidth = 2;
+        this.lineWidth = 3;
+        this.boxlineWidth = 2;
         this.hold = false;
         this.xscale='linear';
         this.yscale='linear';
@@ -201,11 +215,9 @@ class Figure{
         this.ylabel='y';
         this.title='';
         this.axis ='auto';
-        this.axisUpdate();
     }
     
     append(line){
-        line.color = PLOT_GLOBAL_CONTROLS.colors[this.lines.length];
         this.lines.push(line);
     }
     
@@ -275,7 +287,7 @@ class Figure{
         c.fillStyle='#000000' ;
         c.textAlign='center';
         c.strokeStyle = '#333';
-        c.lineWidth = this.lineWidth;
+        c.lineWidth = this.boxlineWidth;
         
         // box
         c.beginPath();
@@ -297,9 +309,18 @@ class Figure{
         let xTicks=range(xbegin,xincrement,xend)
         xTicks[0]=xlim[0];
         xTicks[xTicks.length-1]= xlim[1];
-
+        
         if(this.xscale == 'log'){
-            xTicks=logspace(xlim[0],xlim[1],noOfxTicks)
+            if(xlim[0]<=0){console.error("Log scale of zero or negative is not allowed")}
+            let powerOfTenSpan = Math.log(xlim[1]/xlim[0])/Math.log(10)
+            let powerOfTenIncrement = parseFloat((powerOfTenSpan/noOfxTicks).toPrecision(1));
+            
+            let minPowerOfTen = Math.round(Math.log(xlim[0])/Math.log(10))
+            let maxPowerOfTen = Math.round(Math.log(xlim[1])/Math.log(10))
+            let powerTicks = range(minPowerOfTen,powerOfTenIncrement,maxPowerOfTen)
+            xTicks=pow(10,powerTicks)
+            xTicks[0]=xlim[0];
+            xTicks[xTicks.length-1]=xlim[1]
         }
         for (let i = 0; i < xTicks.length; i++) {
             let xvalue = xTicks[i];
@@ -318,9 +339,18 @@ class Figure{
         let yTicks=range(ybegin,yincrement,yend)
         yTicks[0]=ylim[0];
         yTicks[yTicks.length-1]= ylim[1];
-
+        
         if(this.yscale == 'log'){
-            yTicks=logspace(ylim[0],ylim[1],noOfyTicks)
+            if(ylim[0]<=0){console.error("Log scale of zero or negative is not allowed")}
+            let powerOfTenSpan = Math.log(ylim[1]/ylim[0])/Math.log(10)
+            let powerOfTenIncrement = parseFloat((powerOfTenSpan/noOfyTicks).toPrecision(1));
+            
+            let minPowerOfTen = Math.round(Math.log(ylim[0])/Math.log(10))
+            let maxPowerOfTen = Math.round(Math.log(ylim[1])/Math.log(10))
+            let powerTicks = range(minPowerOfTen,powerOfTenIncrement,maxPowerOfTen)
+            yTicks=pow(10,powerTicks)
+            yTicks[0]=ylim[0];
+            yTicks[yTicks.length-1]=ylim[1]
         }
         for (let i = 0; i < yTicks.length; i++) {
             let yvalue = yTicks[i];
@@ -376,6 +406,7 @@ class Figure{
         
         let  colorCode= line.color// "rgba("+color[0]+ "," +color[1]+","+ color[2]+",0.8)";
         c.strokeStyle= colorCode//"rgb(200,200,200)"; // from color value
+        c.lineWidth = this.lineWidth
         c.beginPath()
         c.moveTo(this.xtoPx(x[0]), this.ytoPx(y[0]))
         for (let index = 0; index <= x.length; index++) {
@@ -388,6 +419,7 @@ class Figure{
         let c = this.c;
         let  colorCode="rgba("+color[0]+ "," +color[1]+","+ color[2]+",0.8)";
         c.strokeStyle= colorCode//"rgb(200,200,200)"; // from color value
+        c.lineWidth = this.lineWidth
         c.beginPath()
         c.moveTo(this.xtoPx(cx+r*Math.cos(0)), this.ytoPx(cx+r*Math.sin(0)))
         for (let theta = 0; theta <= Math.PI*2; theta=theta+0.01*Math.PI) {
@@ -412,13 +444,33 @@ class Figure{
 }
 
 class Line{
-    constructor(x,y){
+    constructor(x,y,...args){
         this.x=x;
         this.y=y;
         this.displayName='data';
         this.color = 'black';
         this.lineWidth = 2;
         this.handleVisibility = true;
+        args.forEach((argument,index)=>
+        {
+            switch (argument) {
+                case 'color':
+                line.color = args[index+1]
+                break;
+                case 'displayname':
+                line.displayName = args[index+1]
+                break;
+                case 'handlevisibility':
+                line.handleVisibility = args[index+1]
+                break;
+                case 'linewidth':
+                line.lineWidth = args[index+1]
+                break;
+                default:
+                break;
+            }
+        })
+        
     }
 }
 
