@@ -3,8 +3,18 @@
 // The purpose of this is to aid rapid prototyping of projects and they are NOT optimised for efficiency. 
 // By Vivek T R 
 // MIT License 2.0
-// Updated: 2021 November
+// Updated: 2022 February
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
+
+
+const MATLABJS_VERSION={
+    dateUpdated: "2022 February",
+    version: "0.0.31",
+    url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
+    documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
+    newfeatures: "plotlib"
+
+}
 
 var clc = function(){console.clear()};
 
@@ -27,9 +37,15 @@ var toc = function(){
 
 var isfield = function(obj,fieldstr){return obj.hasOwnProperty(fieldstr)}
 
+
 var linspace = function(a,b,n=100){
     let step= (b-a)/(n-1)
     return (new Array(n)).fill(0).map((x,i)=>a+i*step);
+}
+
+var logspace = function(a,b,n=100){
+    let step= Math.pow((b/a),1/(n-1))
+    return (new Array(n)).fill(0).map((x,i)=>a*Math.pow(step,i));
 }
 
 var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
