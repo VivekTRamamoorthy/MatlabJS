@@ -227,6 +227,7 @@ class Figure{
     
     
     draw(){
+        this.resize();
         this.clf()
         if (this.axis == 'auto' || this.axis == 'tight'){
             this.axisUpdate()
@@ -286,7 +287,7 @@ class Figure{
         c.font = fontSizePx+ 'px Arial';
         c.fillStyle='#000000' ;
         c.textAlign='center';
-        c.strokeStyle = '#333';
+        c.strokeStyle = '#000';
         c.lineWidth = this.boxlineWidth;
         
         // box
@@ -439,7 +440,41 @@ class Figure{
         c.fillStyle=color ;
         c.stroke();
     }
-    
+
+    resize(){
+        let canvaselem = document.getElementById(this.canvasId);
+        if(canvaselem ==null){console.error('No such canvas exists in DOM')}
+        canvaselem.width =  canvaselem.clientWidth 
+        canvaselem.height = canvaselem.clientHeight
+        this.width = canvaselem.width;
+        this.height = canvaselem.height;
+    }
+    fillRect(x,y,width,height,color="black"){
+        let c = this.c;
+        let xPx= this.xtoPx(x);
+        let widthPx = Math.abs(this.xtoPx(x+width)-this.xtoPx(x));
+        let heightPx =  Math.abs(this.ytoPx(y+height)-this.ytoPx(y));
+        let yPx = this.ytoPx(y);
+        c.fillStyle = color;
+        c.fillRect(xPx,yPx,widthPx,heightPx)
+
+
+    }
+    fillPolygon(x,y,color="#000"){
+        let c = this.c;
+        c.beginPath();
+        c.moveTo(this.xtoPx(x[0]),this.ytoPx(y[0]))
+       for (let index = 1; index < x.length; index++) {
+           c.lineTo(this.xtoPx(x[index]),this.ytoPx(y[index]));
+       }
+       c.closePath();
+        c.fillStyle = color;
+        c.fill();
+    }
+    set(parameter,value){
+        this[parameter]=value;
+        this.draw();
+    }
     
 }
 
