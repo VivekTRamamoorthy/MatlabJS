@@ -240,18 +240,18 @@ class Figure{
         let xUpperLimit = this.xlim[1];
         let yLowerLimit = this.ylim[0];
         let yUpperLimit = this.ylim[1];
-        this.lines.forEach(({x,y},i)=>{
+        this.lines.forEach((line,i)=>{
             if (i==0){
-                xLowerLimit = min(x);
-                xUpperLimit = max(x);
-                yLowerLimit = min(y);
-                yUpperLimit = max(y);
+                xLowerLimit = min(line.x);
+                xUpperLimit = max(line.x);
+                yLowerLimit = min(line.y);
+                yUpperLimit = max(line.y);
             }
             else{
-                xLowerLimit = min(xLowerLimit, min(x));
-                xUpperLimit = max(xUpperLimit, max(x));
-                yLowerLimit = min(yLowerLimit, min(y));
-                yUpperLimit = max(yUpperLimit, max(y));
+                xLowerLimit = min(xLowerLimit, min(line.x));
+                xUpperLimit = max(xUpperLimit, max(line.x));
+                yLowerLimit = min(yLowerLimit, min(line.y));
+                yUpperLimit = max(yUpperLimit, max(line.y));
             }
         })
         this.xlim[0] = xLowerLimit;
