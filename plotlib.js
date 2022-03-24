@@ -1,10 +1,9 @@
 // Javascript mini plotting library
 // Vivek T R
-// updated:2022 February 2
+// updated:2022 March 24
 // MIT license 2.0
-
 // global objects: PLOT_GLOBAL_CONTROLS
-// functions: gcf, figure, plot, colormap, closeall
+// global functions: gcf, figure, plot, closeall
 
 const PLOT_GLOBAL_CONTROLS={
     noOfFigures: 0,
@@ -224,16 +223,24 @@ class Figure{
     clf(){
         this.c.clearRect(0,0,this.width,this.height)
     }
+    clearPadding(){
+        this.c.clearRect(0,0,this.xtoPx(this.xlim[0]),this.height)
+        this.c.clearRect(0,0,this.width,this.ytoPx(this.ylim[1]))
+        this.c.clearRect(this.xtoPx(this.xlim[1]),0,this.width,this.height)
+        this.c.clearRect(0,this.ytoPx(this.ylim[0]),this.width,this.height)
+
+    }
     
     
     draw(){
         this.resize();
         this.clf()
+        this.lines.forEach(line => this.drawLine(line));
+        this.clearPadding()
         if (this.axis == 'auto' || this.axis == 'tight'){
             this.axisUpdate()
         }
         this.drawAxes()
-        this.lines.forEach(line => this.drawLine(line));
     }
     axisUpdate(){
         let xLowerLimit = this.xlim[0];
@@ -511,7 +518,8 @@ class Line{
 
 
 
-function closeall(){
+function closeAll(){
+    if(window.confirm("Confirm clear all?") ==false){return}
     PLOT_GLOBAL_CONTROLS.figureCanvasIds.forEach((canvasid)=>{
         let canvas = document.getElementById(canvasid);
         console.log(canvas)
