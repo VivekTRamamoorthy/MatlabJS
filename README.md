@@ -1,12 +1,14 @@
 # A Javascript mini-library for MATLAB users
 
-When I started to convert some of my Matlab projects to Javascript to deploy in the web, I could not find any easy to use library. Although many excellent libraries exist (mathjs, ndarray, scijs), they are not very ready to use. I wrote my own functions to ease the process and I thought I should share it with others. This mini-library gives you some essential array and matrix functions for easing code convertion from Matlab or Octave to Javascript, or deploy your own scientific computing projects with less pain. 
+This mini-library gives you some essential array and matrix functions written in JavaScript for easing your scientific computing projects or code conversion from Matlab or Octave. 
 
-## TEST HOW IT WORKS
-To see how it works, open [https://VivekTRamamoorthy.github.io/MatlabJS](https://VivekTRamamoorthy.github.io/MatlabJS) 
-and start typing matlab-like code in the console.
+## Documentation
+To see how it works, go to [https://VivekTRamamoorthy.github.io/MatlabJS](https://VivekTRamamoorthy.github.io/MatlabJS).
+The library is loaded in the webpage and you may start testing it in the console.
+The webpage also contains a cheatsheet.
 
-## EXAMPLE CONSOLE INPUTS 
+## Examples 
+```
     tic()
     a=linspace(0,1,100) 
     disp(a) ;
@@ -15,17 +17,17 @@ and start typing matlab-like code in the console.
     d=mul(b,c) ;
     disp(d)
     toc();
+```
 
-The webpage also contains a cheatsheet.
 
-## HOW TO USE IN YOUR PROJECTS
-### Method 1 (Recommended):
+## Using in your projects
+### Method 1: CDN
 - Include  the following script tag to your html. This will include all updates and bug fixes.
 ```
     <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"></script>
 ```
 
-### Method 2:
+### Method 2: Include file using script tag
 - Download the `Matlab.js`file from the [Github repository](https://github.com/VivekTRamamoorthy/MatlabJS) to your project folder.
 - Include the file in a script tag:
 ```
@@ -34,10 +36,10 @@ The webpage also contains a cheatsheet.
 
         
 ## LIMITATIONS
-- Operator overloading is not permitted in JS. So we this library does not permit you to write `c=A*b` for matrices. Instead one has to write `c=mul(A,b)`.
-- Beware that all functions are loaded into global scope using `var`s. You can overwrite these declarations.
+- Operator overloading is not permitted in JS. So we cannot yet write `c=A*b` for matrices. Instead we have to use the universal functions such as `c=mul(A,b)` to multiply.
+- A note of caution that all functions are loaded into the global scope using `var`s so that you may overwrite them.
 - The code is not optimised for efficiency. 
-- This project is in its primitive stage. More functions will be included as time permits. 
+- This project is in its primitive stage. More functionalities will be included as time permits. 
 
 ## LICENSE
 
