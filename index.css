@@ -1,81 +1,50 @@
-*{
+*,*::before,*::after{
+  box-sizing: border-box;
   margin:0;
   padding:0;
 }
-
 body{
   margin: 0%;
   font-family: Arial, Helvetica, sans-serif;
   background-color: whitesmoke;
   font-size:medium;
 }
-
 body a{
   color: dodgerblue;
-  /* font-size:20px; */
 }
 p{
   font-size:20px;
 }
-
 body a:hover{
   color: dodgerblue;
   background-color: yellow;
-  /* border: 2px solid black; */
 }
-
-
-
 h1 {
   text-align: center;
-  /*margin-top: 0px;*/
-  /*background-color: #ccc;*/
   color: Dodgerblue;
   font-size: xx-large;
   font-weight: bold;
   font-family:Verdana, Geneva, Tahoma, sans-serif;
 }
-
-
 h2 {
   text-align: left;
   font-size: large;
-  /*background-color: #ddd;*/
   color: rgb(182, 49, 49);
-
-  
 }
-
 h3 {
   text-align: left;
-  /*background-color: #eee;*/
   color: green;
   font-size: large;
 }
-
 code{
- 
   color:#333;
-  border-radius: 10%;
   font-size: large;
-  
 }
-
-pre{
-  margin-left: 5%;
-  margin-right: 20%;
-  margin-top: 1%;
-  margin-bottom: 1%;
-  border-radius:10%;
-  padding: 5px;
-
+table{
+  overflow:scroll
 }
-
-.header{
-  /* background-image: url(http://cdn.eso.org/images/screen/eso0932a.jpg) ; */
-  
-  margin:0 0;
-  margin-right:0;
+header{
+  text-align: center;
   height:10%;
   top:0px;
   width:100%;
@@ -83,12 +52,8 @@ pre{
   color: white;
   font-size: x-large;
   font-weight: bold;
-
-
 }
-
-.footer{
-  /* position: fixed; */
+footer{
   left: 0;
   bottom: 0;
   width: 100%;
@@ -96,9 +61,7 @@ pre{
   color: white;
   text-align: center;
   padding:30px;
-
 }
-
 .content{
   margin-left:8%;
   margin-right:8%;
@@ -106,19 +69,13 @@ pre{
   padding-right:5%;
   overflow: auto;
 }
-
-
 table, th, td {
   border: 1px solid black;
   border-collapse: collapse;
   text-align: left;
   padding: 5px;
-  
 }
-
-
 /* COLUMNS in mobile, tablet and desktop */
-
 /* Create four equal columns that floats next to each other */
 .column {
   float:left;
@@ -129,12 +86,55 @@ table, th, td {
   overflow:auto;
   background-color:bisque;
 }
-
 table {
   margin:1px;
   padding: 1px;
 }
-
+.runtest-button{
+  /* position: fixed; */
+  padding:0.5rem;
+  top:10vh;
+  right:10vw;
+  border:none;
+  border-radius: 4px;
+  background-color: red;
+  color:white;
+  font-size: 1rem;
+}
+.testDiv{
+  position:fixed;
+  height:90vh;
+  width:90vw;
+  top:5vh;
+  left: 5vw;
+  background-color: black;
+  color:white;
+  padding: 3rem;
+  font-family: 'Courier New', Courier, monospace;
+}
+.testDiv .close-button{
+  position:absolute;
+  right:0;top:0;
+  width:1.5rem;
+  height:1.5rem;
+  background-color:red;
+  border:none;
+  color:white;
+}
+.testDiv h1{
+  font-family: 'Courier New', Courier, monospace;
+  color:white;
+}
+.fatal{
+  color: red;
+  font-size: large;
+}
+.failed{
+  color: red;
+}
+.passed{
+  color: lightgreen;
+}
 /* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 1500px) {
   .column {
@@ -145,7 +145,13 @@ table {
     margin-right:3%;
   }
 }
-
+.flex{
+  display:flex;
+}
+.center{
+  align-items: center;
+  justify-content: center;
+}
 /* On screens that are 992px wide or less, go from four columns to two columns */
 @media screen and (max-width: 992px) {
   .column {
@@ -156,7 +162,9 @@ table {
     margin-right:2%;
   }
 }
-
+section{
+  width:100%;
+}
 /* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 600px) {
   .column {
