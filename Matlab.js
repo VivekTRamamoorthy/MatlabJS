@@ -17,7 +17,7 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve'],
+    'deepcopy','copy','disp','linsolve','elementwise','exp'],
 }
 
 var clc = function(){console.clear()};
@@ -28,7 +28,7 @@ var tic = function(){
     const d = new Date();
     ticTime=d.getTime();
     console.log("Started recording time.")
-   return 0;
+    return 0;
 }
 
 var toc = function(){
@@ -81,7 +81,7 @@ var find = function(array){
 }
 
 
-var sort = function(array){ // index starts from 1 // warning: also sorts the array in place
+var sort = function(array){ // indices start from 1
     let indices = new Array(array.length);
     for (var i = 0; i < array.length; ++i) {indices[i] = i;}
     indices=indices.sort(function (a, b) { return array[a] < array[b] ? -1 : array[a] > array[b] ? 1 : 0; });
@@ -134,17 +134,16 @@ var sum = function(A,dim=0){ // 1 is column sum and 2 is row sum
 var norm = function(V,p=2){
     if(typeof(V)=="number"){return V}
     if(size(V,1)==1 || size(V,2)==1){
-      return pow(sum(pow(V,p)),1/p)
+        return pow(sum(pow(V,p)),1/p)
     }
     console.error("norm is undefined for this input type")
-  }
+}
 
 var abs = function(A){
     if(typeof(A)=="number"){return Math.abs(A);} // A is a number
-    if(typeof(A[0])=="number"){return A.map(x=>Math.abs(x));} // A is an array
-    if(typeof(A[0][0])=="number"){return A.map(subarr=>subarr.map(x=>Math.abs(x)));  } //  A is a matrix
-    console.error(" cannot apply absolute for this input type")
-    return [];
+    if(A instanceof Array){return A.map(x=>abs(x));} // A is an array
+    if(A instanceof cx){return A.abs()}
+    console.error("Cannot find absolute for this input type")
 }
 
 var sqrt = function(A){
@@ -678,7 +677,8 @@ var unique = function(C){
                 uniqueC.push(C[i])
             }
         }
-        return uniqueC;
+        let result = sort(uniqueC)
+        return result[0];
     }else{
         console.error("Could not find unique for this input type.")
     }
@@ -747,16 +747,13 @@ class cx {
         return r;
     }
     mul = function(a){
-        if(a instanceof Number){a=new cx(a);}
-        let r= new cx(0,0);
-        r.re=this.re*a.re-this.im*a.im;
-        r.im=this.re*a.im+this.im*a.re;
-        return r;
+        if(a instanceof Number){return new cx(this.re*a,this.im*a)}
+        return new cx(this.re*a.re-this.im*a.im,this.re*a.im+this.im*a.re);
     }
     div = function(a){
-        if(a instanceof Number){a=new cx(a);}
-        let r= new cx(0,0);
-        r=r.mul(r.conj())
+        if(a instanceof Number){return new cx(this.re/a,this.im/a)}
+        let r= new cx(this.re,this.im);
+        r=r.mul(a.conj())/a.abs()
         return r;
     }
     conj = function(){
@@ -789,6 +786,10 @@ class cx {
     }
     
 }
+var real = z=> z.re
+var imag = z=> z.im
+var angle = z=> z.angle()
+var conj = z=> z.conj()
 
 
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW
@@ -1174,5 +1175,67 @@ var linsolve = function(A,b){
     return transpose(x);
 }
 
+var all = function(booleans){
+    for (let i = 0; i < booleans.length; i++) {
+        if(!booleans[i]){
+            return false
+        }
+    }
+    return true
+}
+var any = function(booleans){
+    for (let i = 0; i < booleans.length; i++) {
+        if(!booleans[i]){
+            return true
+        }
+    }
+    return false
+}
+
+var map = function(fun,a,...args){// multidimensional map function
+    if (args.length==0){ // single input to function
+        if(a instanceof Array){
+            let result=[];
+            for (let i = 0; i < a.length; i++) {
+                if(a[i]){
+                    result[i]=map(fun,a[i])
+                }
+            }
+            return result
+        }else{
+            return fun(a)
+        }
+    }else{// two or more inputs 
+        let b, remargs;
+        [b, ...remargs]=args // taking the second argument
+        let result=[]   
+        if (a instanceof Array && b instanceof Array && a.length === b.length){
+            for (let i = 0; i < a.length; i++) {
+                result[i]=map(fun,a[i],b[i])
+            }
+        }else if (a instanceof Array){
+            for (let i = 0; i < a.length; i++) {
+                result[i]=map(fun,a[i],b)
+            }
+        }else if(b instanceof Array){
+            for (let i = 0; i < b.length; i++) {
+                result[i]=map(fun,a,b[i])
+            }
+        }else{
+            result =fun(a,b)
+        }
+        if (remargs.length>0){ // recursive call for for arguments
+            result = map(fun,result,...remargs)
+        }
+        return result
+    }
+}
+
+var exp = function(A){
+    if(typeof(A)=="number"){return Math.exp(A);} // A is a number
+    if(A instanceof cx){return new cx(Math.exp(1)).pow(A)}
+    if(A instanceof Array){return A.map(x=>exp(x));} // A is an array
+    console.error("Cannot find absolute for this input type")
+}
 
 
