@@ -914,7 +914,10 @@ var sub = function(a,b){
 
 // UNIVERSAL MULTIPLICATION 
 
-var mul = function(a,b){ 
+var mul = function(a,b,...args){ 
+    if (args.length>0){
+        return mul(mul(a,b),...args)
+    }
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a*b}; //b is number
         if (b instanceof cx){return b.mul(a)}; // b is complex
@@ -935,7 +938,17 @@ var mul = function(a,b){
             if(typeof(b)=="number"){return a.map(x=>x*b);} // b is a number
             if(b instanceof cx){return a.map(x=>b.mul(x));} // b is complex
             if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x*b[i])};
+                if(typeof(b[0])=="number"){
+                    if(b.length==a.length){
+                        return a.map((x,i)=>x*b[i])
+                    }else if( b.length==1){
+                        return a.map((x,i)=>x*b[0])
+                    }else if( a.length ==1){
+                        return b.map((x,i)=>x*a[0])
+                    }else{
+                        console.error("array dimensions do not agree") 
+                    };
+                }
                 if (b[0] instanceof cx) {return b.map((x,i)=>x.mul(a[i]));}
             }
         }
@@ -949,17 +962,27 @@ var mul = function(a,b){
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
                 let c=new Array(a.length).fill(0).map(x=>new Array(b[0].length).fill(0).map(x=>0));
                 if(a[0].length==b.length){ // checking dimensions
-                    
                     for(let row=0;row<a.length;row++){
                         for(let col=0;col<b[0].length;col++){
-                            let presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
+                            let cij=0
+                            for (let k = 0; k < a[row].length; k++) {
+                                cij += a[row][k]*b[k][col];
+                            }
                             // display(presum)
-                            c[row][col]=presum.reduce((a,b)=>a+b);
+                            c[row][col]=cij;
                         }
                     }
                     return c; // matrix multiplication code
                 }
-                else{ console.error("Matrix dimensions do not agree"); return []; }
+                else{ // single element matrices
+                    if(a.length==1 && a[0].length==1){
+                        return mul(a[0][0],b)
+                    }else if(b.length ==1 && b[0].length==1){
+                        return mul(b[0][0],a)
+                    }else{
+                        console.error("Matrix dimensions do not agree"); return []; 
+                    }
+                }
             }
         }
     }

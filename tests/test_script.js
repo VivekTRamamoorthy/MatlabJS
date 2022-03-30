@@ -403,6 +403,17 @@ function run_tests(){
     disp(mul(rand(5,4),rand(4,3)))
     disp(mul(rand(5),rand(5,1)))
     disp(mul(rand(1,10),rand(10,1)))
+    printLine("Testing universal mul")
+    test("mul(1,3)","3")
+    test("mul([1],2)","[2]")
+    test("mul([1,2,3],[3])","[3,6,9]")
+    test("mul([3],[1,2,3])","[3,6,9]")
+
+    test("mul([1,2,3],[1,2,3])","[1,4,9]")
+    test("mul([1,2,3],[1,2,3])","[1,4,9]")
+    test("mul([[1,2,3]],[[1],[2],[3]])","[[14]]")
+    test("mul([[1,2,3],[4,5,6]],[[10]])","[[10,20,30],[40,50,60]]")
+
     
     
     
@@ -451,6 +462,8 @@ function run_tests(){
     disp(mul(A,x))
     
     // map
+    printLine("<br>")
+    printLine("function maps")
     disp(map((a,b)=>a+b,ones(3),ones(3)))
     test("map((a,b)=>a+b,ones(2),ones(2))","[[2,2],[2,2]]")
     disp(map((a,b)=>add(a,b),ones(3),ones(3),ones(3)))
