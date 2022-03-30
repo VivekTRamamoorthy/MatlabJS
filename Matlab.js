@@ -9,10 +9,10 @@
 
 const MATLABJS_GLOBAL={
     dateUpdated: "2022 March 30",
-    version: "0.0.32",
+    version: "0.1.0",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
-    newfeatures: "plotlib",
+    newfeatures: "map,exp,all,any, testing suite",
     listOfFunctions:['clc','tic','toc','isfield','linspace','logspace','size','length','find','sort',
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
