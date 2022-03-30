@@ -3,9 +3,8 @@
 // The purpose of this is to aid rapid prototyping of projects and they are NOT optimised for efficiency. 
 // By Vivek T R 
 // MIT License 2.0
-// Updated: 2022 February
+// Updated: 2022 March
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
-
 
 const MATLABJS_GLOBAL={
     dateUpdated: "2022 March 30",
@@ -17,7 +16,8 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve','all','any','map','exp'],
+    'deepcopy','copy','disp','linsolve','all','any','map','exp','real','imag','angle','conj'],
+    classes:['cx']
 }
 
 var clc = function(){console.clear()};
