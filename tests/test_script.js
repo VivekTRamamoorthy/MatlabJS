@@ -1,29 +1,57 @@
+function test(scriptString, expectedResult,functionName=""){
+    let PASSED = false;
+    try{
+            PASSED = equal(  eval(scriptString) , eval(expectedResult)   )
+
+    }catch{
+        PASSED =false
+    }
+    if(PASSED === true){
+        let elem = document.createElement("div")
+        elem.classList.add("passed")
+        elem.innerHTML="TEST PASSED: "+scriptString+" === "+expectedResult;
+        let testDiv = document.getElementById("testDiv");
+        testDiv.appendChild(elem)
+    }else{
+        let elem = document.createElement("div")
+        elem.classList.add("failed")
+        elem.innerHTML="TEST FAILED "+scriptString+" != "+expectedResult;
+        let testDiv = document.getElementById("testDiv");
+        testDiv.appendChild(elem)
+    }
+    return PASSED
+}
+
+function printLine(string){
+    let elem = document.createElement("div")
+    elem.innerHTML=string;
+    let testDiv = document.getElementById("testDiv");
+    testDiv.appendChild(elem)
+}
+
+function equal(one,two){
+    if(one === two){
+        return true
+    }
+    if(one instanceof Array && two instanceof Array){
+        if (one.length != two.length){return false}
+        for (let index = 0; index < one.length; index++) {
+            if(!equal(one[index],two[index])){
+                return false;
+            }
+        }
+        return true
+    }
+    if(one instanceof cx && two instanceof cx){
+        return one.re === two.re && one.im === two.im
+    }
+}
+
 function run_tests(){
     
     let existingDiv = document.getElementById("testDiv")
     if(existingDiv){existingDiv.remove()}
-    function test(scriptString, expectedResult,functionName=""){
-        let PASSED = false;
-        try{
-                PASSED = equal(  eval(scriptString) , eval(expectedResult)   )
-
-        }catch{
-            PASSED =false
-        }
-        if(PASSED === true){
-            let elem = document.createElement("div")
-            elem.classList.add("passed")
-            elem.innerHTML="TEST PASSED: "+scriptString;
-            let testDiv = document.getElementById("testDiv");
-            testDiv.appendChild(elem)
-        }else{
-            elem.classList.add("failed")
-            elem.innerHTML=scriptString+"<br> TEST FAILED ";
-            let testDiv = document.getElementById("testDiv");
-            testDiv.appendChild(elem)
-        }
-        return PASSED
-    }
+    
     
     const testDiv = document.createElement("div");
     testDiv.classList.add("testDiv")
@@ -37,17 +65,7 @@ function run_tests(){
     testDiv.appendChild(closeBtn)
     document.body.appendChild(testDiv)
     
-    function equal(one,two){
-        if(one instanceof Array && two instanceof Array){
-            if (one.length != two.length){return false}
-            let result
-            one.forEach((onei,i)=>{if(!equal(onei,two[i])){return false } })
-            return true
-        }else{
-            return one === two
-        }
-    }
-    
+    // clc
     console.log("Testing clc");
     clc()
     
@@ -64,18 +82,17 @@ function run_tests(){
     // [0 .1010.. 1]
     var B=linspace(10,20,3)
     // [10,15,20]
-    test("linspace(0,1,2)",[0,1])
-    test("linspace(0,0,5)",[0,0,0,0,0])
-    test("linspace(0,-4,5)",[0,-1,-2,-3,-4])
+    test("linspace(0,1,2)","[0,1]")
+    test("linspace(0,0,5)","[0,0,0,0,0]")
+    test("linspace(0,-4,5)","[0,-1,-2,-3,-4]")
     
     
     // logspace
     console.log("Testing logspace");
-    var A=logspace(1,1000,4)
-
-    // [0 .1010.. 1]
-    var B=logspace(1,25,3)
-    // [1,5,25]
+    var A=logspace(1,1000,4) // [1,10,100,1000]
+    var B=logspace(1,25,3) // [1,5,25]
+    test("logspace(1,1000,4)",[1,10,100,1000])
+    test("logspace(1,25,3)",[1,5,25])
     
     
     // disp display
@@ -320,7 +337,7 @@ function run_tests(){
     console.log("union([1,2,3,4],[5,3,10])");
     console.log(" // [1,2,3,4,5,10] ");
     display(union([1,2,3,4],[5,3,10]))
-    test("union([1,2,3,4],[5,3,10])", [10,2,3,4,5,10],"union" )
+    test("union([1,2,3,4],[5,3,10])", "[1,2,3,4,5,10]","union" )
     
     
     var A=[10,2,3,3,4];
@@ -331,7 +348,7 @@ function run_tests(){
     // sparse
     var A=sparse([1,2],[1,2],[10,10],10,10);
     disp(A)
-    test("sparse([1,2],[1,2],[10,10],2,2)","[10,0],[0,10]")
+    test("sparse([1,2],[1,2],[10,10],2,2)","[[10,0],[0,10]]")
     
     // copy
     var A=rand(4)
@@ -345,6 +362,11 @@ function run_tests(){
     disp(A)
     disp(C)
     
+
+
+
+    // Universal functions
+    printLine("Universal functions")
     // add
     disp(add(3,4))
     disp(add(ones(4,1),100))
@@ -352,8 +374,16 @@ function run_tests(){
     disp(add(ones(4),100))
     disp(add(100,rand(4)))
     disp(add(ones(4),rand(4)))
+    test("add([1,1],[0,1])","[1,2]")
+    test("add(3,4)","7")
+    test("add(ones(4,1),100)","[[101],[101],[101],[101]]")
+    test("add(ones(4),100)","mul(101,ones(4))")
+    test("add(100,eye(4))","[[101,100,100,100],[100,101,100,100],[100,100,101,100],[100,100,100,101]]")
+    test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))","true")
+    test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))","true")
     
     
+
     // sub
     disp(sub(3,4))
     disp(sub(ones(4,1),100))
@@ -373,6 +403,17 @@ function run_tests(){
     disp(mul(rand(5,4),rand(4,3)))
     disp(mul(rand(5),rand(5,1)))
     disp(mul(rand(1,10),rand(10,1)))
+    printLine("Testing universal mul")
+    test("mul(1,3)","3")
+    test("mul([1],2)","[2]")
+    test("mul([1,2,3],[3])","[3,6,9]")
+    test("mul([3],[1,2,3])","[3,6,9]")
+
+    test("mul([1,2,3],[1,2,3])","[1,4,9]")
+    test("mul([1,2,3],[1,2,3])","[1,4,9]")
+    test("mul([[1,2,3]],[[1],[2],[3]])","[[14]]")
+    test("mul([[1,2,3],[4,5,6]],[[10]])","[[10,20,30],[40,50,60]]")
+
     
     
     
@@ -412,6 +453,7 @@ function run_tests(){
     disp(A=rand(4))
     disp(colon(A))
     
+
     // linsolve
     var A=[[2,3,4],[1,1,1],[1,0,1]]
     var b=[[9],[3],[2]]
@@ -419,6 +461,19 @@ function run_tests(){
     disp(x)
     disp(mul(A,x))
     
+    // map
+    printLine("<br>")
+    printLine("function maps")
+    disp(map((a,b)=>a+b,ones(3),ones(3)))
+    test("map((a,b)=>a+b,ones(2),ones(2))","[[2,2],[2,2]]")
+    disp(map((a,b)=>add(a,b),ones(3),ones(3),ones(3)))
+    test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2))","[[3,3],[3,3]]")
+    disp(map((a,b)=>add(a,b),ones(3),ones(3),ones(3),3))
+    test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2),4)","[[7,7],[7,7]]")
+
+
+
+
     
 }
 

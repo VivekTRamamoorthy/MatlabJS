@@ -17,7 +17,7 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve'],
+    'deepcopy','copy','disp','linsolve','elementwise','exp'],
 }
 
 var clc = function(){console.clear()};
@@ -28,7 +28,7 @@ var tic = function(){
     const d = new Date();
     ticTime=d.getTime();
     console.log("Started recording time.")
-   return 0;
+    return 0;
 }
 
 var toc = function(){
@@ -81,7 +81,7 @@ var find = function(array){
 }
 
 
-var sort = function(array){ // index starts from 1 // warning: also sorts the array in place
+var sort = function(array){ // indices start from 1
     let indices = new Array(array.length);
     for (var i = 0; i < array.length; ++i) {indices[i] = i;}
     indices=indices.sort(function (a, b) { return array[a] < array[b] ? -1 : array[a] > array[b] ? 1 : 0; });
@@ -134,17 +134,16 @@ var sum = function(A,dim=0){ // 1 is column sum and 2 is row sum
 var norm = function(V,p=2){
     if(typeof(V)=="number"){return V}
     if(size(V,1)==1 || size(V,2)==1){
-      return pow(sum(pow(V,p)),1/p)
+        return pow(sum(pow(V,p)),1/p)
     }
     console.error("norm is undefined for this input type")
-  }
+}
 
 var abs = function(A){
     if(typeof(A)=="number"){return Math.abs(A);} // A is a number
-    if(typeof(A[0])=="number"){return A.map(x=>Math.abs(x));} // A is an array
-    if(typeof(A[0][0])=="number"){return A.map(subarr=>subarr.map(x=>Math.abs(x)));  } //  A is a matrix
-    console.error(" cannot apply absolute for this input type")
-    return [];
+    if(A instanceof Array){return A.map(x=>abs(x));} // A is an array
+    if(A instanceof cx){return A.abs()}
+    console.error("Cannot find absolute for this input type")
 }
 
 var sqrt = function(A){
@@ -678,7 +677,8 @@ var unique = function(C){
                 uniqueC.push(C[i])
             }
         }
-        return uniqueC;
+        let result = sort(uniqueC)
+        return result[0];
     }else{
         console.error("Could not find unique for this input type.")
     }
@@ -747,16 +747,13 @@ class cx {
         return r;
     }
     mul = function(a){
-        if(a instanceof Number){a=new cx(a);}
-        let r= new cx(0,0);
-        r.re=this.re*a.re-this.im*a.im;
-        r.im=this.re*a.im+this.im*a.re;
-        return r;
+        if(a instanceof Number){return new cx(this.re*a,this.im*a)}
+        return new cx(this.re*a.re-this.im*a.im,this.re*a.im+this.im*a.re);
     }
     div = function(a){
-        if(a instanceof Number){a=new cx(a);}
-        let r= new cx(0,0);
-        r=r.mul(r.conj())
+        if(a instanceof Number){return new cx(this.re/a,this.im/a)}
+        let r= new cx(this.re,this.im);
+        r=r.mul(a.conj())/a.abs()
         return r;
     }
     conj = function(){
@@ -789,6 +786,10 @@ class cx {
     }
     
 }
+var real = z=> z.re
+var imag = z=> z.im
+var angle = z=> z.angle()
+var conj = z=> z.conj()
 
 
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW
@@ -913,7 +914,10 @@ var sub = function(a,b){
 
 // UNIVERSAL MULTIPLICATION 
 
-var mul = function(a,b){ 
+var mul = function(a,b,...args){ 
+    if (args.length>0){
+        return mul(mul(a,b),...args)
+    }
     if(typeof(a)=="number"){ // a is number
         if (typeof(b)=="number"){return a*b}; //b is number
         if (b instanceof cx){return b.mul(a)}; // b is complex
@@ -934,7 +938,17 @@ var mul = function(a,b){
             if(typeof(b)=="number"){return a.map(x=>x*b);} // b is a number
             if(b instanceof cx){return a.map(x=>b.mul(x));} // b is complex
             if(b instanceof Array) { 
-                if(typeof(b[0])=="number"){return a.map((x,i)=>x*b[i])};
+                if(typeof(b[0])=="number"){
+                    if(b.length==a.length){
+                        return a.map((x,i)=>x*b[i])
+                    }else if( b.length==1){
+                        return a.map((x,i)=>x*b[0])
+                    }else if( a.length ==1){
+                        return b.map((x,i)=>x*a[0])
+                    }else{
+                        console.error("array dimensions do not agree") 
+                    };
+                }
                 if (b[0] instanceof cx) {return b.map((x,i)=>x.mul(a[i]));}
             }
         }
@@ -948,17 +962,27 @@ var mul = function(a,b){
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
                 let c=new Array(a.length).fill(0).map(x=>new Array(b[0].length).fill(0).map(x=>0));
                 if(a[0].length==b.length){ // checking dimensions
-                    
                     for(let row=0;row<a.length;row++){
                         for(let col=0;col<b[0].length;col++){
-                            let presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
+                            let cij=0
+                            for (let k = 0; k < a[row].length; k++) {
+                                cij += a[row][k]*b[k][col];
+                            }
                             // display(presum)
-                            c[row][col]=presum.reduce((a,b)=>a+b);
+                            c[row][col]=cij;
                         }
                     }
                     return c; // matrix multiplication code
                 }
-                else{ console.error("Matrix dimensions do not agree"); return []; }
+                else{ // single element matrices
+                    if(a.length==1 && a[0].length==1){
+                        return mul(a[0][0],b)
+                    }else if(b.length ==1 && b[0].length==1){
+                        return mul(b[0][0],a)
+                    }else{
+                        console.error("Matrix dimensions do not agree"); return []; 
+                    }
+                }
             }
         }
     }
@@ -1174,5 +1198,67 @@ var linsolve = function(A,b){
     return transpose(x);
 }
 
+var all = function(booleans){
+    for (let i = 0; i < booleans.length; i++) {
+        if(!booleans[i]){
+            return false
+        }
+    }
+    return true
+}
+var any = function(booleans){
+    for (let i = 0; i < booleans.length; i++) {
+        if(!booleans[i]){
+            return true
+        }
+    }
+    return false
+}
+
+var map = function(fun,a,...args){// multidimensional map function
+    if (args.length==0){ // single input to function
+        if(a instanceof Array){
+            let result=[];
+            for (let i = 0; i < a.length; i++) {
+                if(a[i]){
+                    result[i]=map(fun,a[i])
+                }
+            }
+            return result
+        }else{
+            return fun(a)
+        }
+    }else{// two or more inputs 
+        let b, remargs;
+        [b, ...remargs]=args // taking the second argument
+        let result=[]   
+        if (a instanceof Array && b instanceof Array && a.length === b.length){
+            for (let i = 0; i < a.length; i++) {
+                result[i]=map(fun,a[i],b[i])
+            }
+        }else if (a instanceof Array){
+            for (let i = 0; i < a.length; i++) {
+                result[i]=map(fun,a[i],b)
+            }
+        }else if(b instanceof Array){
+            for (let i = 0; i < b.length; i++) {
+                result[i]=map(fun,a,b[i])
+            }
+        }else{
+            result =fun(a,b)
+        }
+        if (remargs.length>0){ // recursive call for for arguments
+            result = map(fun,result,...remargs)
+        }
+        return result
+    }
+}
+
+var exp = function(A){
+    if(typeof(A)=="number"){return Math.exp(A);} // A is a number
+    if(A instanceof cx){return new cx(Math.exp(1)).pow(A)}
+    if(A instanceof Array){return A.map(x=>exp(x));} // A is an array
+    console.error("Cannot find absolute for this input type")
+}
 
 

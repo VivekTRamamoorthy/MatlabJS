@@ -111,6 +111,9 @@ table {
   color:white;
   padding: 3rem;
   font-family: 'Courier New', Courier, monospace;
+  overflow:scroll;
+  z-index: 10;
+
 }
 .testDiv .close-button{
   position:absolute;
