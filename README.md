@@ -35,13 +35,13 @@ The webpage also contains a cheatsheet.
 ```
 
         
-## LIMITATIONS
+## Limitations
 - Operator overloading is not permitted in JS. So we cannot yet write `c=A*b` for matrices. Instead we have to use the universal functions such as `c=mul(A,b)` to multiply.
 - A note of caution that all functions are loaded into the global scope using `var`s so that you may overwrite them.
 - The code is not optimised for efficiency. 
 - This project is in its primitive stage. More functionalities will be included as time permits. 
 
-## LICENSE
+## License
 
 MIT License 2.0 
 Vivek Thaminni Ramamoorthy
