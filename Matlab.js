@@ -7,13 +7,17 @@
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
 
-const MATLABJS_VERSION={
-    dateUpdated: "2022 February",
-    version: "0.0.31",
+const MATLABJS_GLOBAL={
+    dateUpdated: "2022 March 30",
+    version: "0.0.32",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
-    newfeatures: "plotlib"
-
+    newfeatures: "plotlib",
+    listOfFunctions:['clc','tic','toc','isfield','linspace','logspace','size','length','find','sort',
+    'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
+    'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
+    'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
+    'deepcopy','copy','disp','linsolve'],
 }
 
 var clc = function(){console.clear()};
@@ -200,7 +204,7 @@ var min = function(A,B=[],dim=1){
                 A=A.map(x=>x[0]);
                 return Math.min.apply(null,A);
             }
-            let  colmin=[new Array(A.length).fill().map(x=>0)];
+            let  colmin=[new Array(A.length).fill(0).map(x=>0)];
             for (let col = 0; col < A[0].length; col++) {
                 let colarr=[];
                 for (let row = 0; row < A.length; row++) {
@@ -226,7 +230,7 @@ var min = function(A,B=[],dim=1){
         }
         if(typeof(B[0])=="number"){console.error(" cant find max between matrix and a vector"); return [] ;}
         if(typeof(B[0][0])=="number"){ // B is a matrix
-            let C=new Array(B.length).fill().map(x=>new Array(B[0].length).fill().map(x=>0));
+            let C=new Array(B.length).fill(0).map(x=>new Array(B[0].length).fill(0).map(x=>0));
             for (let row = 0; row < A.length; row++) {
                 for (let col = 0; col < A[0].length; col++) {
                     C[row][col]=Math.min(A[row][col],B[row][col]);
@@ -265,7 +269,7 @@ var max = function(A,B=[],dim=1){
                 A=A.map(x=>x[0]);
                 return Math.max.apply(null,A);
             }
-            let  colmax=[new Array(A.length).fill().map(x=>0)];
+            let  colmax=[new Array(A.length).fill(0).map(x=>0)];
             for (let col = 0; col < A[0].length; col++) {
                 let colarr=[];
                 for (let row = 0; row < A.length; row++) {
@@ -290,7 +294,7 @@ var max = function(A,B=[],dim=1){
             return max(B,A);
         }
         if(typeof(B[0][0])=="number"){ // B is a matrix
-            let C=new Array(B.length).fill().map(x=>new Array(B[0].length).fill().map(x=>0));
+            let C=new Array(B.length).fill(0).map(x=>new Array(B[0].length).fill(0).map(x=>0));
             for (let row = 0; row < A.length; row++) {
                 for (let col = 0; col < A[0].length; col++) {
                     C[row][col]=Math.max(A[row][col],B[row][col]);
@@ -348,7 +352,7 @@ var transpose = function(A){
         B=A.map(x=>[x]);
         return B;
     }
-    B=new Array(A[0].length).fill().map(x=>new Array(A.length).fill().map(x=>0));
+    B=new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
             // console.log({row,col})
@@ -363,12 +367,12 @@ var ones = function(a,b=0){
     let rows,cols;
     if(typeof(a)== "object"){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};  
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>1));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>1));
 }
 
 var eye = function(a){
-    let res = new Array(a).fill().map(x=>new Array(a).fill(0))  ;
-    return res.map((row,i)=>row.map((x,j)=> (i==j)+0)); // the +0 is  to make true =1 and false=0
+    let res = new Array(a).fill(0).map(x=>new Array(a).fill(0))  ;
+    return res.map((row,i)=>row.map((x,j)=> (i==j)? 1:0)); // the +0 is  to make true =1 and false=0
     
 }
 
@@ -377,7 +381,7 @@ var zeros = function(a,b=0){
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>0));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>0));
 }
 
 var rand = function(a=0,b=0){
@@ -386,22 +390,22 @@ var rand = function(a=0,b=0){
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.random()));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.random()));
 }
 
 var randi = function(n,a=0,b=0){
-    if(a==0){return Math.floor(Math.random()*n);}
+    if(a==0 && b==0){return Math.floor(Math.random()*n);}
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>Math.ceil(Math.random()*(n-1))));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.ceil(Math.random()*(n-1))));
 }
 
 
 var randn_bm = function() {
     // Standard Normal variate using Box-Muller transform.
-    var u = 0, v = 0;
+    let u = 0, v = 0;
     while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
     while(v === 0) v = Math.random();
     return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
@@ -413,7 +417,7 @@ var randn = function(a=0,b=0){
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill().map(x=>new Array(cols).fill().map(x=>randn_bm()));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>randn_bm()));
 }
 
 var diag = function(D){
@@ -504,7 +508,7 @@ var reshape = function(vec,rows,cols){
         return mat;
     }else if(vec.length*vec[0].length==rows*cols){     // for vec of type matrices,  read column by column
         let p=0;
-        let mat= new Array(rows).fill().map(x=> new Array(cols).fill().map(x=>0));
+        let mat= new Array(rows).fill(0).map(x=> new Array(cols).fill(0).map(x=>0));
         
         for(let col=0; col<cols; col++){
             for(let row=0; row<rows; row++){
@@ -532,7 +536,7 @@ var get = function(mat,rrange,crange=':'){
         if (rrange==':'){ rrange=range(1,mat.length);   }
         if(typeof(rrange)=="number"){   rrange=[rrange];   } 
         rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); // for negative values like -3 to be considered end-3
-        res=new Array(rrange.length).fill(0);
+        let res=new Array(rrange.length).fill(0);
         for (let index = 0; index < rrange.length; index++) {
             res[index] = mat[rrange[index]-1]; // -1 since rrange array index starts from 1
         }
@@ -627,7 +631,7 @@ var set = function(mat,rrange=':',crange=':',submat){
 var repmat= function(mat,rows,cols){
     let mrows=mat.length;
     let mcols=mat[0].length;
-    let res = new Array(mrows*rows).fill().map(x=>  new Array(mcols*cols).fill().map(x=>0)  );
+    let res = new Array(mrows*rows).fill(0).map(x=>  new Array(mcols*cols).fill(0).map(x=>0)  );
     res= res.map((resrow,row)=>{ return resrow.map((reselem,col) =>{return mat[row%mrows][col%mcols]}) } );
     return res;
 }
@@ -666,16 +670,18 @@ var union = function(A,B){
 
 
 var unique = function(C){
-    let unique=0;
-    let UniqueC=[];
-    for(let i=0; i<C.length-1; i++){
-        if (C[i+1]>C[i]){
-            UniqueC[unique]=C[i];
-            unique++;
+    if(typeof C == "number"){return C}
+    if(C instanceof Array ){
+        let uniqueC=[];
+        for(let i=0; i<C.length; i++){
+            if(!uniqueC.includes(C[i])){
+                uniqueC.push(C[i])
+            }
         }
+        return uniqueC;
+    }else{
+        console.error("Could not find unique for this input type.")
     }
-    UniqueC[unique]=C[C.length-1];
-    return UniqueC;
 }
 
 var sparse = function(iK,jK,sK,m,n){
@@ -716,46 +722,70 @@ var colon = function(K){
 // UNIVERSAL FUNCTIONS ADD, MUL, DIV and SUB, POW
 
 class cx {
-    constructor(a,b=0){
+    re;
+    im;
+    constructor(a,b=0,polar=false){
         this.re=a;
         this.im=b;
+        if(polar){
+            this.re = a*Math.cos(b);
+            this.im = a*Math.sin(b);
+        }
     }
     add = function(a){
         if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
+        let r= new cx(0,0);
         r.re=this.re+a.re;
         r.im=this.im+a.im;
         return r;
     }
     sub = function(a){
         if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
+        let r= new cx(0,0);
         r.re=this.re-a.re;
         r.im=this.im-a.im;
         return r;
     }
     mul = function(a){
         if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
+        let r= new cx(0,0);
         r.re=this.re*a.re-this.im*a.im;
         r.im=this.re*a.im+this.im*a.re;
         return r;
     }
     div = function(a){
         if(a instanceof Number){a=new cx(a);}
-        r= new cx(0,0);
+        let r= new cx(0,0);
         r=r.mul(r.conj())
         return r;
     }
     conj = function(){
-        r=new cx(0,0);
-        r.re=this.re;
-        r.im=-this.im;
-        return r;
+        return new cx(this.re,-this.im);
     }
     abs = function(){
         return Math.sqrt(this.re**2+this.im**2)
         
+    }
+    angle = function(){
+        if (this.re ==0){
+            return Math.PI/2*Math.sign(this.im)
+        }
+        return Math.atan(this.im/this.re)
+    }
+    inv = function(){
+        return this.conj().div(this.abs())
+    }
+    pow = function(a){
+        if(typeof a =="number"){
+            return new cx(Math.pow(this.abs(),a),this.angle()*a,polar=true)
+        }
+        if(a instanceof cx){
+            let r = this.abs();
+            let theta = this.angle();
+            let rpowa = new cx(Math.pow(r,a.re),a.im*Math.log(r),polar=true);
+            let expithetapowa = new cx(Math.exp(-a.im*theta),theta*a.re,polar=true)
+            return rpowa.mul(expithetapowa)
+        }
     }
     
 }
@@ -772,7 +802,7 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
             if(b[0] instanceof cx){ return b.map(x=>x.add(a))}; // b is complex array
             if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>bij+a))} // b is matrix
         }
-        if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.adds(c,b,a); return c  }; // b is ndarray
+        if (b.hasOwnProperty("stride")){let c=pool.zeros(b.shape);ops.adds(c,b,a); return c  }; // b is ndarray
     }
     if(a instanceof cx){ // a is complex
         if (b instanceof Array){return b.map(x=>a.add(x))}; // b is numeric or complex array 
@@ -796,7 +826,7 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
             if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij+b));} // b is a number
             if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>b.add(Aij)))} // b is complex
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
+                if(a.length==b.length && a[0].length==b[0].length){ // checking dimensions
                     return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]+b[row][col]))// a and b are matrices
                 }
                 else{ console.error("Matrix dimensions must agree"); return [] }
@@ -804,15 +834,15 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
         }
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.adds(c,a,b); return c;} // b is number
+        if(typeof(b)=="number"){let c=pool.zeros(a.shape); ops.adds(c,a,b); return c;} // b is number
         if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.adds(c.re,a,b.re);ops.addseq(c.im,b.im); return c;} // b is complex
         if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.add(c,a,new ndarray(b)); return c;} // b is array
+            if(typeof(b[0])=="number"){let c=pool.zeros(a.shape);ops.add(c,a,new ndarray(b)); return c;} // b is array
             if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>x.im))}; ops.add(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
         }
         if(b.hasOwnProperty("stride")){ 
             if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.zeros(a.shape);ops.add(c,a,b); return a; 
+            let c=pool.zeros(a.shape);ops.add(c,a,b); return a; 
         }
     }
     
@@ -830,10 +860,10 @@ var sub = function(a,b){
         if (b instanceof cx){return b.sub(a)}; // b is complex
         if (b instanceof Array){ 
             if(typeof(b[0])=="number"){return b.map(x=>a-x)}; // b is number array
-            if(b[0] instanceof cx){ return b.map(x=>x.neg().add(a))}; // b is complex array
+            if(b[0] instanceof cx){ return b.map(x=>x.mul(new cx(-1,0)).add(a))}; // b is complex array
             if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a-bij))} // b is matrix
         }
-        if (b.hasOwnProperty("stride")){ c=pool.zeros(b.shape);ops.subs(c,b,a); return c }; // b is ndarray
+        if (b.hasOwnProperty("stride")){let c=pool.zeros(b.shape);ops.subs(c,b,a); return c }; // b is ndarray
     }
     if(a instanceof cx){ // a is complex
         if (b instanceof Array){return b.map(x=>a.sub(x))}; // b is numeric or complex array 
@@ -843,10 +873,10 @@ var sub = function(a,b){
     if(a instanceof Array){  // a is an array
         if(typeof(a[0])=="number"){ // a is a number array
             if(typeof(b)=="number"){return a.map(x=>x-b);} // b is a number
-            if(b instanceof cx){return a.map(x=>b.neg().add(x));} // b is complex
+            if(b instanceof cx){return a.map(x=>b.mul(new cx(-1,0)).add(x));} // b is complex
             if(b instanceof Array) { 
                 if(typeof(b[0])=="number"){return a.map((x,i)=>x-b[i])};
-                if (b[0] instanceof cx) {return b.map((x,i)=>x.neg().add(a[i]));}
+                if (b[0] instanceof cx) {return b.map((x,i)=>x.mul(new cx(-1,0)).add(a[i]));}
             }
         }
         if(a[0] instanceof cx){ // a is a complex array
@@ -857,7 +887,7 @@ var sub = function(a,b){
             if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij-b));} // b is a number
             if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.sub(b)))} // b is complex
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
+                if(a.length==b.length && a[0].length==b[0].length){ // checking dimensions
                     return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]-b[row][col]))// a and b are matrices
                 }
                 else{ console.error("Matrix dimensions must agree"); return [] }
@@ -865,15 +895,15 @@ var sub = function(a,b){
         }        
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.zeros(a.shape); ops.subs(c,a,b); return c;} // b is number
+        if(typeof(b)=="number"){let c=pool.zeros(a.shape); ops.subs(c,a,b); return c;} // b is number
         if(b instanceof cx){let c={re:pool.zeros(a.shape),im:pool.zeros(a.shape)}; ops.subs(c.re,a,b.re);ops.subseq(c.im,b.im); return c;} // b is complex
         if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.zeros(a.shape);ops.sub(c,a,new ndarray(b)); return c;} // b is array
+            if(typeof(b[0])=="number"){let c=pool.zeros(a.shape);ops.sub(c,a,new ndarray(b)); return c;} // b is array
             if(b[0] instanceof cx){let c={re:pool.zeros(a.shape),im:new ndarray(b.map(x=>-x.im))}; ops.sub(c.re,a,new ndarray(b.map(x=>x.re))); return c;} // b is complex
         }                       // careful with the direct assignment of imaginary part of b to c.im
         if(b.hasOwnProperty("stride")){ 
             if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.zeros(a.shape);ops.sub(c,a,b); return c ;
+            let c=pool.zeros(a.shape);ops.sub(c,a,b); return c ;
         }
     }
     console.error("universal sub has not been implemented for this use case");
@@ -892,7 +922,7 @@ var mul = function(a,b){
             if(b[0] instanceof cx){ return b.map(x=>x.mul(a))}; // b is complex array
             if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a*bij))} // b is matrix
         }
-        if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.muls(c,b,a); return c }; // b is ndarray
+        if (b.hasOwnProperty("stride")){let c=pool.ones(b.shape);ops.muls(c,b,a); return c }; // b is ndarray
     }
     if(a instanceof cx){ // a is complex
         if (b instanceof Array){return b.map(x=>a.mul(x))}; // b is numeric or complex array 
@@ -916,12 +946,12 @@ var mul = function(a,b){
             if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij*b));} // b is a number
             if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.mul(b)))} // b is complex
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                let c=new Array(a.length).fill().map(x=>new Array(b[0].length).fill().map(x=>0));
+                let c=new Array(a.length).fill(0).map(x=>new Array(b[0].length).fill(0).map(x=>0));
                 if(a[0].length==b.length){ // checking dimensions
                     
                     for(let row=0;row<a.length;row++){
                         for(let col=0;col<b[0].length;col++){
-                            presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
+                            let presum=a[row].map((arowcol,i)=>arowcol*b[i][col]);
                             // display(presum)
                             c[row][col]=presum.reduce((a,b)=>a+b);
                         }
@@ -933,15 +963,15 @@ var mul = function(a,b){
         }
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.ones(a.shape); ops.muls(c,a,b); return c;} // b is number
+        if(typeof(b)=="number"){let c=pool.ones(a.shape); ops.muls(c,a,b); return c;} // b is number
         if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,b.re);ops.muls(c.im,a,b.im); return c;} // b is complex
         if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.mul(c,a,new ndarray(b)); return c;} // b is array
+            if(typeof(b[0])=="number"){let c=pool.ones(a.shape);ops.mul(c,a,new ndarray(b)); return c;} // b is array
             if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>x.re)),im:new ndarray(b.map(x=>x.im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
         }                       // careful with the direct assignment of imaginary part of b to c.im
         if(b.hasOwnProperty("stride")){ 
             if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.ones(a.shape);ops.mul(c,a,b); return c;
+            let c=pool.ones(a.shape);ops.mul(c,a,b); return c;
         }
     }
     console.error("universal multiply has not been implemented for this use case");
@@ -962,7 +992,7 @@ var div = function(a,b){
             if(b[0] instanceof cx){ return b.map(x=>x.inv().mul(a))}; // b is complex array
             if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a/bij))} // b is matrix
         }
-        if (b.hasOwnProperty("stride")){ c=pool.ones(b.shape);ops.divs(c,b,a); return c }; // b is ndarray
+        if (b.hasOwnProperty("stride")){let c=pool.ones(b.shape);ops.divs(c,b,a); return c }; // b is ndarray
     }
     if(a instanceof cx){ // a is complex
         if (b instanceof Array){return b.map(x=>a.div(x))}; // b is numeric or complex array 
@@ -992,15 +1022,15 @@ var div = function(a,b){
         }        
     }
     if(a.hasOwnProperty("stride")){ // a is an ndarray
-        if(typeof(b)=="number"){c=pool.ones(a.shape); ops.divs(c,a,b); return c;} // b is number
+        if(typeof(b)=="number"){let c=pool.ones(a.shape); ops.divs(c,a,b); return c;} // b is number
         if(b instanceof cx){let c={re:pool.ones(a.shape),im:pool.ones(a.shape)}; ops.muls(c.re,a,(b.inv()).re);ops.muls(c.im,a,(b.inv()).im); return c;} // b is complex
         if(b instanceof Array){
-            if(typeof(b[0])=="number"){c=pool.ones(a.shape);ops.div(c,a,new ndarray(b)); return c;} // b is array
+            if(typeof(b[0])=="number"){let c=pool.ones(a.shape);ops.div(c,a,new ndarray(b)); return c;} // b is array
             if(b[0] instanceof cx){let c={re:new ndarray(b.map(x=>(x.inv()).re)),im:new ndarray(b.map(x=>(x.inv()).im))}; ops.muleq(c.re,a); ops.muleq(c.im,a);return c;} // b is complex
         }                       // careful with the direct assignment of imaginary part of b to c.im
         if(b.hasOwnProperty("stride")){ 
             if (a.size[0]==b.size[0] && a.size[1]==b.size[1]){ console.error("matrix dimensions must agree")};
-            c=pool.ones(a.shape);ops.div(c,a,b); return c;
+            let c=pool.ones(a.shape);ops.div(c,a,b); return c;
         }
     }
     console.error("universal div has not been implemented for this use case");
@@ -1019,7 +1049,7 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
             if(b[0] instanceof cx){ return b.map(x=>(new cx(a,0)).pow(x));}; // b is complex array
             if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a**bij))} // b is matrix
         }
-        if (b.hasOwnProperty("stride")){ c=new ndarray(b.data.map(x=>a**x)); return c }; // b is ndarray
+        if (b.hasOwnProperty("stride")){let c=new ndarray(b.data.map(x=>a**x)); return c }; // b is ndarray
     }
     if(a instanceof cx){ // a is complex
         if (b instanceof Array){return b.map(x=>a.pow(x))}; // b is numeric or complex array 
@@ -1043,8 +1073,8 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
             if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij**b));} // b is a number
             if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>(new cx(Aij,0)).pow(b)))} // b is complex
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                if(a.length==b.length & a[0].length==b[0].length){ // checking dimensions
-                    return a.map((arow,row)=>arow.map((arowcol,col)=>arow[col]**b[row][col]))// a and b are matrices then performs dot pow
+                if(a.length==b.length && a[0].length==b[0].length){ // checking dimensions
+                    return a.map((arow,row)=>arow.map((arowcol,col)=>Math.pow(arow[col],b[row][col])))// a and b are matrices then performs dot pow
                 }
                 else{ console.error("Matrix dimensions must agree"); return [] }
             }
@@ -1061,7 +1091,7 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         } // b is complex
         if(b instanceof Array){
             if(typeof(b[0])=="number"){
-                c=new ndarray(   a.data.map((x,i)=> x**b[i])   ); 
+                let c=new ndarray(   a.data.map((x,i)=> x**b[i])   ); 
                 return c;
             } // b is array
             if(b[0] instanceof cx){
@@ -1085,7 +1115,8 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
 
 
 var dotmul = function(A,B){
-    if(A.length==B.length & A[0].length==B[0].length){
+    if(typeof A == "number" && typeof B == "number" ){ return A*B}
+    if(A.length==B.length && A[0].length==B[0].length){
         let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
             for (let col = 0; col < A[0].length; col++) {
@@ -1101,7 +1132,7 @@ var dotmul = function(A,B){
 
 
 var dotdiv = function(A,B){
-    if(A.length==B.length & A[0].length==B[0].length){
+    if(A.length==B.length && A[0].length==B[0].length){
         let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
             for (let col = 0; col < A[0].length; col++) {
@@ -1124,7 +1155,7 @@ var deepcopy = function(A){
         return B;
     }
     else{
-        B=A;
+        let B=A;
         return B;
     }
 }
@@ -1135,6 +1166,9 @@ var disp=display;
 
 // LINEAR SOLVE 
 var linsolve = function(A,b){
+    if(!mldivide){
+        console.error("linsolve needs 'ndarray.js' file to be included to work. ")
+    }
     b=transpose(b);
     let x= mldivide(transpose(A),b[0]);
     return transpose(x);
