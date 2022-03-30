@@ -92,6 +92,8 @@ function run_tests(){
     var A=logspace(1,1000,4) // [1,10,100,1000]
     var B=logspace(1,25,3) // [1,5,25]
     test("logspace(1,1000,4)",[1,10,100,1000])
+    printLine("Known issue with logspace. Produces: ")
+    printLine(logspace(1,1000,4).toString())
     test("logspace(1,25,3)",[1,5,25])
     
     

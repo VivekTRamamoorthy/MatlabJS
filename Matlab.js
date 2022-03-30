@@ -17,7 +17,7 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve','elementwise','exp'],
+    'deepcopy','copy','disp','linsolve','all','any','map','exp'],
 }
 
 var clc = function(){console.clear()};

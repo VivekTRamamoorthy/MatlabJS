@@ -656,8 +656,56 @@
                         Include ndarray.js file in your project.
                     </td>
                 </tr>
+                <tr>
+                    <td>all</td>
+                    <td>all</td>
+                    <td>all([[true,true],[true,false]]) // false<br>
+                        all([true,true],[true,true]]) // true<br>
+                    </td>
+                    <td>If all elements are true, returns true <br>
+                        Multi-dimensional
+                    </td>
+                </tr>
+                <tr>
+                    <td>any</td>
+                    <td>any</td>
+                    <td>any([[false,false],[false,false]]) // false<br>
+                        any([false,false],[true,false]]) // true<br>
+                    </td>
+                    <td>If any element is true, returns true <br>
+                        Multi-dimensional 
+                    </td>
+                </tr>
+                <tr>
+                    <td>Not available</td>
+                    <td>map(funcion,arg1,arg2,arg3,...)</td>
+                    <td>map(x=>x>3, [1,2,3,4,5]) <br>
+                        // [false,false,false,true,true] <br>
+                        map(x=>x>3, [[1,2,3],[4,5,6]]) <br>
+                        // [[false,false,false],[true,true,true]] <br>
+                        map((a,b)=>a>b, [[1,2,3],[4,5,6]],3) <br>
+                        // [[false,false,false],[true,true,true]] <br>
+                        map((a,b)=>a+b, [[1,2,3],[4,5,6]],3,[[1,2,3],[4,5,6]] ) <br>
+                        // [[5,7,9],[11,13,15]] <br>
+                    </td>
+                    <td>Multi dimensional map:<br>
+                        Applies function across all elements,<br>
+                        If any arg is not an array, uses the value instead<br>
+                        Considers two arguments at a time until the last
+                    </td>
+                </tr>
+                <tr>
+                    <td>exp</td>
+                    <td>exp(number or complex or array or complex array</td>
+                    <td>exp(1) // 2.718..<br>
+                        a=exp(new cx(0,Math.PI/2)) <br>// 0+1i i.e. a.re=0 a.im=1 <br>
+                    </td>
+                    <td>Multi dimensional universal exponention function 
+                    </td>
+                </tr>
                 
             </table>
+            <br><br>
             
         </section>
         
