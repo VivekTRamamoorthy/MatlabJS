@@ -1203,13 +1203,24 @@ var all = function(booleans){
         if(!booleans[i]){
             return false
         }
+        if(booleans[i] instanceof Array){
+            if(!all(booleans[i])){
+                return false
+            }
+        }
     }
     return true
 }
 var any = function(booleans){
     for (let i = 0; i < booleans.length; i++) {
-        if(!booleans[i]){
-            return true
+        if(booleans[i]){
+            if(booleans[i] instanceof Array){
+                if(any(booleans[i])){
+                    return true
+                }
+            }else{
+                return true
+            }
         }
     }
     return false
@@ -1220,9 +1231,7 @@ var map = function(fun,a,...args){// multidimensional map function
         if(a instanceof Array){
             let result=[];
             for (let i = 0; i < a.length; i++) {
-                if(a[i]){
                     result[i]=map(fun,a[i])
-                }
             }
             return result
         }else{
