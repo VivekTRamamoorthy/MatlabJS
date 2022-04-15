@@ -1,4 +1,6 @@
 
 tests/*
 !test_script.js
+!test_node.js
 *.ts
+node_modules
