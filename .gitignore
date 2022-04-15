@@ -2,3 +2,4 @@
 tests/*
 !test_script.js
 *.ts
+node_modules
