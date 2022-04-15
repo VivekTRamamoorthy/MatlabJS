@@ -1,0 +1,28 @@
+{
+  "name": "matlabjs",
+  "version": "0.1.0",
+  "description": "A javascript minilibrary for basic matlab functions",
+  "main": "tests/test_node.js",
+  "directories": {
+    "test": "jest"
+  },
+  "scripts": {
+    "test": "node Matlab.js && node tests/test_node.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VivekTRamamoorthy/MatlabJS.git"
+  },
+  "keywords": [
+    "Matlab",
+    "Javascript",
+    "Scientific",
+    "computing"
+  ],
+  "author": "Vivek T Ramamoorthy",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/VivekTRamamoorthy/MatlabJS/issues"
+  },
+  "homepage": "https://github.com/VivekTRamamoorthy/MatlabJS#readme"
+}
