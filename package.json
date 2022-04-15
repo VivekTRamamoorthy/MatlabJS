@@ -4,7 +4,7 @@
   "description": "A javascript minilibrary for basic matlab functions",
   "main": "tests/test_node.js",
   "directories": {
-    "test": "jest"
+    "test": "test"
   },
   "scripts": {
     "test": "node Matlab.js && node tests/test_node.js"
