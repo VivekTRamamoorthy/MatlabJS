@@ -3,12 +3,10 @@
 // The purpose of this is to aid rapid prototyping of projects and they are NOT optimised for efficiency. 
 // By Vivek T R 
 // MIT License 2.0
-// Updated: 2022 February
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
-
 const MATLABJS_GLOBAL={
-    dateUpdated: "2022 March 30",
+    dateUpdated: "2022 April 15",
     version: "0.1.0",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
@@ -17,7 +15,8 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve','all','any','map','exp'],
+    'deepcopy','copy','disp','linsolve','all','any','map','exp','real','imag','angle','conj'],
+    classes:['cx']
 }
 
 var clc = function(){console.clear()};
@@ -60,7 +59,7 @@ var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [
             return [a.length,1];
         }
         if(dim==1){return a.length;}
-        if(dim==2){return a[0].length;}
+        if(dim==2){return a[0].length || 1;}
     }
     console.error("cannot resolve the size of this object.")
     return [];
@@ -1203,13 +1202,24 @@ var all = function(booleans){
         if(!booleans[i]){
             return false
         }
+        if(booleans[i] instanceof Array){
+            if(!all(booleans[i])){
+                return false
+            }
+        }
     }
     return true
 }
 var any = function(booleans){
     for (let i = 0; i < booleans.length; i++) {
-        if(!booleans[i]){
-            return true
+        if(booleans[i]){
+            if(booleans[i] instanceof Array){
+                if(any(booleans[i])){
+                    return true
+                }
+            }else{
+                return true
+            }
         }
     }
     return false
@@ -1220,9 +1230,7 @@ var map = function(fun,a,...args){// multidimensional map function
         if(a instanceof Array){
             let result=[];
             for (let i = 0; i < a.length; i++) {
-                if(a[i]){
                     result[i]=map(fun,a[i])
-                }
             }
             return result
         }else{
