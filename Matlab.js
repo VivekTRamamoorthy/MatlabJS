@@ -60,7 +60,7 @@ var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [
             return [a.length,1];
         }
         if(dim==1){return a.length;}
-        if(dim==2){return a[0].length;}
+        if(dim==2){return a[0].length || 1;}
     }
     console.error("cannot resolve the size of this object.")
     return [];
