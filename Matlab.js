@@ -3,11 +3,10 @@
 // The purpose of this is to aid rapid prototyping of projects and they are NOT optimised for efficiency. 
 // By Vivek T R 
 // MIT License 2.0
-// Updated: 2022 March
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
 const MATLABJS_GLOBAL={
-    dateUpdated: "2022 March 30",
+    dateUpdated: "2022 April 15",
     version: "0.1.0",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
