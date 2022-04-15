@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node Matlab.js && node tests/test_node.js"
+    // "test": "node Matlab.js && node tests/test_node.js"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -24,5 +25,8 @@
   "bugs": {
     "url": "https://github.com/VivekTRamamoorthy/MatlabJS/issues"
   },
-  "homepage": "https://github.com/VivekTRamamoorthy/MatlabJS#readme"
+  "homepage": "https://github.com/VivekTRamamoorthy/MatlabJS#readme",
+  "devDependencies": {
+    "jest": "^27.5.1"
+  }
 }
