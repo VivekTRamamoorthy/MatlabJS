@@ -32,34 +32,43 @@ const gcf = function(){ // get current figure no
 const figure = function(figureNo = null,parentElementId = null){
     // DIFFERENT CASES
     // No input
+    let figureHandle
     if (figureNo == null){ 
         PLOT_GLOBAL_CONTROLS.noOfFigures+=1;
         figureNo = PLOT_GLOBAL_CONTROLS.noOfFigures
         let figureId = 'Figure'+ figureNo;
-        createNewCanvas(figureId,parentElementId)
+        figureHandle = createNewCanvas(figureId,parentElementId);
+        PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]= figureHandle;
         updateGCF(figureNo,figureId)
         
-        return figureId;
+        return figureHandle;
     }
     // Number
     if(typeof figureNo =="number"){ // fetching the handle of an existing figure canvas
         let figureId =PLOT_GLOBAL_CONTROLS.figureCanvasIds[figureNo-1];
         if (typeof figureId =="undefined"){ 
             figureId = 'Figure'+figureNo
-            createNewCanvas(figureId,parentElementId);
+            figureHandle = createNewCanvas(figureId,parentElementId);
+            PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]= figureHandle;
+        } else{
+            figureHandle = PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1];
         }
         updateGCF(figureNo,figureId)
-        return figureId;
+        return figureHandle;
     }
     // String
     if(typeof figureNo == 'string'){
         let figureId = figureNo;
         let figureIndex = PLOT_GLOBAL_CONTROLS.figureCanvasIds.indexOf(figureId); // location of the current figure elem Id
-        if (figureIndex == -1){ // No matches found:= create new canvas with first non empty figure no
+        if (figureIndex == -1){ // No matches found:= 
             let canvas = document.getElementById(figureId);
-            if (canvas ==null){
+            if (canvas == null){ // create new canvas with first non empty figure no
                 
-                createNewCanvas(figureId,parentElementId)
+                figureHandle = createNewCanvas(figureId,parentElementId);
+                PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]= figureHandle;
+            }else{
+                figureHandle =  new Figure(figureId);
+                PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]= figureHandle;
             }
             let index=0;
             while(index<100){
@@ -69,15 +78,16 @@ const figure = function(figureNo = null,parentElementId = null){
                 index+=1;
             }
             figureNo = index+1; // first non empty figure
-            
+            PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]=figureHandle;
         } else{
             
             figureNo = figureIndex+1;
+            figureHandle = PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1];
         }
         updateGCF(figureNo,figureId)
         PLOT_GLOBAL_CONTROLS.noOfFigures=PLOT_GLOBAL_CONTROLS.figureCanvasIds.length;
         
-        return figureId
+        return figureHandle
         
     }
     
@@ -96,6 +106,10 @@ const figure = function(figureNo = null,parentElementId = null){
         canvas.id = newCanvasId;
         parentElement.appendChild(canvas);
         console.log('Creating new figure canvas with id ',newCanvasId)
+        let newfigure =  new Figure(newCanvasId);
+        PLOT_GLOBAL_CONTROLS.figureHandles[figureNo-1]=newfigure;
+    
+        return newfigure;  
     }
     
     
@@ -142,7 +156,12 @@ const plot = function(x,y,...args) {
                 break;
                 case 'axis':
                 figure.axis = args[index+1]
-                
+                break;
+                case 'xlim':
+                figure.xlim = args[index+1]
+                break;
+                case 'ylim':
+                figure.ylim = args[index+1]
                 break;
                 case 'xlabel':
                 figure.xlabel = args[index+1]
@@ -170,7 +189,7 @@ const plot = function(x,y,...args) {
         
 
 
-        if(figure.axis == 'auto' || figure.axis == 'fixed'){
+        if(figure.axis == 'auto' || figure.axis == 'tight'){
             figure.axisUpdate()
         }
 
@@ -195,7 +214,7 @@ class Figure{
         function convertRemToPixels(rem) {    
             return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
         }
-        this.padding = convertRemToPixels(5);
+        this.padding = convertRemToPixels(3);
         this.fontSize = convertRemToPixels(1);
         let canvaselem = document.getElementById(canvasId);
         if(canvaselem ==null){console.error('No such canvas exists in DOM')}
@@ -228,10 +247,7 @@ class Figure{
         this.c.clearRect(0,0,this.width,this.ytoPx(this.ylim[1]))
         this.c.clearRect(this.xtoPx(this.xlim[1]),0,this.width,this.height)
         this.c.clearRect(0,this.ytoPx(this.ylim[0]),this.width,this.height)
-
     }
-    
-    
     draw(){
         this.resize();
         this.clf()
@@ -241,6 +257,9 @@ class Figure{
             this.axisUpdate()
         }
         this.drawAxes()
+    }
+    drawLines(){
+        this.lines.forEach(line => this.drawLine(line));
     }
     axisUpdate(){
         let xLowerLimit = this.xlim[0];
@@ -261,6 +280,14 @@ class Figure{
                 yUpperLimit = max(yUpperLimit, max(line.y));
             }
         })
+        if(xLowerLimit == xUpperLimit){
+            xLowerLimit -= 0.001;
+            xUpperLimit += 0.001;
+        }
+        if(yLowerLimit == yUpperLimit){
+            yLowerLimit -= 0.001;
+            yUpperLimit += 0.001;
+        }
         this.xlim[0] = xLowerLimit;
         this.xlim[1] = xUpperLimit;
         this.ylim[0] = yLowerLimit;
@@ -383,9 +410,6 @@ class Figure{
         
         // title
         c.fillText(this.title, this.width/2, this.padding/2)
-        
-        
-        
     }
     
     
@@ -406,13 +430,49 @@ class Figure{
         }
         return this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx)
     }
+    pxToX(xpixel){
+        let xlim = this.xlim;
+        let paddingPx = this.padding;
+        if (xpixel<this.xtoPx(xlim[0])){
+            return xlim[0]
+        } else if( xpixel>this.xtoPx(xlim[1])){
+            return xlim[1]
+        }
+        // xpixel =(xvalue - xlim[0])/(xlim[1]-xlim[0])*(this.width-2*paddingPx)+paddingPx
+        let xvalue = (xpixel-paddingPx)/(this.width-2*paddingPx)*(xlim[1]-xlim[0])+ xlim[0];
+        if( this.xscale == 'log'){
+            // xpixel = (Math.log(xvalue) - Math.log(xlim[0]))/(Math.log(xlim[1])-Math.log(xlim[0]))*(this.width-2*paddingPx)+paddingPx
+            xvalue = Math.exp((xpixel-paddingPx)/(this.width-2*paddingPx)*(Math.log(xlim[1])-Math.log(xlim[0]))+ Math.log(xlim[0]) )
+            return xvalue
+        }
+        return xvalue
+    }
+    
+    pxToY(ypixel){
+        let ylim = this.ylim;
+        let paddingPx = this.padding;
+        if (ypixel>this.ytoPx(ylim[0])){
+            return ylim[0]
+        } else if( ypixel<this.ytoPx(ylim[1])){
+            return ylim[1]
+        }
+        // ypixel =  this.height -((yvalue - ylim[0])/(ylim[1]-ylim[0])*(this.height-2*paddingPx)+paddingPx)
+
+        let yvalue = (this.height - ypixel + paddingPx)/(this.height-2*paddingPx)*(ylim[1]-ylim[0])+ ylim[0];
+        if( this.yscale == 'log'){
+            // xpixel = (Math.log(xvalue) - Math.log(y[0]))/(Math.log(y[1])-Math.log(y[0]))*(this.width-2*paddingPx)+paddingPx
+            yvalue = Math.exp((ypixel-paddingPx)/(this.height-2*paddingPx)*(Math.log(ylim[1])-Math.log(ylim[0]))+ Math.log(ylim[0]) )
+            return yvalue
+        }
+        return yvalue
+    }
     
     drawLine(line){
         let c = this.c;
         let x = line.x;
         let y = line.y;
         
-        let  colorCode= line.color// "rgba("+color[0]+ "," +color[1]+","+ color[2]+",0.8)";
+        let  colorCode= line.color?line.color:this.color// "rgba("+color[0]+ "," +color[1]+","+ color[2]+",0.8)";
         c.strokeStyle= colorCode//"rgb(200,200,200)"; // from color value
         c.lineWidth = this.lineWidth
         c.beginPath()
@@ -436,6 +496,7 @@ class Figure{
         
         c.stroke();
     }
+
     
     drawPoint(cx,cy,r=3,color = this.color){
         let c = this.c;
@@ -533,6 +594,38 @@ function closeAll(){
     return 0;
 }
 
+PLOTLIB_OPS={
+    
+    fillRect(canvasID,x,y,width,height,color="#000"){
+        let c = document.getElementById(canvasID).getContext('2d')
+        c.fillStyle = color;
+        c.fillRect(x,y,width,height)
+    },
+    fillPolygon(canvasID,x,y,color="#000"){
+        let c = document.getElementById(canvasID).getContext('2d')
+        c.beginPath();
+        c.moveTo((x[0]),(y[0]))
+        for (let index = 1; index < x.length; index++) {
+            c.lineTo((x[index]),(y[index]));
+        }
+        c.closePath();
+        c.fillStyle = color;
+        c.fill();
+    },
+    drawPoint(canvasID,cx,cy,r=3,color="#000"){
+        let c = document.getElementById(canvasID).getContext('2d')
+        c.strokeStyle= color;//"rgb(200,200,200)"; // from color value
+        c.beginPath()
+        for (let theta = 0; theta <= Math.PI*2; theta=theta+0.01*Math.PI) {
+            c.lineTo(cx+r*Math.cos(theta), cy+r*Math.sin(theta));
+        }
+        c.fillStyle=color ;
+        c.stroke();
+    },
+    
+}
+
+
 // COLORMAPS
 PLOT_GLOBAL_CONTROLS.colormap=[
     [   0,     0,   143],
@@ -600,3 +693,10 @@ PLOT_GLOBAL_CONTROLS.colormap=[
     [ 143,     0,     0],
     [ 128,     0,     0]
 ]
+
+
+
+
+
+
+
