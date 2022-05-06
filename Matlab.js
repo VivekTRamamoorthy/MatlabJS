@@ -6,8 +6,8 @@
 // Check for latest updates at www.github.com/VivekTRamamoorthy/MatlabJS
 
 const MATLABJS_GLOBAL={
-    dateUpdated: "2022 April 15",
-    version: "0.1.0",
+    dateUpdated: "2022 May 6",
+    version: "0.1.1",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
     newfeatures: "map,exp,all,any, testing suite",
@@ -16,8 +16,11 @@ const MATLABJS_GLOBAL={
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
     'deepcopy','copy','disp','linsolve','all','any','map','exp','real','imag','angle','conj'],
-    classes:['cx']
+    classes:['cx'],
+    objects:['MATLABJS_GLOBAL','ticTime','tocTime',],
 }
+
+var pi =Math.PI
 
 var clc = function(){console.clear()};
 
@@ -65,8 +68,17 @@ var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [
     return [];
 }
 
-var length = function(a){
-    return a.length;
+var length = function(a){ // length of the largest array dimension
+    if(a instanceof Array){
+        if(a[0] instanceof Array){
+            return length(a[0])>a.length? length(a[0]): a.length;
+        }
+        return a.length;
+    }
+    if (a == null || a == undefined){
+        return 0;
+    } 
+    return 1;
 }
 
 var find = function(array){

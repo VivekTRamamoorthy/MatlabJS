@@ -23,16 +23,33 @@ The webpage also contains a cheatsheet.
 ## Using in your projects
 ### Method 1: CDN
 - Include  the following script tag to your html. This will include all updates and bug fixes.
-```
+```html
     <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"></script>
 ```
-
+This would only give the standard functions.
+To use plotting tools and linsolve function, additionally include `plotlib.js` and `ndarray.js` files.
 ### Method 2: Include file using script tag
 - Download the `Matlab.js`file from the [Github repository](https://github.com/VivekTRamamoorthy/MatlabJS) to your project folder.
 - Include the file in a script tag:
-```
+```html
     <script src="Matlab.js"></script>
 ```
+
+### Node: 
+Install using 
+``` npm install -g matlabjs```
+Use in your projects like below
+```javascript
+const MatlabJS = require("matlabjs")
+let A = MatlabJS.zeros(10,10)
+```
+or
+```javascript
+const {add, linspace} = require("matlabjs")
+let A = add(linspace(0,1),200)
+```
+
+
 
         
 ## Limitations
@@ -45,3 +62,5 @@ The webpage also contains a cheatsheet.
 
 MIT License 2.0 
 Vivek Thaminni Ramamoorthy
+
+## How to contribute

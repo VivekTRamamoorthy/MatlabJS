@@ -17,6 +17,7 @@
         <script src="plotlib.js"></script>
     
     <script src="./tests/test_script.js"></script>
+    <script src="./tests/run_tests.js"></script>
     
     
     
@@ -66,7 +67,7 @@
             </pre>
             Perform a quick check to see if the current version is stable.
             <div class="flex center">
-                <button id="test" onclick="run_tests()" class="runtest-button">Run tests</button>
+                <button id="test" onclick="run_tests_frontend()" class="runtest-button">Run tests</button>
             </div>
             
         </section>  
@@ -74,25 +75,36 @@
         
         <section class="">
             <h2>How to use this in your project:</h2>
-            <h3>CDN:</h3>
-            Include the following script tag in your html head.
+            
+            <h3>Method 1 - CDN (recommended):</h3>
+            Include the following script tag within your html head. 
             <pre><code>
                 &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"&gt;&lt;/script&gt;
             </code></pre>
-            <h3>File:</h3>
-            Add <code>Matlab.js</code> file  from <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a> to your project and 
-            and include it using a script tag.
-            <pre>
-                <code>
-                    &lt;script src="Matlab.js"&gt;&lt;/script&gt;
-                </code>
-            </pre>
-           
+            This would only give the standard functions. <br>
             To use plotting tools and <code>linsolve</code> function, additionally include plotlib.js and ndarray.js files.
             <pre><code>
                 &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/ndarray.js"&gt;&lt;/script&gt;
                 &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"&gt;&lt;/script&gt;
             </code></pre>
+            
+            <h3>Method 2 - File inclusion (robust):</h3>
+            Download <code>Matlab.js</code> file  from the <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS repository</a> to your project and 
+            and include it using a script tag as below.
+            <pre>
+                <code>
+                    &lt;script src="Matlab.js"&gt;&lt;/script&gt;
+                </code>
+            </pre>
+            
+            <h3>Node</h3>
+            Install using the following command in your terminal and use <code>const MatlabJS = require("matlabjs")</code> in your modules.
+            <pre>
+                <code>
+                    npm install -g matlabjs
+                </code>
+            </pre>
+            
 
         </section>
         
