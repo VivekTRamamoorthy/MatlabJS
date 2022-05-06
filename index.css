@@ -12,13 +12,6 @@ body{
 body a{
   color: dodgerblue;
 }
-p{
-  font-size:20px;
-}
-body a:hover{
-  color: dodgerblue;
-  background-color: yellow;
-}
 h1 {
   text-align: center;
   color: Dodgerblue;
@@ -62,6 +55,9 @@ footer{
   text-align: center;
   padding:30px;
 }
+section{
+  width:100%;
+}
 .content{
   margin-left:8%;
   margin-right:8%;
@@ -75,23 +71,11 @@ table, th, td {
   text-align: left;
   padding: 5px;
 }
-/* COLUMNS in mobile, tablet and desktop */
-/* Create four equal columns that floats next to each other */
-.column {
-  float:left;
-  width: 25%;
-  height:50%;
-  margin:2%;
-  padding:2%;
-  overflow:auto;
-  background-color:bisque;
-}
 table {
   margin:1px;
   padding: 1px;
 }
 .runtest-button{
-  /* position: fixed; */
   padding:0.5rem;
   top:10vh;
   right:10vw;
@@ -128,21 +112,13 @@ table {
   font-family: 'Courier New', Courier, monospace;
   color:white;
 }
-.fatal{
-  color: red;
-  font-size: large;
-}
 .failed{
   color: red;
 }
 .passed{
   color: lightgreen;
 }
-/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 1500px) {
-  .column {
-    width: 100%;
-  }
   .content{
     margin-left:3%;
     margin-right:3%;
@@ -155,24 +131,14 @@ table {
   align-items: center;
   justify-content: center;
 }
-/* On screens that are 992px wide or less, go from four columns to two columns */
 @media screen and (max-width: 992px) {
-  .column {
-    width: 50%;
-  }
   .content{
     margin-left:2%;
     margin-right:2%;
   }
 }
-section{
-  width:100%;
-}
-/* On screens that are 600px wide or less, make the columns stack on top of each other instead of next to each other */
+
 @media screen and (max-width: 600px) {
-  .column {
-    width: 100%;
-  }
   .content{
     margin-left:1%;
     margin-right:1%;

@@ -1,6 +1,9 @@
 
 tests/*
+node/*
 !test_script.js
 !test_node.js
+!test_export.js
+!run_tests.js
 *.ts
 node_modules

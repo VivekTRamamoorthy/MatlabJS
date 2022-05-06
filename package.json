@@ -1,8 +1,8 @@
 {
   "name": "matlabjs",
-  "version": "0.1.0",
+  "version": "0.1.1001",
   "description": "A javascript minilibrary for basic matlab functions",
-  "main": "tests/test_node.js",
+  "main": "node/main.js",
   "directories": {
     "test": "test"
   },
