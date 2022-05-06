@@ -64,3 +64,8 @@ MIT License 2.0
 Vivek Thaminni Ramamoorthy
 
 ## How to contribute
+- Fork the repository and clone it to your machine.
+- Add functions / bug fixes to `Matlab.js` or other files. 
+- Optionally include tests in `tests/run_tests.js` using the syntax `test("your_function(input1,input2)","expected_output")`.
+- Commit and push.
+- Raise pull request in GitHub and ensure the Actions check passes.
