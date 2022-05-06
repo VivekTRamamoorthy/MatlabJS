@@ -7,7 +7,7 @@
 
 const MATLABJS_GLOBAL={
     dateUpdated: "2022 May 6",
-    version: "0.1.1",
+    version: "0.1.1001",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
     newfeatures: "map,exp,all,any, testing suite",

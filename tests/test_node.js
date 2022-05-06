@@ -7,8 +7,9 @@ const fs = require('fs');
 eval( fs.readFileSync("Matlab.js", 'utf8')) // loading library
 eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading test suite
 console.log(add([1,2],1))
-run_tests() // calling test suite
 
+// calling test suite
+run_tests() 
 
 // testing function test("script1","script2")
 function test(scriptString, expectedResult,functionName=""){

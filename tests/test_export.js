@@ -8,4 +8,4 @@ console.log(MATLABJS.add(1,22)); // 23
 
 // if this and the test is successful, follow the steps to update the published package
 // npm version 0.x.x
-// npm publish
+// npm publish // This automatically creates a commit with the version number.
