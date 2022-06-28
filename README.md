@@ -1,4 +1,4 @@
-# A Javascript mini-library for MATLAB users
+# MatlabJS: A Javascript mini-library for MATLAB users
 
 This mini-library gives you some essential array and matrix functions written in JavaScript for easing your scientific computing projects or code conversion from Matlab or Octave. 
 
@@ -8,7 +8,7 @@ The library is loaded in the webpage and you may start testing it in the console
 The webpage also contains a cheatsheet.
 
 ## Examples 
-```
+```javascript
     tic()
     a=linspace(0,1,100) 
     disp(a) ;
@@ -69,7 +69,7 @@ You can contribute to this repository by following these steps:
 
 - Fork the repository and clone it locally, and create a new branch.
 - Include your contribution in the `Matlab.js` file
-    - Copy these modifications also in `node/main.js` also. The node export is maintained in a separate file.
+    - Copy these modifications also in `node/main.js`. The node export is maintained in a separate file.
 - Write testing scripts for the new function in `tests/run_tests.js` file
     - This can be done by including `test("your_function_name(args)","expectedoutput")` somewhere within the file.
     - An example would be `test("add2(4)",6)`
