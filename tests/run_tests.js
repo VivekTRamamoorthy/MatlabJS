@@ -1,3 +1,16 @@
+// This file is a part of MatlabJS: a JavaScript minilibrary
+
+// This is considered the MAIN TEST SUITE for MatlabJS both in browser and node.
+// This is also part of github actions CI/CD workflow that is triggered on every pull request.
+// Contributors are encouraged to include their tests in this script for any new functions they may include in Matlab.js
+// While this is the test suite script, it needs to be invoked in node by `node tests/test_node.js`
+
+// This defines a function run_tests() that needs printLine(), test() and equal() functions predefined
+// Irrespective of where the test results need to be displayed, this function can be used
+// as long as equal, test and printLine are predefined
+// equal(string1,string2) should return true if both string1 and string2 are deemed to be the same 
+// printLine will determine the way in which comment statements should be printed: "Testing add()"
+
 
 function run_tests(){
     // clc

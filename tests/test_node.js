@@ -1,11 +1,14 @@
-// TO RUN TESTS, ENTER THE FOLLOWING IN THE TERMINAL 
-// node tests/test_node.js
+// This script will test the Matlab.js file's functions by importing them into node and running test cases
+// To run test, type the following in terminal from the parent folder
+// `node tests/test_node.js`
+// It's recommended that contributors run this locally using node but raising pull requests
+// This script will also be run in github actions on every pull request for CI/CD
 
 
 // LOADING MATLAB JS
 const fs = require('fs');
-eval( fs.readFileSync("Matlab.js", 'utf8')) // loading library
-eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading test suite
+eval( fs.readFileSync("Matlab.js", 'utf8')) // loading the library
+eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading run_tests() function
 console.log(add([1,2],1))
 
 // calling test suite
