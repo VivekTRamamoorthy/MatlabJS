@@ -5,7 +5,7 @@
 }
 body{
   margin: 0%;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Geneva, Arial, Helvetica, sans-serif;
   background-color: whitesmoke;
   font-size:medium;
 }
@@ -117,6 +117,10 @@ table {
 }
 .passed{
   color: lightgreen;
+}
+.functionlist{
+  width:100%; 
+  font-family:courier;
 }
 @media screen and (max-width: 1500px) {
   .content{

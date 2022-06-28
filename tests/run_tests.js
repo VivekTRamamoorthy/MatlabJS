@@ -1,21 +1,33 @@
+// This file is a part of MatlabJS: a JavaScript minilibrary
+
+// This is considered the MAIN TEST SUITE for MatlabJS both in browser and node.
+// This is also part of github actions CI/CD workflow that is triggered on every pull request.
+// Contributors are encouraged to include their tests in this script for any new functions they may include in Matlab.js
+// While this is the test suite script, it needs to be invoked in node by `node tests/test_node.js`
+
+// This defines a function run_tests() that needs printLine(), test() and equal() functions predefined
+// Irrespective of where the test results need to be displayed, this function can be used
+// as long as equal, test and printLine are predefined
+// equal(string1,string2) should return true if both string1 and string2 are deemed to be the same 
+// printLine will determine the way in which comment statements should be printed: "Testing add()"
+
 
 function run_tests(){
-    console.log("Running tests ...");
-    
     // clc
-    console.log("Testing clc");
+    printLine("Testing clc: Check console");
     clc()
     
     // tic and toc
-    console.log("Testing tic and toc");
+    printLine("Testing tic and toc");
     tic();
     let t=toc();
+    printLine("Elapsed time is "+t)
     // disp({t})
     
 
     
     // linspace
-    console.log("Testing linspace");
+    printLine("Testing linspace");
     var A=linspace(0,1)
     // [0 .1010.. 1]
     var B=linspace(10,20,3)
@@ -26,7 +38,7 @@ function run_tests(){
     
     
     // logspace
-    console.log("Testing logspace");
+    printLine("Testing logspace");
     var A=logspace(1,1000,4) // [1,10,100,1000]
     var B=logspace(1,25,3) // [1,5,25]
     test("logspace(1,1000,4)",[1,10,100,1000])
@@ -36,14 +48,15 @@ function run_tests(){
     
     
     // disp display
-    console.log("Testing disp display")
+    printLine("Testing disp display")
     var A=linspace(0,1)
     var B=linspace(10,20,3)
+    printLine("See console for output")
     // disp(A)
     // display(B)
     
     // isfield
-    console.log("Testing isfield")
+    printLine("Testing isfield")
     struc={x:10,y:100}
     isfield(struc,'x') // true
     isfield(struc,'a') // false
@@ -52,12 +65,11 @@ function run_tests(){
     test("isfield({x:10,y:100},'z')",false)
     
     // size
-    console.log("Testing size")
-    var A=[[1,2,3],[3,4,5]]
-    size(A) // [2,3]
+    printLine("Testing size")
+    test("size([[1,2,3],[3,4,5]])","[2,3]")
     
     // length
-    console.log("Testing length")
+    printLine("Testing length")
     var A=[1,2,3,3,4,5]
     A.length // 6
     length(A) // 6
@@ -75,12 +87,12 @@ function run_tests(){
         
     
     // find
-    console.log("Testing find")
+    printLine("Testing find")
     var A=[1,2,0,0,4,5]
     find(A) // [1, 2, 5, 6]
     
     // sort
-    console.log("Testing sort");
+    printLine("Testing sort");
     var A=[3,2,1,5,7];
     [sortedA,indices]=sort(A);
     // disp(sortedA); // [1,2,3,5,7]
@@ -88,7 +100,7 @@ function run_tests(){
     
     
     // sum
-    console.log("Testing sum");
+    printLine("Testing sum");
     var A=[1,2,3]
     sum(A) // 6
     var B=[[1,2,3],[4,5,6],[7,8,9]]
@@ -99,7 +111,7 @@ function run_tests(){
     
     
     // abs
-    console.log("Testing abs");
+    printLine("Testing abs");
     var A=[1,-2,3]
     abs(A) // [1,2,3]
     var B=[[1,-2,3],[-4,5,6],[-7,8,-9]]
@@ -108,7 +120,7 @@ function run_tests(){
     
     
     // universal sqrt
-    console.log("Testing universal sqrt");
+    printLine("Testing universal sqrt");
     var A=[1,4,2]
     // disp(sqrt(A))
     // [1,2,1.414] A=rand(4)
@@ -117,14 +129,14 @@ function run_tests(){
     
     
     // setdiff
-    console.log("Testing setdiff");
+    printLine("Testing setdiff");
     var A=[4,3,1,5]
     var B=[5,3,7,8]
     setdiff(A,B) // [1,4]
     
     
     // min
-    console.log("Testing min");
+    printLine("Testing min");
     var A=[1,3,-5,9]
     // disp(min(A)) // -5
     var B=[[1,2,3],[4,5,6],[7,8,9]]
@@ -135,7 +147,7 @@ function run_tests(){
     // disp(min(B,[],2)) // row min
     
     // max
-    console.log("Testing max");
+    printLine("Testing max");
    var  A=[1,3,-5,9]
     // disp(max(A)) // -5
     var B=[[1,2,3],[4,5,6],[7,8,9]]
@@ -147,18 +159,18 @@ function run_tests(){
     
     
     // range
-    console.log("Testing range");
-    range(2,0.5,4)
-    // [2,2.5,3,3.5,4]
+    printLine("Testing range");
+    test("range(10)","[1,2,3,4,5,6,7,8,9,10]")
+    test("range(2,0.5,4)","[2,2.5,3,3.5,4]")
     
     // triu
-    console.log("Testing triu");
+    printLine("Testing triu");
     // disp(triu(rand(4)))
     // disp(triu(rand(4),1))
     
     
     // concatRows
-    console.log("Testing concatRows");
+    printLine("Testing concatRows");
     var A=ones(3,3)
     // disp(A)
     var B=rand(3,3)
@@ -168,7 +180,7 @@ function run_tests(){
     // 3 x 6 matrix
     
     // concatCols
-    console.log("Testing concatCols");
+    printLine("Testing concatCols");
     var A=ones(3,3)
     // disp(A)
     var B=rand(3,3)
@@ -179,14 +191,14 @@ function run_tests(){
     
     
     // transpose
-    console.log("Testing transpose");
+    printLine("Testing transpose");
     var A=[[1,2,3],[4,5,6]]
     transpose(A)
     // [[1,4],[2,5],[3,6]]
     
     
     // ones
-    console.log("Testing ones");
+    printLine("Testing ones");
     // disp(ones(3))
     // 3x3 matrix of 1s
     // disp(ones(3,2))
@@ -196,14 +208,14 @@ function run_tests(){
     
     
     // eye
-    console.log("Testing eye");
+    printLine("Testing eye");
     // disp(eye(3))// 3x3 identity matrix
     // disp(eye(4)) // 4x4 matrix of 1s
     // disp(eye(10)) // column of 1s
     
     
     // zeros
-    console.log("Testing zeros");
+    printLine("Testing zeros");
     // disp(zeros(3))
     // 3x3 matrix of 0s
     // disp(zeros(3,2))
@@ -213,7 +225,7 @@ function run_tests(){
     
     
     // rand
-    console.log("Testing rand");
+    printLine("Testing rand");
     // disp(rand())
     // random no in [0,1]
     // disp(rand(3))
@@ -225,7 +237,7 @@ function run_tests(){
     
     
     // randi
-    console.log("Testing randi");
+    printLine("Testing randi");
     // disp(randi(5))
     // random integer in {1,2...5}
     // disp(randi(5,3))
@@ -234,7 +246,7 @@ function run_tests(){
     // 3x2 random in {1,2...5}
     
     // diag
-    console.log("Testing diag");
+    printLine("Testing diag");
     // disp(diag([5,3,2]))
     // returns:
     // [ [5, 0, 0],
@@ -242,12 +254,12 @@ function run_tests(){
     // [0, 0, 2] ]
     
     // reshape
-    console.log("Testing reshape");
+    printLine("Testing reshape");
     reshape([1,2,3,4,5,6],2,3)
     // [1,2,3; 4,5,6]
     
     // get values from arrays or matrices
-    console.log("Testing get values from arrays or matrices");
+    printLine("Testing get values from arrays or matrices");
     var A=rand(10,10);// disp(A)
     var B=get(A,[1,2,3],[2,5,7])
     // disp(B)
@@ -255,7 +267,7 @@ function run_tests(){
     // disp(B) // gets all rows & first 3 cols
     
     // set values in arrays or matrices
-    console.log("Testing set values in arrays or matrices");
+    printLine("Testing set values in arrays or matrices");
     // Matrix example:
     var A=rand(5,5)
     set(A,range(1,3),range(1,3),0)
@@ -272,24 +284,22 @@ function run_tests(){
     // disp(A) // [1, 10, 3, 4, 20, 100]
     
     // repmat
-    console.log("Testing repmat");
+    printLine("Testing repmat");
     var A=rand(2,3)
     var B=repmat(A,4,5)
     // disp(B)
     
     // kron
-    console.log("Testing kron");
+    printLine("Testing kron");
     var A=[[1,2,3],[2,3,4]];
     var Y=[[1],[1],[1]];
-    // display(kron(A,Y))
+    test("kron([[1,2,3],[2,3,4]],[[1],[1],[1]])","[[1,2,3],[1,2,3],[1,2,3],[2,3,4],[2,3,4],[2,3,4]]" )
     
     
     // union
-    console.log("Testing union");
-    console.log("union([1,2,3,4],[5,3,10])");
-    console.log(" // [1,2,3,4,5,10] ");
-    // display(union([1,2,3,4],[5,3,10]))
-    test("union([1,2,3,4],[5,3,10])", "[1,2,3,4,5,10]","union" )
+    printLine("Testing union");
+    test("union([1,2,3,4],[5,3,10])","[1,2,3,4,5,10] ");
+    test("union([1,2,3,4],[5,3,10])", "[1,2,3,4,5,10]", "union" )
     
     
     var A=[10,2,3,3,4];

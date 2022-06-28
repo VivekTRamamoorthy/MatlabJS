@@ -64,8 +64,19 @@ MIT License 2.0
 Vivek Thaminni Ramamoorthy
 
 ## How to contribute
-- Fork the repository and clone it to your machine.
-- Add functions / bug fixes to `Matlab.js` or other files. 
-- Optionally include tests in `tests/run_tests.js` using the syntax `test("your_function(input1,input2)","expected_output")`.
-- Commit and push.
-- Raise pull request in GitHub and ensure the Actions check passes.
+
+You can contribute to this repository by following these steps:
+
+- Fork the repository and clone it locally, and create a new branch.
+- Include your contribution in the `Matlab.js` file
+    - Copy these modifications also in `node/main.js` also. The node export is maintained in a separate file.
+- Write testing scripts for the new function in `tests/run_tests.js` file
+    - This can be done by including `test("your_function_name(args)","expectedoutput")` somewhere within the file.
+    - An example would be `test("add2(4)",6)`
+- Test in browser 
+    - Serve and open `index.html` and click the `Run tests` button on the web page displayed. This will call `run_tests.js` and print results in a popup.
+- Test in node
+    - To test that `require('matlabjs')` would work, run `node tests/test_export.js` from Terminal.
+    - To run the testing suite, run `node tests/test_node.js` from Terminal.
+- If these tests pass, you may commit and raise a pull request to `main` branch.
+

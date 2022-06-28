@@ -1,3 +1,31 @@
+// This file is a part of MatlabJS: a Javascript minilibrary 
+// This file defines printLine(), test(), equal() functions to use run_tests() function
+// It also wraps run_tests() in a run_tests_frontend() function
+// run_tests_frontend() when called in the browser will display a pop of the test results.
+// This file and run_tests.js need to be included to make this work in the browser.
+
+function run_tests_frontend(){
+    
+    let existingDiv = document.getElementById("testDiv")
+    if(existingDiv){existingDiv.remove()}
+    
+    
+    const testDiv = document.createElement("div");
+    testDiv.classList.add("testDiv")
+    testDiv.id="testDiv"
+    testDiv.innerHTML="<h1>Running tests ...</h1>";
+    const closeBtn = document.createElement("button");
+    closeBtn.classList.add("close-button")
+    closeBtn.innerText="X";
+    closeBtn.style="position:absolute;top:0;right:0;"
+    closeBtn.onclick=()=>{document.getElementById("testDiv").remove()}
+    testDiv.appendChild(closeBtn)
+    document.body.appendChild(testDiv)
+    
+    run_tests()
+
+}
+
 function test(scriptString, expectedResult,functionName=""){
     let PASSED = false;
     try{
@@ -47,27 +75,7 @@ function equal(one,two){
     }
 }
 
-function run_tests_frontend(){
-    
-    let existingDiv = document.getElementById("testDiv")
-    if(existingDiv){existingDiv.remove()}
-    
-    
-    const testDiv = document.createElement("div");
-    testDiv.classList.add("testDiv")
-    testDiv.id="testDiv"
-    testDiv.innerHTML="<h1>Running tests ...</h1>";
-    const closeBtn = document.createElement("button");
-    closeBtn.classList.add("close-button")
-    closeBtn.innerText="X";
-    closeBtn.style="position:absolute;top:0;right:0;"
-    closeBtn.onclick=()=>{document.getElementById("testDiv").remove()}
-    testDiv.appendChild(closeBtn)
-    document.body.appendChild(testDiv)
-    
-    run_tests()
 
-}
 
 
 

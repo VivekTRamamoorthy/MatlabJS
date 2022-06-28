@@ -2,18 +2,43 @@
 <html>
 <head>
     <title>MatlabJS example</title>
-
+    
     <!-- INCLUDING MATLABJS FROM CDN -->
     <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"></script>
+
+    
+    <!-- INCLUDE FROM FILE -->
+    <!-- <script src="Matlab.js"></script> -->
+
+    <!-- OPTIONAL INCLUDES -->
+    <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/ndarray.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"></script>
+
 </head>
 <body>
-    <h1>Example browser usage for MatlabJS</h1>
+    <h1>Using MatlabJS in browser</h1>
     <p>Check the console for results</p>
     <script>
         // Example script starts here:
         document.write(range(0,1,10))
-        let A = linspace(0,)
+        let A = linspace(0,100)
+        console.log({A})
+        
+        tic();
+        t=toc();
+        
+        A=linspace(0,1)
+        disp(A)
+        // [0 .1010.. 1]
+        B=linspace(10,20,3)
+        display(B)
+        // [10,15,20]
+        A=logspace(1,1000,4)
+        disp(A)
+        // [1 10 100 1000]
+        B=logspace(1,25,3)
+        display(B)
+        // [1,5,25]
     </script>
 </body>
 </html>
