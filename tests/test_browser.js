@@ -57,9 +57,17 @@ function printLine(string){
     testDiv.appendChild(elem)
 }
 
+// equality check equal(object1,object2)
 function equal(one,two){
     if(one === two){
         return true
+    }
+    if(typeof(one) === "number" && typeof(two) === "number" ){
+        let tolerance = 1e-9;
+        if(Math.abs(one-two) <tolerance){
+            return true
+        }
+
     }
     if(one instanceof Array && two instanceof Array){
         if (one.length != two.length){return false}
@@ -73,6 +81,7 @@ function equal(one,two){
     if(one instanceof cx && two instanceof cx){
         return one.re === two.re && one.im === two.im
     }
+    return false
 }
 
 

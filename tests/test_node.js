@@ -7,32 +7,49 @@
 
 // LOADING MATLAB JS
 const fs = require('fs');
-eval( fs.readFileSync("Matlab.js", 'utf8')) // loading the library
+// eval( fs.readFileSync("Matlab.js", 'utf8')) // loading the library
 eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading run_tests() function
-console.log(add([1,2],1))
 
+
+// export directly from Matlab.js
+var { clc , tic , toc , isfield , linspace , logspace , size , length , find , sort ,
+    sum , norm , abs , sqrt , setdiff , min , max , range , concatRows , concatCols , transpose ,
+    ones , zeros , eye, rand , randi , randn_bm , randn , diag , triu , display , reshape , get , set ,
+    repmat , kron , union , unique , sparse , colon , add , sub , mul , div , pow , dotmul , dotdiv ,
+    deepcopy , copy , disp , linsolve , all , any , map , exp , real , imag , angle , conj,
+     cx, pi,
+     MATLABJS_GLOBAL, ticTime } = require("../Matlab.js");
+
+// var run_tests = require("./run_tests.js");
 // calling test suite
-run_tests() 
 
 // testing function test("script1","script2")
 function test(scriptString, expectedResult,functionName=""){
-    let PASSED = false;
+    let PASSED = false
+    let EvaluationError = false
     try{
             PASSED = equal(  eval(scriptString) , eval(expectedResult)   )
 
     }catch{
         PASSED =false
+        EvaluationError = true
     }
     if(PASSED === true){
-        console.log('\x1b[32m%s\x1b[0m',"TEST PASSED: "+scriptString+" === "+expectedResult);
+        console.log('\x1b[32m%s\x1b[0m',"TEST PASSED: "+scriptString+" === "+expectedResult)
     }else{
-        console.log( '\x1b[31m%s\x1b[0m ',"TEST FAILED "+scriptString+" != "+expectedResult);
+        console.log( '\x1b[31m%s\x1b[0m ',"TEST FAILED "+scriptString+" != "+expectedResult)
+        if(EvaluationError){
+            console.log('\x1b[31m%s\x1b[0m ',"Could not evaluate: "+scriptString+" and " +expectedResult)
+        }else{
+        console.log( '\x1b[31m%s\x1b[0m ',""+scriptString+" evaluated to " +eval(scriptString))
+        console.log( '\x1b[31m%s\x1b[0m ',""+expectedResult+" evaluated to " +eval(expectedResult))
+        }
     }
     return PASSED
 }
 
 // output of test for node
-function printLine(string){
+var printLine = function(string){
     console.log(string);
 }
 
@@ -40,6 +57,13 @@ function printLine(string){
 function equal(one,two){
     if(one === two){
         return true
+    }
+    if(typeof(one) === "number" && typeof(two) === "number" ){
+        let tolerance = 1e-9;
+        if(Math.abs(one-two) <tolerance){
+            return true
+        }
+
     }
     if(one instanceof Array && two instanceof Array){
         if (one.length != two.length){return false}
@@ -53,8 +77,10 @@ function equal(one,two){
     if(one instanceof cx && two instanceof cx){
         return one.re === two.re && one.im === two.im
     }
+    return false
 }
 
+run_tests() 
 
 
 

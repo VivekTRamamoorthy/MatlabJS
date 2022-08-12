@@ -7,7 +7,7 @@
 
 const MATLABJS_GLOBAL={
     dateUpdated: "2022 May 6",
-    version: "0.1.1001",
+    version: "0.2.0",
     url: "https://www.github.com/VivekTRamamoorthy/MatlabJS",
     documentation: "https://VivekTRamamoorthy.github.io/MatlabJS",
     newfeatures: "map,exp,all,any, testing suite",
@@ -15,9 +15,9 @@ const MATLABJS_GLOBAL={
     'sum','norm','abs','sqrt','setdiff','min','max','range','concatRows','concatCols','transpose',
     'ones','zeros','rand','randi','randn_bm','randn','diag','triu','display','reshape','get','set',
     'repmat','kron','union','unique','sparse','colon','add','sub','mul','div','pow','dotmul','dotdiv',
-    'deepcopy','copy','disp','linsolve','all','any','map','exp','real','imag','angle','conj'],
+    'deepcopy','copy','disp','linsolve','all','any','map','exp','real','imag','angle','conj',],
     classes:['cx'],
-    objects:['MATLABJS_GLOBAL','ticTime','tocTime',],
+    objects:['MATLABJS_GLOBAL','ticTime',],
 }
 
 var pi =Math.PI
@@ -29,13 +29,13 @@ var ticTime;
 var tic = function(){
     const d = new Date();
     ticTime=d.getTime();
-    console.log("Started recording time.")
+    // console.log("Started recording time.")
     return 0;
 }
 
 var toc = function(){
     const d = new Date();
-    var tocTime = d.getTime();
+    let tocTime = d.getTime();
     const elTime=(tocTime-ticTime)/1000;
     console.log("Elapsed time is: "+ elTime + " secs" )
     return elTime;
@@ -166,26 +166,27 @@ var sqrt = function(A){
 }
 
 var setdiff = function(arr1,arr2){
-    let result=[arr1[0]], indices=[1],donotinclude, current;
-    for (let i = 1; i < arr1.length; i++) {
-        current=arr1[i];
-        donotinclude=0;
-        // check to see if the current element exists in the result
-        for (let j = 0; j < result.length; j++) {
-            if(current==result[j]){donotinclude=1; break; }
-        }
-        if(donotinclude==1){break;}
-        // check to see if the current element exists in the array 2
-        for (let j = 0; j < arr2.length; j++) {
-            if(current==arr2[j]){donotinclude=1;break; }
-        }
-        // if(donotinclude==1){break;}
-        // if the element doesn't exist then push to the result and update the index
-        if(donotinclude==0){result.push(current); indices.push(i); }
-    }
-    // return [result,indices] // alternative two output argument result
-    result.sort((a,b)=>a-b);
-    return result
+    // let result=[arr1[0]], indices=[1];
+    // for (let i = 0; i < arr1.length; i++) {
+    //     let current=arr1[i];
+    //     let donotinclude=0;
+    //     // check to see if the current element exists in the result
+    //     for (let j = 0; j < result.length; j++) {
+    //         if(current==result[j]){donotinclude=1; break; }
+    //     }
+    //     if(donotinclude==1){break;}
+    //     // check to see if the current element exists in the array 2
+    //     for (let j = 0; j < arr2.length; j++) {
+    //         if(current==arr2[j]){donotinclude=1;break; }
+    //     }
+    //     // if(donotinclude==1){break;}
+    //     // if the element doesn't exist then push to the result and update the index
+    //     if(donotinclude==0){result.push(current); indices.push(i); }
+    // }
+    // // return [result,indices] // alternative two output argument result
+    // result.sort((a,b)=>a-b);
+    // return result
+    return  arr1.filter(x=> !arr2.includes(x));
 }
 
 var min = function(A,B=[],dim=1){ 
@@ -362,7 +363,7 @@ var transpose = function(A){
         B=A.map(x=>[x]);
         return B;
     }
-    B=new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
+    B= zeros(A[0].length,A.length);//new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
             // console.log({row,col})
@@ -391,7 +392,14 @@ var zeros = function(a,b=0){
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>0));
+    let res = new Array(rows);
+    for (let row = 0; row < rows; row++) {
+        res[row]=new Array(cols);
+        for (let col = 0; col < cols; col++) {
+            res[row][col]=0;
+        }
+    }
+    return  res;//new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>0));
 }
 
 var rand = function(a=0,b=0){
@@ -518,11 +526,11 @@ var reshape = function(vec,rows,cols){
         return mat;
     }else if(vec.length*vec[0].length==rows*cols){     // for vec of type matrices,  read column by column
         let p=0;
-        let mat= new Array(rows).fill(0).map(x=> new Array(cols).fill(0).map(x=>0));
+        let mat= zeros(rows,cols); //new Array(rows).fill(0).map(x=> new Array(cols).fill(0).map(x=>0));
         
         for(let col=0; col<cols; col++){
             for(let row=0; row<rows; row++){
-                let vcols=vec[0].length;
+                // let vcols=vec[0].length;
                 let vrows=vec.length;
                 let vcol=Math.floor(p/vrows) ; // current col in v
                 let vrow=p%vrows; // current row in v
@@ -699,13 +707,17 @@ var sparse = function(iK,jK,sK,m,n){
     let K=zeros(m,n);
     if(sK[0] instanceof Array){
         for (let i=0;i<iK.length;i++){
-            K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i][0]; // the minus ones to consider index starting from 1
+            if(sK[i][0]!=0){
+                K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i][0]; // the minus ones to consider index starting from 1
+            }
         }
         return K;
     }
     else{
         for (let i=0;i<iK.length;i++){
-            K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i]; // the minus ones to consider index starting from 1
+            if(sK[i][0]!=0){
+                K[iK[i]-1 ][jK[i] -1 ]=K[iK[i]-1 ][jK[i] -1 ]+sK[i]; // the minus ones to consider index starting from 1
+            }
         }
         return K;
     }
@@ -935,7 +947,19 @@ var mul = function(a,b,...args){
         if (b instanceof Array){ 
             if(typeof(b[0])=="number"){return b.map(x=>a*x)}; // b is number array
             if(b[0] instanceof cx){ return b.map(x=>x.mul(a))}; // b is complex array
-            if(b[0] instanceof Array){ return b.map((brow)=>brow.map((bij)=>a*bij))} // b is matrix
+            if(b[0] instanceof Array){
+                
+                let rows = b.length;
+                let cols = b[0].length;
+                let res = zeros(rows,cols);
+                for (let i = 0; i < rows; i++) {
+                    for (let j = 0; j < cols; j++) {
+                        res[i][j] = b[i][j]*a;
+                    }
+                }
+                return res
+                //  return b.map((brow)=>brow.map((bij)=>a*bij))
+            } // b is matrix
         }
         if (b.hasOwnProperty("stride")){let c=pool.ones(b.shape);ops.muls(c,b,a); return c }; // b is ndarray
     }
@@ -971,12 +995,13 @@ var mul = function(a,b,...args){
             if(typeof(b)=="number"){return a.map(Arow=>Arow.map(Aij=>Aij*b));} // b is a number
             if(b instanceof cx){return a.map(Arow=>Arow.map(Aij=>Aij.mul(b)))} // b is complex
             if(b instanceof Array && b[0] instanceof Array){ // b is a matrix
-                let c=new Array(a.length).fill(0).map(x=>new Array(b[0].length).fill(0).map(x=>0));
                 if(a[0].length==b.length){ // checking dimensions
-                    for(let row=0;row<a.length;row++){
-                        for(let col=0;col<b[0].length;col++){
-                            let cij=0
-                            for (let k = 0; k < a[row].length; k++) {
+                    let c=zeros(a.length,b[0].length);//new Array(a.length).fill(0).map(x=>new Array(b[0].length).fill(0).map(x=>0));
+                    const nk =a[0].length;const nrow =a.length; const ncol = b[0].length;
+                    for(let row=0;row<nrow;row++){
+                        for(let col=0;col<ncol;col++){
+                            let cij=0; 
+                            for (let k = 0; k < nk; k++) {
                                 cij += a[row][k]*b[k][col];
                             }
                             // display(presum)
@@ -1242,7 +1267,7 @@ var map = function(fun,a,...args){// multidimensional map function
         if(a instanceof Array){
             let result=[];
             for (let i = 0; i < a.length; i++) {
-                    result[i]=map(fun,a[i])
+                result[i]=map(fun,a[i])
             }
             return result
         }else{
@@ -1281,4 +1306,18 @@ var exp = function(A){
     console.error("Cannot find absolute for this input type")
 }
 
+try{
+    
+    const MATLABJS = { clc , tic , toc , isfield , linspace , logspace , size , length , find , sort ,
+     sum , norm , abs , sqrt , setdiff , min , max , range , concatRows , concatCols , transpose ,
+     ones , zeros , eye, rand , randi , randn_bm , randn , diag , triu , display , reshape , get , set ,
+     repmat , kron , union , unique , sparse , colon , add , sub , mul , div , pow , dotmul , dotdiv ,
+     deepcopy , copy , disp , linsolve , all , any , map , exp , real , imag , angle , conj,
+      cx, pi,
+      MATLABJS_GLOBAL, ticTime };
+    // MATLABJS_GLOBAL.listOfFunctions.forEach(func_name => {MATLABJS[func_name]=eval(func_name)})
 
+    module.exports =  MATLABJS
+}catch(err){
+    // console.log(err)
+}
