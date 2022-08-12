@@ -56,13 +56,13 @@
             Try out these examples: <br>
             <pre>
                 <code>
-                    tic() 
-                    a=linspace(0,1) 
-                    disp(a)
-                    b=eye(8) 
-                    c=rand(8) 
-                    d=mul(b,c) 
-                    toc() 
+    tic() 
+    a=linspace(0,1) 
+    disp(a)
+    b=eye(8) 
+    c=rand(8) 
+    d=mul(b,c) 
+    toc() 
                 </code>
             </pre>
             Perform a quick check to see if the current version is stable.
@@ -78,31 +78,26 @@
             
             <h3>Method 1 - CDN (recommended):</h3>
             Include the following script tag within your html head. 
-            <pre><code>
-                &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"&gt;&lt;/script&gt;
+            <pre><code>     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"&gt;&lt;/script&gt;
             </code></pre>
             This would only give the standard functions. <br>
             To use plotting tools and <code>linsolve</code> function, additionally include plotlib.js and ndarray.js files.
-            <pre><code>
-                &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/ndarray.js"&gt;&lt;/script&gt;
-                &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"&gt;&lt;/script&gt;
+            <pre><code>     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/ndarray.js"&gt;&lt;/script&gt;   
+     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"&gt;&lt;/script&gt;
             </code></pre>
             
             <h3>Method 2 - File inclusion (robust):</h3>
             Download <code>Matlab.js</code> file  from the <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS repository</a> to your project and 
             and include it using a script tag as below.
             <pre>
-                <code>
-                    &lt;script src="Matlab.js"&gt;&lt;/script&gt;
+                <code>     &lt;script src="Matlab.js"&gt;&lt;/script&gt;
                 </code>
             </pre>
             
             <h3>Node</h3>
             Install using the following command in your terminal and use <code>const MatlabJS = require("matlabjs")</code> in your modules.
             <pre>
-                <code>
-                    npm install -g matlabjs
-                </code>
+                <code>  npm install matlabjs</code>
             </pre>
             
 
@@ -168,7 +163,7 @@
                         B=logspace(1,25,3)<br>
                         // [1,5,25]
                     </td>
-                    <td>Produces linearly spaced array. </td>
+                    <td>Produces logarithmically spaced arrays. </td>
                 </tr>
                 <tr>
                     <td>disp, display</td>

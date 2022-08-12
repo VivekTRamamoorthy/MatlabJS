@@ -4,7 +4,8 @@
 // This script will import the node/main.js exports and test a few functions to confirm if the import worked.
 
 
-let MATLABJS =require("../node/main.js")
+// let MATLABJS =require("../node/main.js")
+let MATLABJS =require("../Matlab.js")
 
 console.log(MATLABJS.isfield(MATLABJS,"clc")) // true
 console.log(MATLABJS.add(1,22)); // 23
