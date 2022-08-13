@@ -409,7 +409,7 @@ function run_tests() {
 }
 
 try{
-    module.exports =  run_tests;
+    module.exports = { run_tests };
 }catch(err){
     // console.log(err)
 }

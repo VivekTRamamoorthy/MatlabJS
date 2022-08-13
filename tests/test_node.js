@@ -6,9 +6,9 @@
 
 
 // LOADING MATLAB JS
-const fs = require('fs');
+// const fs = require('fs');
 // eval( fs.readFileSync("Matlab.js", 'utf8')) // loading the library
-eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading run_tests() function
+// eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading run_tests() function
 
 
 // export directly from Matlab.js
@@ -20,11 +20,12 @@ var { clc , tic , toc , isfield , linspace , logspace , size , length , find , s
      cx, pi,
      MATLABJS_GLOBAL, ticTime } = require("../Matlab.js");
 
+     var {run_tests} = require("./run_tests.js");
 // var run_tests = require("./run_tests.js");
 // calling test suite
 
 // testing function test("script1","script2")
-function test(scriptString, expectedResult,functionName=""){
+var test = function(scriptString, expectedResult,functionName=""){
     let PASSED = false
     let EvaluationError = false
     try{
