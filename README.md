@@ -9,14 +9,14 @@ The webpage also contains a cheat sheet.
 
 ## Examples 
 ```javascript
-    tic()
-    a=linspace(0,1,100) 
-    disp(a) ;
-    b=eye(4); 
-    c=rand(4); 
-    d=mul(b,c) ;
-    disp(d)
-    toc();
+    tic()
+    a=linspace(0,1,100) 
+    disp(a) ;
+    b=eye(4); 
+    c=rand(4); 
+    d=mul(b,c) ;
+    disp(d)
+    toc();
 ```
 
 ## Using in your projects
@@ -51,10 +51,10 @@ let A = add(linspace(0,1),200)
 
 
 ## Limitations
-- Operator overloading is not permitted in JS. So we cannot yet write `c=A*b` for matrices. Instead we have to use the universal functions such as `c=mul(A,b)` to multiply.
-- A note of caution that all functions are loaded into the global scope using `var`s so that you may overwrite them.
-- The code is not optimised for efficiency.
-- This project is in its primitive stage. More functionalities will be included as time permits.
+- Operator overloading is not permitted in JS. So we cannot yet write `c=A*b` for matrices. Instead, one has to use the universal functions to multiply, for example, `c=mul(A,b)`.
+- A note of caution that all functions are loaded into the global scope using `var`s so that users may overwrite them if needed like in Matlab.
+- The code may not be optimised for efficiency. For intensive computations, users are advised to manually optimise for their use case if performance is an issue. 
+- This project is in its primitive stage, and more functionalities will be included as time progresses.
 
 ## License
 
@@ -66,14 +66,19 @@ Vivek Thaminni Ramamoorthy
 You can contribute to this repository by following these steps:
 
 - Fork the repository and clone it locally, and create a new branch.
-- Include your contribution in the `Matlab.js` file
-- Copy these modifications also in `node/main.js` also. The node export is maintained in a separate file.
-- Write testing scripts for the new function in `tests/run_tests.js` file
-- This can be done by including `test("your_function_name(args)","expectedoutput")` somewhere within the file.
-- An example would be `test("add2(4)",6)`
+- Include your contribution in the `Matlab.js` file. For example:
+```javascript
+    var add2 = function(a){
+     return a+2;
+     }
+```
+- Write testing scripts for the new function in `tests/run_tests.js` file by including `test("your_function_name(args)","expectedoutput")`.
+    - An example would be `test("add2(4)",6)`
 - Test on the browser
-- Serve and open `index.html` and click the `Run tests` button on the web page displayed. This will call `run_tests.js` and print results in a popup.
+    - Serve and open `index.html` and click the `Run tests` button on the web page displayed. This will call `run_tests.js` and print results in a popup.
 - Test on Node
-- To test that `require('matlabjs')` would work for node users, run `node tests/test_export.js` from terminal.
-- To run the testing suite, run `npm test` from the terminal.
+    - To test that `require('matlabjs')` would work for node users, run `node tests/test_export.js` from the terminal.
+    - To run the testing suite, run `npm test` from the terminal.
 - If these tests pass, you may commit and raise a pull request to the `main` branch.
+
+
