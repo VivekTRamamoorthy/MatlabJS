@@ -53,7 +53,7 @@ let A = add(linspace(0,1),200)
 ## Limitations
 - Operator overloading is not permitted in JS. So we cannot yet write `c=A*b` for matrices. Instead, one has to use the universal functions to multiply, for example, `c=mul(A,b)`.
 - A note of caution that all functions are loaded into the global scope using `var`s so that users may overwrite them if needed like in Matlab.
-- The code may not be optimised for efficiency. For intesive computations, users are advised to manually optimise for their use case if performance is an issue. 
+- The code may not be optimised for efficiency. For intensive computations, users are advised to manually optimise for their use case if performance is an issue. 
 - This project is in its primitive stage, and more functionalities will be included as time progresses.
 
 ## License
