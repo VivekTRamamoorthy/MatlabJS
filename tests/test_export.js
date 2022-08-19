@@ -1,8 +1,6 @@
 // LOADING NODE MODULE EXPORT
 // This is test script to ensure that the require in node exports correctly
 // To test this, run `node tests/test_export`
-// This script will import the node/main.js exports and test a few functions to confirm if the import worked.
-
 
 // let MATLABJS =require("../node/main.js")
 let MATLABJS =require("../Matlab.js")

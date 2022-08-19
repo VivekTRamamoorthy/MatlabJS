@@ -111,7 +111,7 @@ function run_tests() {
 
   // setdiff
   printLine("\nTesting setdiff");
-  test("setdiff([4,3,1,5],[5,3,7,8])", "[4,1]");
+  test("setdiff([4,3,1,5],[5,3,7,8])", "[1,4]");
 
   // max
   printLine("\nTesting max");
@@ -368,6 +368,7 @@ function run_tests() {
   // disp(div(ones(4),rand(4)))
 
   // dotdiv
+  printLine("\nTesting dotdiv")
   var A = rand(1, 4);
   var B = mul(100, ones(1, 4));
   // disp(dotdiv(A,B))
@@ -407,6 +408,7 @@ function run_tests() {
 
   printLine("END OF TESTS \n \n \n");
 }
+
 
 try{
     module.exports = { run_tests };

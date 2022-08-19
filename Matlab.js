@@ -186,7 +186,7 @@ var setdiff = function(arr1,arr2){
     // // return [result,indices] // alternative two output argument result
     // result.sort((a,b)=>a-b);
     // return result
-    return  arr1.filter(x=> !arr2.includes(x));
+    return  arr1.filter(x=> !arr2.includes(x)).sort((a,b)=>a-b);
 }
 
 var min = function(A,B=[],dim=1){ 
@@ -346,9 +346,7 @@ var concatRows = function(A,B)
 }
 
 var concatCols = function(A,B){
-    
     if(A[0].length==B[0].length){
-        
         let C=A.concat(B);
         return C;
     }
@@ -366,7 +364,6 @@ var transpose = function(A){
     B= zeros(A[0].length,A.length);//new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
-            // console.log({row,col})
             B[row][col]=A[col][row];
         }
     }
