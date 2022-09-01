@@ -55,20 +55,24 @@ var logspace = function(a,b,n=100){
 }
 
 var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
-    if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
+    if(typeof(a) === "number"){ return [1,1]}
     if(a instanceof Array){
         if(dim==0){
-            if(a[0] instanceof Array){return [a.length,a[0].length];}
-            return [a.length,1];
+            if(a[0] instanceof Array){
+                return [a.length,a[0].length];
+            }
+            return [1,a.length];
         }
         if(dim==1){return a.length;}
         if(dim==2){return a[0].length || 1;}
     }
+    if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
     console.error("cannot resolve the size of this object.")
     return [];
 }
 
 var length = function(a){ // length of the largest array dimension
+    if(typeof(a) === "number"){ return 1}
     if(a instanceof Array){
         if(a[0] instanceof Array){
             return length(a[0])>a.length? length(a[0]): a.length;

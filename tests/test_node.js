@@ -38,7 +38,7 @@ var test = function(scriptString, expectedResult){
     }else{
         console.log( '\x1b[31m%s\x1b[0m ',"TEST FAILED "+scriptString+" != "+expectedResult)
         if(EvaluationError){
-            console.log('\x1b[31m%s\x1b[0m ',"Could not evaluate: "+scriptString+" and " +expectedResult)
+            console.log('\x1b[31m%s\x1b[0m ',"Could not evaluate: "+scriptString+" or " +expectedResult)
         }else{
         console.log( '\x1b[31m%s\x1b[0m ',""+scriptString+" evaluated to " +eval(scriptString))
         console.log( '\x1b[31m%s\x1b[0m ',""+expectedResult+" evaluated to " +eval(expectedResult))

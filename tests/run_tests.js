@@ -25,33 +25,37 @@ function run_tests() {
 
   // linspace
   printLine("\nTesting linspace");
+
   test("linspace(0,1,2)", "[0,1]");
   test("linspace(0,0,5)", "[0,0,0,0,0]");
   test("linspace(0,-4,5)", "[0,-1,-2,-3,-4]");
+  test("linspace(1,100)", "new Array(100).fill().map((x,i)=>i+1)");
 
   // logspace
   printLine("\nTesting logspace");
   test("logspace(1,25,3)", [1, 5, 25]);
   test("logspace(1,1000,4)", [1, 10, 100, 1000]);
-  printLine("Known issue with logspace(1,1000,4). Produces: ");
-  printLine(logspace(1, 1000, 4).toString());
+  test("logspace(1,2)"," new Array(100).fill(0).map((x,i)=>Math.pow(2,i/99))");
 
   // isfield
   printLine("\nTesting isfield");
-  struc = { x: 10, y: 100 };
   test("isfield({x:10,y:100},'x')", true);
   test("isfield({x:10,y:100},'y')", true);
   test("isfield({x:10,y:100},'z')", false);
 
   // size
   printLine("\nTesting size");
+  test("size(1)", [1,1]);
+  test("size([1])", "[1,1]");
+  test("size([[1]])", "[1,1]");
+  test("size([1,2,3,3,4,5])", "[1,6]");
+  test("size([[1,2,3,3,4,5]])", "[1,6]");
+  test("size([[1],[2],[3],[3],[4],[5]])", "[6,1]");
   test("size([[1,2,3],[3,4,5]])", "[2,3]");
+  
 
   // length
   printLine("\nTesting length");
-  var A = [1, 2, 3, 3, 4, 5];
-  A.length; // 6
-  length(A); // 6
   test("length(0)", "1");
   test("length(1)", "1");
   test("length(1.2)", "1");
@@ -62,29 +66,27 @@ function run_tests() {
   test("length([[1,2,3,4]])", "4");
   test("length([[[1,2,3,4]]])", "4");
   test("length(undefined)", "0");
+  test("length(null)", "0");
 
   // find
   printLine("\nTesting find");
   test("find([1,2,0,0,4,5])", "[1, 2, 5, 6]");
+  
 
   // sort
   printLine("\nTesting sort");
-  var A = [3, 2, 1, 5, 7];
-  [sortedA, indices] = sort(A);
-  // disp(sortedA); // [1,2,3,5,7]
-  // disp(indices); // [3,2,1,4,5]
   test("sort([3,2,1,5,7])", "[[1,2,3,5,7],[3,2,1,4,5]]");
 
   // sum
   printLine("\nTesting sum");
-  var A = [1, 2, 3];
-  test("sum([1,2,3])", "6"); // 6
-  var B = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-  ];
-  // disp(sum(B,1))
+  test("sum([1,2,3])", "6"); 
+  test("sum([[1,2,3]])", "6"); 
+  test("sum([[1,2,3]],1)", "[[1,2,3]]"); 
+  test("sum([[1,2,3]],2)", "[[6]]"); 
+  test("sum([[1,2,3],[1,2,3]], 1)", "[[2,4,6]]"); 
+  test("sum([[1,2,3],[1,2,3]], 2)", "[[6],[6]]"); 
+
+
   printLine("column sum");
   test("sum([[1,2,3],[4,5,6],[7,8,9]] , 1)", "[[12,15,18]]");
   printLine("row sum");
@@ -177,6 +179,10 @@ function run_tests() {
 
   // ones
   printLine("\nTesting ones");
+  test("ones(1)","[[1]]")
+  test("ones(2)","[[1,1],[1,1]]")
+  test("ones(3)","[[1,1,1],[1,1,1],[1,1,1]]")
+  test("ones(4)","[[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]")
   // disp(ones(3))
   // 3x3 matrix of 1s
   // disp(ones(3,2))

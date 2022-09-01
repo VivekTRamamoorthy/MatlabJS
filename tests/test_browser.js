@@ -28,11 +28,15 @@ function run_tests_frontend(){
 
 function test(scriptString, expectedResult,functionName=""){
     let PASSED = false;
+    let EvaluationError = false
+
     try{
             PASSED = equal(  eval(scriptString) , eval(expectedResult)   )
 
     }catch{
         PASSED =false
+        EvaluationError = true
+
     }
     if(PASSED === true){
         let elem = document.createElement("div")
@@ -43,9 +47,14 @@ function test(scriptString, expectedResult,functionName=""){
     }else{
         let elem = document.createElement("div")
         elem.classList.add("failed")
-        elem.innerHTML="TEST FAILED "+scriptString+" != "+expectedResult;
         let testDiv = document.getElementById("testDiv");
         testDiv.appendChild(elem)
+
+        if(EvaluationError){
+            elem.innerHTML="TEST FAILED: Could not evaluate: "+scriptString+" or " +expectedResult;
+        }else{
+            elem.innerHTML="TEST FAILED: <br>"+scriptString+" evaluated to " +eval(scriptString)+"<br>"+expectedResult+" evaluated to " +eval(expectedResult);
+        }
     }
     return PASSED
 }
