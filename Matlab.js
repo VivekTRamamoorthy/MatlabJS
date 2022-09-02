@@ -438,12 +438,15 @@ var rand = function(a=0,b=0){
 }
 
 var randi = function(n,a=0,b=0){
-    if(a==0 && b==0){return Math.floor(Math.random()*n);}
+    if (!n){
+        console.error("Not enough input arguments for randi")
+    }
+    if(a==0 && b==0){return Math.ceil(Math.random()*n);}
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.ceil(Math.random()*(n-1))));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.ceil(Math.random()*(n))));
 }
 
 
@@ -898,7 +901,6 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
     
     
     console.error("universal add has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -957,7 +959,6 @@ var sub = function(a,b){
         }
     }
     console.error("universal sub has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1061,7 +1062,6 @@ var mul = function(a,b,...args){
         }
     }
     console.error("universal multiply has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1120,7 +1120,6 @@ var div = function(a,b){
         }
     }
     console.error("universal div has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1194,7 +1193,6 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         } // b is complex
     }
     console.error("universal pow has not been implemented for this use case");
-    return "bulb";
     
 } 
 
