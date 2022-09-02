@@ -151,6 +151,7 @@ function run_tests() {
   // disp(B)
   var C = concatRows(A, B);
   test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
+  test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
   // disp(C)
   // 3 x 6 matrix
 
@@ -204,6 +205,10 @@ function run_tests() {
 
   // rand
   printLine("\nTesting rand");
+
+  test("rand()>0 && rand()<1", "true")
+  test("rand(1)>0 && rand(1)<1", "true")
+  test("all(map((x,i)=>{return x>0},rand(2))) && all(map(x=>x<1, rand(2)))", "true")
 
   test("rand()>0 && rand()<1", "true")
   test("rand(1)>0 && rand(1)<1", "true")
