@@ -898,7 +898,6 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
     
     
     console.error("universal add has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -957,7 +956,6 @@ var sub = function(a,b){
         }
     }
     console.error("universal sub has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1061,7 +1059,6 @@ var mul = function(a,b,...args){
         }
     }
     console.error("universal multiply has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1120,7 +1117,6 @@ var div = function(a,b){
         }
     }
     console.error("universal div has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1194,7 +1190,6 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         } // b is complex
     }
     console.error("universal pow has not been implemented for this use case");
-    return "bulb";
     
 } 
 

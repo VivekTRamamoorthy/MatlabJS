@@ -150,6 +150,7 @@ function run_tests() {
   var B = rand(3, 3);
   // disp(B)
   var C = concatRows(A, B);
+  test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
   // disp(C)
   // 3 x 6 matrix
 
@@ -187,21 +188,26 @@ function run_tests() {
 
   // eye
   printLine("\nTesting eye");
-  // disp(eye(3))// 3x3 identity matrix
-  // disp(eye(4)) // 4x4 matrix of 1s
-  // disp(eye(10)) // column of 1s
+  test("eye(1)","[[1]]")
+  test("eye(2)","[[1,0],[0,1]]")
+  test("eye(3)","[[1,0,0],[0,1,0],[0,0,1]]")
+  test("eye(4)","[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]")
+
 
   // zeros
   printLine("\nTesting zeros");
-  // disp(zeros(3))
-  // 3x3 matrix of 0s
-  // disp(zeros(3,2))
-  // 3x2 matrix of 0s
-  // disp(zeros(3,1))
-  // column of 0s
+  test("zeros(1)","[[0]]")
+  test("zeros(2)","[[0,0],[0,0]]")
+  test("zeros(3)","[[0,0,0],[0,0,0],[0,0,0]]")
+  test("zeros(4)","[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]")
+
 
   // rand
   printLine("\nTesting rand");
+
+  test("rand()>0 && rand()<1", "true")
+  test("rand(1)>0 && rand(1)<1", "true")
+  test("all(map((x,i)=>{return x>0},rand(2))) && all(map(x=>x<1, rand(2)))", "true")
   // disp(rand())
   // random no in [0,1]
   // disp(rand(3))
@@ -213,6 +219,7 @@ function run_tests() {
 
   // randi
   printLine("\nTesting randi");
+  test("all(map(")
   // disp(randi(5))
   // random integer in {1,2...5}
   // disp(randi(5,3))
