@@ -85,14 +85,38 @@ var length = function(a){ // length of the largest array dimension
     return 1;
 }
 
-var find = function(array){
+var find = function(inp){
     let found=[];
-    for (let i = 0; i < array.length; i++) {
-        if(array[i]!=0){
-            found.push(i+1);
+    if(typeof(inp) == "number"){
+        if(inp){
+            found = 1; 
+        }
+        return found
+    }
+    else if (inp instanceof Array){
+        if(typeof(inp[0]) === "number"){
+            for (let i = 0; i < inp.length; i++) {
+                if(inp[i]){
+                    found.push(i+1);
+                }
+            }
+            return found
+        }
+        if(inp[0] instanceof Array  && typeof(inp[0][0]) === "number"){
+            let p=0;
+            for (let col = 0; col < inp[0].length; col++) {
+                for (let row = 0; row < inp.length; row++) {
+                    p+=1;
+                    if(inp[row][col]){
+                        found.push([p]);
+                    }
+
+                }
+            }
+            return found
         }
     }
-    return found;
+    console.error("find is not defined for this input")
 }
 
 
@@ -108,6 +132,7 @@ var sort = function(array){ // indices start from 1
 
 
 var sum = function(A,dim=0){ // 1 is column sum and 2 is row sum
+    if(typeof(A)==="number"){return A}
     let s=0;
     if(typeof(A[0])=="number"){
         for (let elem = 0; elem < A.length; elem++) {

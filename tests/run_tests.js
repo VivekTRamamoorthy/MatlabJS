@@ -12,9 +12,6 @@
 // printLine will determine the way in which comment statements should be printed: "\nTesting add()"
 
 function run_tests() {
-  // clc
-  printLine("\nTesting clc: Check console");
-  clc();
 
   // tic and toc
   printLine("\nTesting tic and toc");
@@ -71,7 +68,7 @@ function run_tests() {
   // find
   printLine("\nTesting find");
   test("find([1,2,0,0,4,5])", "[1, 2, 5, 6]");
-  
+  test("find([[2,1,2,2], [ 2, 0, 1, 0], [ 0, 0, 1, 1], [2, 1, 0, 2] ])","[[1],[2],[4],[5],[8],[9],[10],[11],[13],[15],[16]]")
 
   // sort
   printLine("\nTesting sort");
@@ -79,21 +76,19 @@ function run_tests() {
 
   // sum
   printLine("\nTesting sum");
+  test("sum(10)", "10");
+  test("sum([10])", "10");
+  test("sum([[10]])", "10");
   test("sum([1,2,3])", "6"); 
   test("sum([[1,2,3]])", "6"); 
+  test("sum([[1,2,3],[1,2,3]])", "[[2,4,6]]"); 
   test("sum([[1,2,3]],1)", "[[1,2,3]]"); 
   test("sum([[1,2,3]],2)", "[[6]]"); 
   test("sum([[1,2,3],[1,2,3]], 1)", "[[2,4,6]]"); 
   test("sum([[1,2,3],[1,2,3]], 2)", "[[6],[6]]"); 
-
-
-  printLine("column sum");
   test("sum([[1,2,3],[4,5,6],[7,8,9]] , 1)", "[[12,15,18]]");
-  printLine("row sum");
   test("sum([[1,2,3],[4,5,6],[7,8,9]] , 2)", "[[6],[15],[24]]");
-  // column sum [12,15,18]
-  // disp(sum(B,2))
-  // row sum [[6],[15],[24]]
+
 
   // abs
   printLine("\nTesting abs");
