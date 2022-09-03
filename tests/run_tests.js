@@ -12,9 +12,6 @@
 // printLine will determine the way in which comment statements should be printed: "\nTesting add()"
 
 function run_tests() {
-  // clc
-  printLine("\nTesting clc: Check console");
-  clc();
 
   // tic and toc
   printLine("\nTesting tic and toc");
@@ -25,33 +22,37 @@ function run_tests() {
 
   // linspace
   printLine("\nTesting linspace");
+
   test("linspace(0,1,2)", "[0,1]");
   test("linspace(0,0,5)", "[0,0,0,0,0]");
   test("linspace(0,-4,5)", "[0,-1,-2,-3,-4]");
+  test("linspace(1,100)", "new Array(100).fill().map((x,i)=>i+1)");
 
   // logspace
   printLine("\nTesting logspace");
   test("logspace(1,25,3)", [1, 5, 25]);
   test("logspace(1,1000,4)", [1, 10, 100, 1000]);
-  printLine("Known issue with logspace(1,1000,4). Produces: ");
-  printLine(logspace(1, 1000, 4).toString());
+  test("logspace(1,2)"," new Array(100).fill(0).map((x,i)=>Math.pow(2,i/99))");
 
   // isfield
   printLine("\nTesting isfield");
-  struc = { x: 10, y: 100 };
   test("isfield({x:10,y:100},'x')", true);
   test("isfield({x:10,y:100},'y')", true);
   test("isfield({x:10,y:100},'z')", false);
 
   // size
   printLine("\nTesting size");
+  test("size(1)", [1,1]);
+  test("size([1])", "[1,1]");
+  test("size([[1]])", "[1,1]");
+  test("size([1,2,3,3,4,5])", "[1,6]");
+  test("size([[1,2,3,3,4,5]])", "[1,6]");
+  test("size([[1],[2],[3],[3],[4],[5]])", "[6,1]");
   test("size([[1,2,3],[3,4,5]])", "[2,3]");
+  
 
   // length
   printLine("\nTesting length");
-  var A = [1, 2, 3, 3, 4, 5];
-  A.length; // 6
-  length(A); // 6
   test("length(0)", "1");
   test("length(1)", "1");
   test("length(1.2)", "1");
@@ -62,36 +63,32 @@ function run_tests() {
   test("length([[1,2,3,4]])", "4");
   test("length([[[1,2,3,4]]])", "4");
   test("length(undefined)", "0");
+  test("length(null)", "0");
 
   // find
   printLine("\nTesting find");
   test("find([1,2,0,0,4,5])", "[1, 2, 5, 6]");
+  test("find([[2,1,2,2], [ 2, 0, 1, 0], [ 0, 0, 1, 1], [2, 1, 0, 2] ])","[[1],[2],[4],[5],[8],[9],[10],[11],[13],[15],[16]]")
 
   // sort
   printLine("\nTesting sort");
-  var A = [3, 2, 1, 5, 7];
-  [sortedA, indices] = sort(A);
-  // disp(sortedA); // [1,2,3,5,7]
-  // disp(indices); // [3,2,1,4,5]
   test("sort([3,2,1,5,7])", "[[1,2,3,5,7],[3,2,1,4,5]]");
 
   // sum
   printLine("\nTesting sum");
-  var A = [1, 2, 3];
-  test("sum([1,2,3])", "6"); // 6
-  var B = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-  ];
-  // disp(sum(B,1))
-  printLine("column sum");
+  test("sum(10)", "10");
+  test("sum([10])", "10");
+  test("sum([[10]])", "10");
+  test("sum([1,2,3])", "6"); 
+  test("sum([[1,2,3]])", "6"); 
+  test("sum([[1,2,3],[1,2,3]])", "[[2,4,6]]"); 
+  test("sum([[1,2,3]],1)", "[[1,2,3]]"); 
+  test("sum([[1,2,3]],2)", "[[6]]"); 
+  test("sum([[1,2,3],[1,2,3]], 1)", "[[2,4,6]]"); 
+  test("sum([[1,2,3],[1,2,3]], 2)", "[[6],[6]]"); 
   test("sum([[1,2,3],[4,5,6],[7,8,9]] , 1)", "[[12,15,18]]");
-  printLine("row sum");
   test("sum([[1,2,3],[4,5,6],[7,8,9]] , 2)", "[[6],[15],[24]]");
-  // column sum [12,15,18]
-  // disp(sum(B,2))
-  // row sum [[6],[15],[24]]
+
 
   // abs
   printLine("\nTesting abs");
@@ -111,7 +108,8 @@ function run_tests() {
 
   // setdiff
   printLine("\nTesting setdiff");
-  test("setdiff([4,3,1,5],[5,3,7,8])", "[4,1]");
+  test("setdiff([4,3,1,5],[5,3,7,8])", "[1,4]");
+  test("setdiff([1,2,3],[3,2,1])", "[]");
 
   // max
   printLine("\nTesting max");
@@ -143,6 +141,18 @@ function run_tests() {
 
   // triu
   printLine("\nTesting triu");
+  test("triu([[1,2,3],[4,5,6],[7,8,9]])","[[1,2,3],[0,5,6],[0,0,9]]")
+  test("triu([[1,2,3,4],[5,6,7,8],[9,10,11,12]])", "[[1,2,3,4],[0,6,7,8],[0,0,11,12]]")
+  test("triu([[1,2,3,4],[5,6,7,8],[9,10,11,12]],1)", "[[0,2,3,4],[0,0,7,8],[0,0,0,12]]")
+  test("triu(4)","[[4]]")
+  test("triu([4])","[[4]]")
+  test("triu([[4]])","[[4]]")
+  test("triu([[4,5,6,67,8]])","[[4,5,6,67,8]]")
+  test("triu([[4,5,6,67,8]],1)","[[0,5,6,67,8]]")
+  test("triu([[4,5,6,67,8]],2)","[[0,0,6,67,8]]")
+  test("triu([[4,5,6,67,8]],4)","[[0,0,0,0,8]]")
+  test("all(map(get(triu(randi(9,100,100)),range(2,100),[1]),x=>x==0))","true")
+  test("triu([[1,1,1,1],  [2,2,2,2],[3,3,3,3]],2)","[[0,0,1,1],[0,0,0,2],[0,0,0,0]]") 
   // disp(triu(rand(4)))
   // disp(triu(rand(4),1))
 
@@ -153,30 +163,28 @@ function run_tests() {
   var B = rand(3, 3);
   // disp(B)
   var C = concatRows(A, B);
+  test("concatRows([[1]],[[2]])",[[1,2]])
+  test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
   // disp(C)
   // 3 x 6 matrix
 
   // concatCols
   printLine("\nTesting concatCols");
-  var A = ones(3, 3);
-  // disp(A)
-  var B = rand(3, 3);
-  // disp(B)
-  var C = concatCols(A, B);
-  // disp(C)
-  // 6 x 3 matrix
+  test("concatCols([[1]],[[2]])",[[1], [2]])
+  test("concatCols([[1,1]],[[1, 1]])",[[1, 1], [1, 1]])
+
 
   // transpose
   printLine("\nTesting transpose");
-  var A = [
-    [1, 2, 3],
-    [4, 5, 6],
-  ];
-  transpose(A);
-  // [[1,4],[2,5],[3,6]]
+  test("transpose([[1, 2]])", [[1],[2]])
+  test("transpose([[1, 2, 3],[4, 5, 6]])", [[1,4],[2,5],[3,6]])
 
   // ones
   printLine("\nTesting ones");
+  test("ones(1)","[[1]]")
+  test("ones(2)","[[1,1],[1,1]]")
+  test("ones(3)","[[1,1,1],[1,1,1],[1,1,1]]")
+  test("ones(4)","[[1,1,1,1],[1,1,1,1],[1,1,1,1],[1,1,1,1]]")
   // disp(ones(3))
   // 3x3 matrix of 1s
   // disp(ones(3,2))
@@ -186,21 +194,38 @@ function run_tests() {
 
   // eye
   printLine("\nTesting eye");
-  // disp(eye(3))// 3x3 identity matrix
-  // disp(eye(4)) // 4x4 matrix of 1s
-  // disp(eye(10)) // column of 1s
+  test("eye(1)","[[1]]")
+  test("eye(2)","[[1,0],[0,1]]")
+  test("eye(3)","[[1,0,0],[0,1,0],[0,0,1]]")
+  test("eye(4)","[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]")
+
 
   // zeros
   printLine("\nTesting zeros");
-  // disp(zeros(3))
-  // 3x3 matrix of 0s
-  // disp(zeros(3,2))
-  // 3x2 matrix of 0s
-  // disp(zeros(3,1))
-  // column of 0s
+  test("zeros(1)","[[0]]")
+  test("zeros(2)","[[0,0],[0,0]]")
+  test("zeros(3)","[[0,0,0],[0,0,0],[0,0,0]]")
+  test("zeros(4)","[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]")
+  test("zeros(4,2)","[[0,0],[0,0],[0,0],[0,0]]")
+  test("zeros(1,2)","[[0,0]]")
+  test("zeros([1,1])","[[0]]")
+  test("zeros([2,2])","[[0,0],[0,0]]")
+  test("zeros([3,3])","[[0,0,0],[0,0,0],[0,0,0]]")
+  test("zeros([4,4])","[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]")
+  test("zeros([4,2])","[[0,0],[0,0],[0,0],[0,0]]")
+  test("zeros([1,2])","[[0,0]]")
+
 
   // rand
   printLine("\nTesting rand");
+
+  test("rand()>0 && rand()<1", "true")
+  test("rand(1)>0 && rand(1)<1", "true")
+  test("all(map(rand(2),(x,i)=>{return x>0})) && all(map(rand(2),x=>x<1))", "true")
+
+  test("rand()>0 && rand()<1", "true")
+  test("rand(1)>0 && rand(1)<1", "true")
+  test("all(map(rand(2),(x,i)=>{return x>0})) && all(map(rand(2),x=>x<1))", "true")
   // disp(rand())
   // random no in [0,1]
   // disp(rand(3))
@@ -212,6 +237,9 @@ function run_tests() {
 
   // randi
   printLine("\nTesting randi");
+  test("randi(1) ===1  ","true")
+  test("randi(3) >=1  &&  randi(3)<=3 ","true")
+  test("all(map(  randi(3,100,100), (x,i)=>{return x>=1}    )) && all(map(  randi(3,100,100),  x=>x<=3    ))","true")
   // disp(randi(5))
   // random integer in {1,2...5}
   // disp(randi(5,3))
@@ -219,9 +247,17 @@ function run_tests() {
   // disp(randi(5,3,2))
   // 3x2 random in {1,2...5}
 
+  // randn
+  printLine("\nTesting randn");
+  test("typeof(randn()) === 'number'  ","true")
+  test(" (randn(1)) instanceof Array && (randn(1)[0]) instanceof Array && typeof(randn(1)[0][0]) == 'number' ","true")
+
   // diag
   printLine("\nTesting diag");
   // disp(diag([5,3,2]))
+  test("diag(1)", "[[1]]")
+  test("diag(1002)", "[[1002]]")
+  test("diag([5,3,2])", "[[5,0,0],[0,3,0],[0,0,2]]")
   // returns:
   // [ [5, 0, 0],
   // [0, 3, 0],
@@ -230,15 +266,27 @@ function run_tests() {
   // reshape
   printLine("\nTesting reshape");
   reshape([1, 2, 3, 4, 5, 6], 2, 3);
+  test("reshape(1, 1, 1);"," [[1]] ")
+  test("reshape([1], 1, 1);"," [[1]] ")
+  test("reshape([1, 2, 3, 4, 5, 6], 2, 3);"," [[1,2,3],[4,5,6]] ")
   // [1,2,3; 4,5,6]
 
   // get values from arrays or matrices
   printLine("\nTesting get values from arrays or matrices");
-  var A = rand(10, 10); // disp(A)
-  var B = get(A, [1, 2, 3], [2, 5, 7]);
-  // disp(B)
-  var B = get(A, ":", [1, 2, 3]);
-  // disp(B) // gets all rows & first 3 cols
+  // var A = rand(10, 10); 
+  // var B = get(A, [1, 2, 3], [2, 5, 7]);
+  // var B = get(A, ":", [1, 2, 3]);
+  test("get([[1]],':',':')","[[1]]")
+  test("get([[1,1],[2,3]],':',':')","[[1,1],[2,3]]")
+  test("get([[1,1],[2,3]],[2],[2])","[[3]]")
+  test("get([1,2,3,4,5,6],[2,3])","[2,3]")
+  test("get([1,2,3,4,5,6],[6])","[6]")
+  test("get([1,2,3,4,5,6],':')","[1,2,3,4,5,6]")
+  test("get([1,2,3,4,5,6],[1,6])","[1,6]")
+  test("get([1,2,3,4,5,6],[0,-1])","[6,5]")
+  test("get([1,2,3,4,5,6],range(-2,0))","[4,5,6]")
+
+
 
   // set values in arrays or matrices
   printLine("\nTesting set values in arrays or matrices");
@@ -256,12 +304,17 @@ function run_tests() {
   set(A, 0, 100); // A(end)=20 :: sets last elem to 100
   set(A, -1, 20); // A(end-1)=20 :: sets end-1 (last but one) elem to 20
   // disp(A) // [1, 10, 3, 4, 20, 100]
+  test("set([1, 2, 3, 4, 5, 6], 3,0)","[1, 2, 0, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], 1,0)","[0, 2, 3, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], [1,2,3],[6,7,8])","[6,7,8, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], [1,2,3],0)","[0,0,0, 4, 5, 6]")
 
   // repmat
   printLine("\nTesting repmat");
   var A = rand(2, 3);
   var B = repmat(A, 4, 5);
   // disp(B)
+  test("repmat([[1]],2,3)","[[1,1,1],[1,1,1]]")
 
   // kron
   printLine("\nTesting kron");
@@ -320,8 +373,8 @@ function run_tests() {
     "add(100,eye(4))",
     "[[101,100,100,100],[100,101,100,100],[100,100,101,100],[100,100,100,101]]"
   );
-  test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))", "true");
-  test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))", "true");
+  test("all(map(add(ones(4),rand(4)),x=> (x>1 && x<2)))", "true");
+  test("all(map(add(ones(4),rand(4)),x=> (x>1 && x<2)))", "true");
 
   // sub
   // disp(sub(3,4))
@@ -356,33 +409,31 @@ function run_tests() {
   printLine("\nTesting dotmul")
   var A = ones(4);
   var B = rand(4);
-  // disp(dotmul(rand(10,1),rand(10,1)))
-  // disp(dotmul(A,B))
-  // disp(dotmul(eye(4),B))
-
-  // disp(div(3,4))
-  // disp(div(ones(4,1),100))
-  // disp(div(100,rand(1,4)))
-  // disp(div(ones(4),100))
-  // disp(div(100,rand(4)))
-  // disp(div(ones(4),rand(4)))
+  test("dotmul(11,7)",77)
+  test("dotmul([11],[7])",[77])
+  test("dotmul([[11]],[[7]])","[[77]]")
+  test("dotmul([[[11]]],[[[7]]])","[[[77]]]")
+  test("dotmul([[[[11]]]],[[[[7]]]])","[[[[77]]]]")
+  test("dotmul([[[[11,10]]]],[[[[7,8]]]])","[[[[77,80]]]]")
+  test("dotmul([[[[11,10],[12,5]]]],[[[[7,8],[5,10]]]])","[[[[77,80],[60,50]]]]")
 
   // dotdiv
-  var A = rand(1, 4);
-  var B = mul(100, ones(1, 4));
-  // disp(dotdiv(A,B))
-  C = add(rand(10), 1);
-  // disp(dotdiv(rand(10),C))
-  // disp(dotdiv(eye(4),rand(4)))
+  printLine("\nTesting dotdiv")
+  test("dotdiv(11,7)",11/7)
+  test("dotdiv([11],[7])",[11/7])
+  test("dotdiv([[11]],[[7]])","[[11/7]]")
+  test("dotdiv([[[11]]],[[[7]]])","[[[11/7]]]")
+  test("dotdiv([[[[11]]]],[[[[7]]]])","[[[[11/7]]]]")
+  test("dotdiv([[[[11,10]]]],[[[[7,8]]]])","[[[[11/7,10/8]]]]")
+  test("dotdiv([[[[11,10],[12,5]]]],[[[[7,8],[5,10]]]])","[[[[11/7,10/8],[12/5,5/10]]]]")
 
   // pow
-  // disp(pow(3,4))
-  // disp(pow(ones(4,1),100))
-  // disp(pow(100,rand(1,4)))
-  // disp(pow(ones(4),100))
-  // disp(pow(100,rand(4)))
-  // disp(pow(ones(4),rand(4)))
-  // disp(pow(eye(4),rand(4)))
+ test("pow(2,2)","4")
+ test("pow(2,3)","8")
+ test("pow(1,3)","1")
+ test("pow([2],[2])","[4]")
+ test("pow([2,3,4,5],2)","[4,9,16,25]")
+ test("pow([2,3,4,5],[2,3,3,4])","[4,27,64,625]")
 
   // colon
   // disp(A=rand(4))
@@ -401,15 +452,19 @@ function run_tests() {
 
   // map
   printLine("\nTesting maps");
-  test("map((a,b)=>a+b,ones(2),ones(2))", "[[2,2],[2,2]]");
-  test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2))", "[[3,3],[3,3]]");
-  test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2),4)", "[[7,7],[7,7]]");
+  test("map(1,x=>x+1)","2")
+  test("map([1],x=>x+1)","[2]")
+  test("map([[1]],x=>x+1)","[[2]]")
+  test("map([[[1]]],x=>x+1)","[[[2]]]")
+
+
 
   printLine("END OF TESTS \n \n \n");
 }
 
+
 try{
-    module.exports =  run_tests;
+    module.exports = { run_tests };
 }catch(err){
     // console.log(err)
 }

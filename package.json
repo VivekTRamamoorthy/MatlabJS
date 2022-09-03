@@ -7,7 +7,8 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node Matlab.js && node tests/test_node.js"
+    "test": "node Matlab.js && node tests/test_node.js",
+    "export-check": "node tests/test_export.js"
   },
   "repository": {
     "type": "git",

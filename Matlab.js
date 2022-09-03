@@ -55,20 +55,24 @@ var logspace = function(a,b,n=100){
 }
 
 var size = function(a,dim=0){ // mimics matlabs size function size([10,10]) => [1,2]
-    if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
+    if(typeof(a) === "number"){ return [1,1]}
     if(a instanceof Array){
         if(dim==0){
-            if(a[0] instanceof Array){return [a.length,a[0].length];}
-            return [a.length,1];
+            if(a[0] instanceof Array){
+                return [a.length,a[0].length];
+            }
+            return [1,a.length];
         }
         if(dim==1){return a.length;}
         if(dim==2){return a[0].length || 1;}
     }
+    if(a.hasOwnProperty("stride")){return a.size;} // check for ndarray
     console.error("cannot resolve the size of this object.")
     return [];
 }
 
 var length = function(a){ // length of the largest array dimension
+    if(typeof(a) === "number"){ return 1}
     if(a instanceof Array){
         if(a[0] instanceof Array){
             return length(a[0])>a.length? length(a[0]): a.length;
@@ -81,14 +85,38 @@ var length = function(a){ // length of the largest array dimension
     return 1;
 }
 
-var find = function(array){
+var find = function(inp){
     let found=[];
-    for (let i = 0; i < array.length; i++) {
-        if(array[i]!=0){
-            found.push(i+1);
+    if(typeof(inp) == "number"){
+        if(inp){
+            found = 1; 
+        }
+        return found
+    }
+    else if (inp instanceof Array){
+        if(typeof(inp[0]) === "number"){
+            for (let i = 0; i < inp.length; i++) {
+                if(inp[i]){
+                    found.push(i+1);
+                }
+            }
+            return found
+        }
+        if(inp[0] instanceof Array  && typeof(inp[0][0]) === "number"){
+            let p=0;
+            for (let col = 0; col < inp[0].length; col++) {
+                for (let row = 0; row < inp.length; row++) {
+                    p+=1;
+                    if(inp[row][col]){
+                        found.push([p]);
+                    }
+
+                }
+            }
+            return found
         }
     }
-    return found;
+    console.error("find is not defined for this input")
 }
 
 
@@ -104,6 +132,7 @@ var sort = function(array){ // indices start from 1
 
 
 var sum = function(A,dim=0){ // 1 is column sum and 2 is row sum
+    if(typeof(A)==="number"){return A}
     let s=0;
     if(typeof(A[0])=="number"){
         for (let elem = 0; elem < A.length; elem++) {
@@ -186,7 +215,7 @@ var setdiff = function(arr1,arr2){
     // // return [result,indices] // alternative two output argument result
     // result.sort((a,b)=>a-b);
     // return result
-    return  arr1.filter(x=> !arr2.includes(x));
+    return  arr1.filter(x=> !arr2.includes(x)).sort((a,b)=>a-b);
 }
 
 var min = function(A,B=[],dim=1){ 
@@ -346,9 +375,7 @@ var concatRows = function(A,B)
 }
 
 var concatCols = function(A,B){
-    
     if(A[0].length==B[0].length){
-        
         let C=A.concat(B);
         return C;
     }
@@ -366,7 +393,6 @@ var transpose = function(A){
     B= zeros(A[0].length,A.length);//new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
-            // console.log({row,col})
             B[row][col]=A[col][row];
         }
     }
@@ -381,13 +407,13 @@ var ones = function(a,b=0){
     return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>1));
 }
 
-var eye = function(a){
+var eye = function(a=1){
     let res = new Array(a).fill(0).map(x=>new Array(a).fill(0))  ;
     return res.map((row,i)=>row.map((x,j)=> (i==j)? 1:0)); // the +0 is  to make true =1 and false=0
     
 }
 
-var zeros = function(a,b=0){
+var zeros = function(a=1,b=0){
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
@@ -412,12 +438,15 @@ var rand = function(a=0,b=0){
 }
 
 var randi = function(n,a=0,b=0){
-    if(a==0 && b==0){return Math.floor(Math.random()*n);}
+    if (!n){
+        console.error("Not enough input arguments for randi")
+    }
+    if(a==0 && b==0){return Math.ceil(Math.random()*n);}
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
     if(typeof(a)== "number"){rows=a;cols=b;};
-    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.ceil(Math.random()*(n-1))));
+    return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>Math.ceil(Math.random()*(n))));
 }
 
 
@@ -439,7 +468,12 @@ var randn = function(a=0,b=0){
 }
 
 var diag = function(D){
-    if (typeof(D)=="number") {return D}
+    if(!D){
+        console.error("Not enough input arguments")
+    }
+    if (typeof(D)=="number") {
+        return [[D]]
+    }
     if (D instanceof Array) {
         let diagonalMatrix=[];
         for (let row = 0; row < D.length; row++) {
@@ -458,14 +492,32 @@ var diag = function(D){
 }
 
 var triu = function(matrix,diagonal=0){
-    let upperTriangularMatrix=deepcopy(matrix);
-    for (let row = 0; row < matrix.length; row++) {
-        for (let col = 0; col < Math.min(row  + diagonal,matrix[0].length); col++) {
-            upperTriangularMatrix[row][col]=0;
-        }
+    if(!matrix){
+        console.error("Not enough input arguments")
     }
-    return upperTriangularMatrix;
+    if(typeof(matrix)== "number"){
+        return [[matrix]]
+    }
+    if(matrix instanceof Array && typeof(matrix[0])== "number"){
+        return [matrix]
+    }
+    if(matrix instanceof Array && matrix[0] instanceof Array && typeof(matrix[0][0]) == "number"){
+        let upperTriangularMatrix=deepcopy(matrix);
+        for (let row = 0; row < matrix.length; row++) {
+            for (let col = 0; col < Math.min(row  + diagonal,matrix[0].length); col++) {
+                upperTriangularMatrix[row][col]=0;
+            }
+        }
+        return upperTriangularMatrix;
+    }
+    console.error("triu not defined for this input type")
 }
+
+var isArray =function(A){
+    return A instanceof Array || A instanceof Float32Array || A instanceof Float64Array ||A  instanceof Int16Array || A instanceof Int32Array
+
+}
+
 
 var display = function(a){
     if(typeof(a)=="number"){ // a is number
@@ -476,7 +528,7 @@ var display = function(a){
         console.log("ans:\n"+a.re+" + 1i*"+a.im); 
         return;
     }
-    if(a instanceof Array){  // a is an array
+    if(a instanceof Array ){  // a is an array
         if(typeof(a[0])=="number"){ // a is a number array
             let displayText="\n [";
             for(let i=0;i<a.length;i++){displayText=displayText.concat("  "+ a[i]+"  ")}
@@ -491,7 +543,7 @@ var display = function(a){
             console.log(displayText);
             return;
         }        
-        if(a[0] instanceof Array){ // a is a matrix
+        if(isArray(a[0]) ){ // a is a matrix
             let displayText="  \n";
             for(let i=0;i<a.length;i++){
                 for(let j=0;j<a[0].length;j++){
@@ -516,7 +568,7 @@ var display = function(a){
 
 
 var reshape = function(vec,rows,cols){
-    if (vec.length==rows*cols && typeof(vec[0])=="number"){
+    if (vec instanceof Array && vec.length==rows*cols && typeof(vec[0])=="number"){
         let mat=[];
         for(let row=0;row<rows;row++){
             let start=row*cols;
@@ -524,10 +576,11 @@ var reshape = function(vec,rows,cols){
             mat[row]=vec.slice(start,end)
         }
         return mat;
-    }else if(vec.length*vec[0].length==rows*cols){     // for vec of type matrices,  read column by column
+    }
+    if(vec instanceof Array && vec[0] instanceof Array && vec.length*vec[0].length==rows*cols){     
+        // for vec of type matrices,  read column by column
         let p=0;
-        let mat= zeros(rows,cols); //new Array(rows).fill(0).map(x=> new Array(cols).fill(0).map(x=>0));
-        
+        let mat= zeros(rows,cols);         
         for(let col=0; col<cols; col++){
             for(let row=0; row<rows; row++){
                 // let vcols=vec[0].length;
@@ -540,9 +593,10 @@ var reshape = function(vec,rows,cols){
         }
         return mat;
     }
-    console.error("cannot perform reshape operation. Check matrix dimensions")
-    console.error("vector length: ",vec.length,"  rows: ",rows,"  cols: ", cols )
-    return [];
+    if(typeof(vec) == "number" && rows == 1 && cols == 1){
+        return [[vec]]
+    }
+    console.error("To RESHAPE the number of elements must not change.")
 }
 
 var get = function(mat,rrange,crange=':'){
@@ -595,15 +649,17 @@ var set = function(mat,rrange=':',crange=':',submat){
         // dealing with number input
         if (typeof(rrange)=="number"){ rrange= [rrange] }
         // dealing with negative numbers : for negative values like -3 to be considered end-3
-        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); 
+        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;}else{ return x}}); 
         if (typeof(crange)=="number"){ // if the input is a number
             for (let index = 0; index < rrange.length; index++) {
                 mat[rrange[index]-1]=crange; // here crange is the number
             }
             return mat;
         }
-        for (let index = 0; index < rrange.length; index++) {
-            mat[rrange[index]-1]=crange[index]; // here crange is the sub array
+        if (crange instanceof Array && crange.length === rrange.length){
+            for (let index = 0; index < rrange.length; index++) {
+                mat[rrange[index]-1]=crange[index]; // here crange is the sub array
+            }
             return mat;
         }
     }
@@ -872,7 +928,6 @@ var add = function(a,b){ // universal add function, not fully supported for ndar
     
     
     console.error("universal add has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -931,7 +986,6 @@ var sub = function(a,b){
         }
     }
     console.error("universal sub has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1035,7 +1089,6 @@ var mul = function(a,b,...args){
         }
     }
     console.error("universal multiply has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1094,7 +1147,6 @@ var div = function(a,b){
         }
     }
     console.error("universal div has not been implemented for this use case");
-    return "bulb";
     
 }
 
@@ -1120,7 +1172,7 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         if(typeof(a[0])=="number"){ // a is a number array
             if(typeof(b)=="number"){return a.map(x=>x**b);} // b is a number
             if(b instanceof cx){return a.map(x=>(new cx(x,0)).pow(b));} // b is complex
-            if(b instanceof Array) { 
+            if(b instanceof Array && a.length === b.length) { 
                 if(typeof(b[0])=="number"){return a.map((x,i)=>x**b[i])};
                 if (b[0] instanceof cx) {return a.map((x,i)=>(new cx(x,0)).pow(b[i]));}
             }
@@ -1168,7 +1220,6 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         } // b is complex
     }
     console.error("universal pow has not been implemented for this use case");
-    return "bulb";
     
 } 
 
@@ -1176,14 +1227,17 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
 
 var dotmul = function(A,B){
     if(typeof A == "number" && typeof B == "number" ){ return A*B}
-    if(A.length==B.length && A[0].length==B[0].length){
+    if(isArray(A) && isArray(B) && A.length==B.length && typeof(A[0]) =="number" && typeof(B[0]) =="number"){
+        let C=new Array(A.length).fill(0);
+        for (let elem = 0; elem < A.length; elem++) {
+            C[elem]=A[elem]*B[elem];
+        }
+        return C;
+    }
+    if(isArray(A) && isArray(B) && A.length==B.length && isArray(A[0]) && isArray(B[0]) && A[0].length==B[0].length){
         let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
-            for (let col = 0; col < A[0].length; col++) {
-                C[row][col]=A[row][col]*B[row][col];
-                
-            }
-            
+                C[row]=dotmul(A[row],B[row]);
         }
         return C;
     }
@@ -1192,18 +1246,22 @@ var dotmul = function(A,B){
 
 
 var dotdiv = function(A,B){
-    if(A.length==B.length && A[0].length==B[0].length){
-        let C=zeros(size(A))
-        for (let row = 0; row < A.length; row++) {
-            for (let col = 0; col < A[0].length; col++) {
-                C[row][col]=A[row][col]/B[row][col];
-                
-            }
-            
+    if(typeof A == "number" && typeof B == "number" ){ return A/B}
+    if(isArray(A) && isArray(B) && A.length==B.length && typeof(A[0]) =="number" && typeof(B[0]) =="number"){
+        let C=new Array(A.length).fill(0);
+        for (let elem = 0; elem < A.length; elem++) {
+            C[elem]=A[elem]/B[elem];
         }
         return C;
     }
-    console.error('Matrix dimensions do not agree for dot division')
+    if(isArray(A) && isArray(B) && A.length==B.length && isArray(A[0]) && isArray(B[0]) && A[0].length==B[0].length){
+        let C=zeros(size(A))
+        for (let row = 0; row < A.length; row++) {
+                C[row]=dotdiv(A[row],B[row]);
+        }
+        return C;
+    }
+    console.error('Matrix dimensions do not agree for dot multiplication')
 }
 
 var deepcopy = function(A){
@@ -1262,40 +1320,15 @@ var any = function(booleans){
     return false
 }
 
-var map = function(fun,a,...args){// multidimensional map function
-    if (args.length==0){ // single input to function
-        if(a instanceof Array){
-            let result=[];
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i])
-            }
-            return result
-        }else{
-            return fun(a)
-        }
-    }else{// two or more inputs 
-        let b, remargs;
-        [b, ...remargs]=args // taking the second argument
-        let result=[]   
-        if (a instanceof Array && b instanceof Array && a.length === b.length){
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i],b[i])
-            }
-        }else if (a instanceof Array){
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i],b)
-            }
-        }else if(b instanceof Array){
-            for (let i = 0; i < b.length; i++) {
-                result[i]=map(fun,a,b[i])
-            }
-        }else{
-            result =fun(a,b)
-        }
-        if (remargs.length>0){ // recursive call for for arguments
-            result = map(fun,result,...remargs)
+var map = function(data,fun){// multidimensional map function
+    if(data instanceof Array){
+        let result=[];
+        for (let i = 0; i < data.length; i++) {
+            result[i]=map(data[i],fun)
         }
         return result
+    }else{
+        return fun(data)
     }
 }
 

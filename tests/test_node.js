@@ -5,13 +5,14 @@
 // This script will also be run in github actions on every pull request for CI/CD
 
 
-// LOADING MATLAB JS
+// LOADING THE TEST SUITE THE FILE WAY
 const fs = require('fs');
+eval( fs.readFileSync("tests/run_tests.js", 'utf8')) 
+// loading run_tests() function this way because test utils are different for browser and node
 // eval( fs.readFileSync("Matlab.js", 'utf8')) // loading the library
-eval( fs.readFileSync("tests/run_tests.js", 'utf8')) // loading run_tests() function
 
 
-// export directly from Matlab.js
+// LOADING MATLABHS & TEST SUITE THE REQUIRE WAY
 var { clc , tic , toc , isfield , linspace , logspace , size , length , find , sort ,
     sum , norm , abs , sqrt , setdiff , min , max , range , concatRows , concatCols , transpose ,
     ones , zeros , eye, rand , randi , randn_bm , randn , diag , triu , display , reshape , get , set ,
@@ -19,12 +20,10 @@ var { clc , tic , toc , isfield , linspace , logspace , size , length , find , s
     deepcopy , copy , disp , linsolve , all , any , map , exp , real , imag , angle , conj,
      cx, pi,
      MATLABJS_GLOBAL, ticTime } = require("../Matlab.js");
-
-// var run_tests = require("./run_tests.js");
-// calling test suite
+// var {run_tests} = require("./run_tests.js");
 
 // testing function test("script1","script2")
-function test(scriptString, expectedResult,functionName=""){
+var test = function(scriptString, expectedResult){
     let PASSED = false
     let EvaluationError = false
     try{
@@ -39,7 +38,7 @@ function test(scriptString, expectedResult,functionName=""){
     }else{
         console.log( '\x1b[31m%s\x1b[0m ',"TEST FAILED "+scriptString+" != "+expectedResult)
         if(EvaluationError){
-            console.log('\x1b[31m%s\x1b[0m ',"Could not evaluate: "+scriptString+" and " +expectedResult)
+            console.log('\x1b[31m%s\x1b[0m ',"Could not evaluate: "+scriptString+" or " +expectedResult)
         }else{
         console.log( '\x1b[31m%s\x1b[0m ',""+scriptString+" evaluated to " +eval(scriptString))
         console.log( '\x1b[31m%s\x1b[0m ',""+expectedResult+" evaluated to " +eval(expectedResult))
