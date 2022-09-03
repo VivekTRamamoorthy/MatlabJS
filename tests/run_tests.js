@@ -163,29 +163,21 @@ function run_tests() {
   var B = rand(3, 3);
   // disp(B)
   var C = concatRows(A, B);
-  test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
+  test("concatRows([[1]],[[2]])",[[1,2]])
   test("concatRows([[1,  1]],[[1, 1]])",[[1, 1, 1, 1]])
   // disp(C)
   // 3 x 6 matrix
 
   // concatCols
   printLine("\nTesting concatCols");
-  var A = ones(3, 3);
-  // disp(A)
-  var B = rand(3, 3);
-  // disp(B)
-  var C = concatCols(A, B);
-  // disp(C)
-  // 6 x 3 matrix
+  test("concatCols([[1]],[[2]])",[[1], [2]])
+  test("concatCols([[1,1]],[[1, 1]])",[[1, 1], [1, 1]])
+
 
   // transpose
   printLine("\nTesting transpose");
-  var A = [
-    [1, 2, 3],
-    [4, 5, 6],
-  ];
-  transpose(A);
-  // [[1,4],[2,5],[3,6]]
+  test("transpose([[1, 2]])", [[1],[2]])
+  test("transpose([[1, 2, 3],[4, 5, 6]])", [[1,4],[2,5],[3,6]])
 
   // ones
   printLine("\nTesting ones");
@@ -312,12 +304,17 @@ function run_tests() {
   set(A, 0, 100); // A(end)=20 :: sets last elem to 100
   set(A, -1, 20); // A(end-1)=20 :: sets end-1 (last but one) elem to 20
   // disp(A) // [1, 10, 3, 4, 20, 100]
+  test("set([1, 2, 3, 4, 5, 6], 3,0)","[1, 2, 0, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], 1,0)","[0, 2, 3, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], [1,2,3],[6,7,8])","[6,7,8, 4, 5, 6]")
+  test("set([1, 2, 3, 4, 5, 6], [1,2,3],0)","[0,0,0, 4, 5, 6]")
 
   // repmat
   printLine("\nTesting repmat");
   var A = rand(2, 3);
   var B = repmat(A, 4, 5);
   // disp(B)
+  test("repmat([[1]],2,3)","[[1,1,1],[1,1,1]]")
 
   // kron
   printLine("\nTesting kron");
@@ -431,13 +428,12 @@ function run_tests() {
   test("dotdiv([[[[11,10],[12,5]]]],[[[[7,8],[5,10]]]])","[[[[11/7,10/8],[12/5,5/10]]]]")
 
   // pow
-  // disp(pow(3,4))
-  // disp(pow(ones(4,1),100))
-  // disp(pow(100,rand(1,4)))
-  // disp(pow(ones(4),100))
-  // disp(pow(100,rand(4)))
-  // disp(pow(ones(4),rand(4)))
-  // disp(pow(eye(4),rand(4)))
+ test("pow(2,2)","4")
+ test("pow(2,3)","8")
+ test("pow(1,3)","1")
+ test("pow([2],[2])","[4]")
+ test("pow([2,3,4,5],2)","[4,9,16,25]")
+ test("pow([2,3,4,5],[2,3,3,4])","[4,27,64,625]")
 
   // colon
   // disp(A=rand(4))

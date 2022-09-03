@@ -649,15 +649,17 @@ var set = function(mat,rrange=':',crange=':',submat){
         // dealing with number input
         if (typeof(rrange)=="number"){ rrange= [rrange] }
         // dealing with negative numbers : for negative values like -3 to be considered end-3
-        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;} return x}); 
+        rrange=rrange.map((x,i)=>{if(x<1){return mat.length+x;}else{ return x}}); 
         if (typeof(crange)=="number"){ // if the input is a number
             for (let index = 0; index < rrange.length; index++) {
                 mat[rrange[index]-1]=crange; // here crange is the number
             }
             return mat;
         }
-        for (let index = 0; index < rrange.length; index++) {
-            mat[rrange[index]-1]=crange[index]; // here crange is the sub array
+        if (crange instanceof Array && crange.length === rrange.length){
+            for (let index = 0; index < rrange.length; index++) {
+                mat[rrange[index]-1]=crange[index]; // here crange is the sub array
+            }
             return mat;
         }
     }
@@ -1170,7 +1172,7 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
         if(typeof(a[0])=="number"){ // a is a number array
             if(typeof(b)=="number"){return a.map(x=>x**b);} // b is a number
             if(b instanceof cx){return a.map(x=>(new cx(x,0)).pow(b));} // b is complex
-            if(b instanceof Array) { 
+            if(b instanceof Array && a.length === b.length) { 
                 if(typeof(b[0])=="number"){return a.map((x,i)=>x**b[i])};
                 if (b[0] instanceof cx) {return a.map((x,i)=>(new cx(x,0)).pow(b[i]));}
             }
