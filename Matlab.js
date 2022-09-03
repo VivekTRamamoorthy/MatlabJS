@@ -407,13 +407,13 @@ var ones = function(a,b=0){
     return  new Array(rows).fill(0).map(x=>new Array(cols).fill(0).map(x=>1));
 }
 
-var eye = function(a){
+var eye = function(a=1){
     let res = new Array(a).fill(0).map(x=>new Array(a).fill(0))  ;
     return res.map((row,i)=>row.map((x,j)=> (i==j)? 1:0)); // the +0 is  to make true =1 and false=0
     
 }
 
-var zeros = function(a,b=0){
+var zeros = function(a=1,b=0){
     if(b==0){b=a;};
     let rows,cols;
     if(a instanceof Array){rows=a[0]; cols=a[1]; }; // if a is an array and a(2) is not 1
@@ -468,7 +468,12 @@ var randn = function(a=0,b=0){
 }
 
 var diag = function(D){
-    if (typeof(D)=="number") {return D}
+    if(!D){
+        console.error("Not enough input arguments")
+    }
+    if (typeof(D)=="number") {
+        return [[D]]
+    }
     if (D instanceof Array) {
         let diagonalMatrix=[];
         for (let row = 0; row < D.length; row++) {
@@ -487,13 +492,25 @@ var diag = function(D){
 }
 
 var triu = function(matrix,diagonal=0){
-    let upperTriangularMatrix=deepcopy(matrix);
-    for (let row = 0; row < matrix.length; row++) {
-        for (let col = 0; col < Math.min(row  + diagonal,matrix[0].length); col++) {
-            upperTriangularMatrix[row][col]=0;
-        }
+    if(!matrix){
+        console.error("Not enough input arguments")
     }
-    return upperTriangularMatrix;
+    if(typeof(matrix)== "number"){
+        return [[matrix]]
+    }
+    if(matrix instanceof Array && typeof(matrix[0])== "number"){
+        return [matrix]
+    }
+    if(matrix instanceof Array && matrix[0] instanceof Array && typeof(matrix[0][0]) == "number"){
+        let upperTriangularMatrix=deepcopy(matrix);
+        for (let row = 0; row < matrix.length; row++) {
+            for (let col = 0; col < Math.min(row  + diagonal,matrix[0].length); col++) {
+                upperTriangularMatrix[row][col]=0;
+            }
+        }
+        return upperTriangularMatrix;
+    }
+    console.error("triu not defined for this input type")
 }
 
 var display = function(a){
@@ -545,7 +562,7 @@ var display = function(a){
 
 
 var reshape = function(vec,rows,cols){
-    if (vec.length==rows*cols && typeof(vec[0])=="number"){
+    if (vec instanceof Array && vec.length==rows*cols && typeof(vec[0])=="number"){
         let mat=[];
         for(let row=0;row<rows;row++){
             let start=row*cols;
@@ -553,10 +570,11 @@ var reshape = function(vec,rows,cols){
             mat[row]=vec.slice(start,end)
         }
         return mat;
-    }else if(vec.length*vec[0].length==rows*cols){     // for vec of type matrices,  read column by column
+    }
+    if(vec instanceof Array && vec[0] instanceof Array && vec.length*vec[0].length==rows*cols){     
+        // for vec of type matrices,  read column by column
         let p=0;
-        let mat= zeros(rows,cols); //new Array(rows).fill(0).map(x=> new Array(cols).fill(0).map(x=>0));
-        
+        let mat= zeros(rows,cols);         
         for(let col=0; col<cols; col++){
             for(let row=0; row<rows; row++){
                 // let vcols=vec[0].length;
@@ -569,9 +587,10 @@ var reshape = function(vec,rows,cols){
         }
         return mat;
     }
-    console.error("cannot perform reshape operation. Check matrix dimensions")
-    console.error("vector length: ",vec.length,"  rows: ",rows,"  cols: ", cols )
-    return [];
+    if(typeof(vec) == "number" && rows == 1 && cols == 1){
+        return [[vec]]
+    }
+    console.error("To RESHAPE the number of elements must not change.")
 }
 
 var get = function(mat,rrange,crange=':'){
@@ -1286,40 +1305,15 @@ var any = function(booleans){
     return false
 }
 
-var map = function(fun,a,...args){// multidimensional map function
-    if (args.length==0){ // single input to function
-        if(a instanceof Array){
-            let result=[];
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i])
-            }
-            return result
-        }else{
-            return fun(a)
-        }
-    }else{// two or more inputs 
-        let b, remargs;
-        [b, ...remargs]=args // taking the second argument
-        let result=[]   
-        if (a instanceof Array && b instanceof Array && a.length === b.length){
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i],b[i])
-            }
-        }else if (a instanceof Array){
-            for (let i = 0; i < a.length; i++) {
-                result[i]=map(fun,a[i],b)
-            }
-        }else if(b instanceof Array){
-            for (let i = 0; i < b.length; i++) {
-                result[i]=map(fun,a,b[i])
-            }
-        }else{
-            result =fun(a,b)
-        }
-        if (remargs.length>0){ // recursive call for for arguments
-            result = map(fun,result,...remargs)
+var map = function(data,fun){// multidimensional map function
+    if(data instanceof Array){
+        let result=[];
+        for (let i = 0; i < data.length; i++) {
+            result[i]=map(data[i],fun)
         }
         return result
+    }else{
+        return fun(data)
     }
 }
 

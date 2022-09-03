@@ -140,6 +140,18 @@ function run_tests() {
 
   // triu
   printLine("\nTesting triu");
+  test("triu([[1,2,3],[4,5,6],[7,8,9]])","[[1,2,3],[0,5,6],[0,0,9]]")
+  test("triu([[1,2,3,4],[5,6,7,8],[9,10,11,12]])", "[[1,2,3,4],[0,6,7,8],[0,0,11,12]]")
+  test("triu([[1,2,3,4],[5,6,7,8],[9,10,11,12]],1)", "[[0,2,3,4],[0,0,7,8],[0,0,0,12]]")
+  test("triu(4)","[[4]]")
+  test("triu([4])","[[4]]")
+  test("triu([[4]])","[[4]]")
+  test("triu([[4,5,6,67,8]])","[[4,5,6,67,8]]")
+  test("triu([[4,5,6,67,8]],1)","[[0,5,6,67,8]]")
+  test("triu([[4,5,6,67,8]],2)","[[0,0,6,67,8]]")
+  test("triu([[4,5,6,67,8]],4)","[[0,0,0,0,8]]")
+  test("all(map(get(triu(randi(9,100,100)),range(2,100),[1]),x=>x==0))","true")
+  test("triu([[1,1,1,1],  [2,2,2,2],[3,3,3,3]],2)","[[0,0,1,1],[0,0,0,2],[0,0,0,0]]") 
   // disp(triu(rand(4)))
   // disp(triu(rand(4),1))
 
@@ -201,6 +213,14 @@ function run_tests() {
   test("zeros(2)","[[0,0],[0,0]]")
   test("zeros(3)","[[0,0,0],[0,0,0],[0,0,0]]")
   test("zeros(4)","[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]")
+  test("zeros(4,2)","[[0,0],[0,0],[0,0],[0,0]]")
+  test("zeros(1,2)","[[0,0]]")
+  test("zeros([1,1])","[[0]]")
+  test("zeros([2,2])","[[0,0],[0,0]]")
+  test("zeros([3,3])","[[0,0,0],[0,0,0],[0,0,0]]")
+  test("zeros([4,4])","[[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]]")
+  test("zeros([4,2])","[[0,0],[0,0],[0,0],[0,0]]")
+  test("zeros([1,2])","[[0,0]]")
 
 
   // rand
@@ -208,11 +228,11 @@ function run_tests() {
 
   test("rand()>0 && rand()<1", "true")
   test("rand(1)>0 && rand(1)<1", "true")
-  test("all(map((x,i)=>{return x>0},rand(2))) && all(map(x=>x<1, rand(2)))", "true")
+  test("all(map(rand(2),(x,i)=>{return x>0})) && all(map(rand(2),x=>x<1))", "true")
 
   test("rand()>0 && rand()<1", "true")
   test("rand(1)>0 && rand(1)<1", "true")
-  test("all(map((x,i)=>{return x>0},rand(2))) && all(map(x=>x<1, rand(2)))", "true")
+  test("all(map(rand(2),(x,i)=>{return x>0})) && all(map(rand(2),x=>x<1))", "true")
   // disp(rand())
   // random no in [0,1]
   // disp(rand(3))
@@ -226,7 +246,7 @@ function run_tests() {
   printLine("\nTesting randi");
   test("randi(1) ===1  ","true")
   test("randi(3) >=1  &&  randi(3)<=3 ","true")
-  test("all(map(  (x,i)=>{return x>=1} ,randi(3,100,100)   )) && all(map(    x=>x<=3, randi(3,100,100)    ))","true")
+  test("all(map(  randi(3,100,100), (x,i)=>{return x>=1}    )) && all(map(  randi(3,100,100),  x=>x<=3    ))","true")
   // disp(randi(5))
   // random integer in {1,2...5}
   // disp(randi(5,3))
@@ -237,6 +257,9 @@ function run_tests() {
   // diag
   printLine("\nTesting diag");
   // disp(diag([5,3,2]))
+  test("diag(1)", "[[1]]")
+  test("diag(1002)", "[[1002]]")
+  test("diag([5,3,2])", "[[5,0,0],[0,3,0],[0,0,2]]")
   // returns:
   // [ [5, 0, 0],
   // [0, 3, 0],
@@ -245,6 +268,9 @@ function run_tests() {
   // reshape
   printLine("\nTesting reshape");
   reshape([1, 2, 3, 4, 5, 6], 2, 3);
+  test("reshape(1, 1, 1);"," [[1]] ")
+  test("reshape([1], 1, 1);"," [[1]] ")
+  test("reshape([1, 2, 3, 4, 5, 6], 2, 3);"," [[1,2,3],[4,5,6]] ")
   // [1,2,3; 4,5,6]
 
   // get values from arrays or matrices
@@ -335,8 +361,8 @@ function run_tests() {
     "add(100,eye(4))",
     "[[101,100,100,100],[100,101,100,100],[100,100,101,100],[100,100,100,101]]"
   );
-  test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))", "true");
-  test("all(map(x=> (x>1 && x<2),add(ones(4),rand(4))))", "true");
+  test("all(map(add(ones(4),rand(4)),x=> (x>1 && x<2)))", "true");
+  test("all(map(add(ones(4),rand(4)),x=> (x>1 && x<2)))", "true");
 
   // sub
   // disp(sub(3,4))
@@ -417,9 +443,12 @@ function run_tests() {
 
   // map
   printLine("\nTesting maps");
-  test("map((a,b)=>a+b,ones(2),ones(2))", "[[2,2],[2,2]]");
-  test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2))", "[[3,3],[3,3]]");
-  test("map((a,b)=>add(a,b),ones(2),ones(2),ones(2),4)", "[[7,7],[7,7]]");
+  test("map(1,x=>x+1)","2")
+  test("map([1],x=>x+1)","[2]")
+  test("map([[1]],x=>x+1)","[[2]]")
+  test("map([[[1]]],x=>x+1)","[[[2]]]")
+
+
 
   printLine("END OF TESTS \n \n \n");
 }
