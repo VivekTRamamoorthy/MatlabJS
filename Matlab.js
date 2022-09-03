@@ -513,6 +513,12 @@ var triu = function(matrix,diagonal=0){
     console.error("triu not defined for this input type")
 }
 
+var isArray =function(A){
+    return A instanceof Array || A instanceof Float32Array || A instanceof Float64Array ||A  instanceof Int16Array || A instanceof Int32Array
+
+}
+
+
 var display = function(a){
     if(typeof(a)=="number"){ // a is number
         console.log(a)
@@ -522,7 +528,7 @@ var display = function(a){
         console.log("ans:\n"+a.re+" + 1i*"+a.im); 
         return;
     }
-    if(a instanceof Array){  // a is an array
+    if(a instanceof Array ){  // a is an array
         if(typeof(a[0])=="number"){ // a is a number array
             let displayText="\n [";
             for(let i=0;i<a.length;i++){displayText=displayText.concat("  "+ a[i]+"  ")}
@@ -537,7 +543,7 @@ var display = function(a){
             console.log(displayText);
             return;
         }        
-        if(a[0] instanceof Array){ // a is a matrix
+        if(isArray(a[0]) ){ // a is a matrix
             let displayText="  \n";
             for(let i=0;i<a.length;i++){
                 for(let j=0;j<a[0].length;j++){
@@ -1219,14 +1225,17 @@ var pow = function(a,b){ // universal add function, not fully supported for ndar
 
 var dotmul = function(A,B){
     if(typeof A == "number" && typeof B == "number" ){ return A*B}
-    if(A.length==B.length && A[0].length==B[0].length){
+    if(isArray(A) && isArray(B) && A.length==B.length && typeof(A[0]) =="number" && typeof(B[0]) =="number"){
+        let C=new Array(A.length).fill(0);
+        for (let elem = 0; elem < A.length; elem++) {
+            C[elem]=A[elem]*B[elem];
+        }
+        return C;
+    }
+    if(isArray(A) && isArray(B) && A.length==B.length && isArray(A[0]) && isArray(B[0]) && A[0].length==B[0].length){
         let C=zeros(size(A))
         for (let row = 0; row < A.length; row++) {
-            for (let col = 0; col < A[0].length; col++) {
-                C[row][col]=A[row][col]*B[row][col];
-                
-            }
-            
+                C[row]=dotmul(A[row],B[row]);
         }
         return C;
     }
@@ -1235,18 +1244,22 @@ var dotmul = function(A,B){
 
 
 var dotdiv = function(A,B){
-    if(A.length==B.length && A[0].length==B[0].length){
-        let C=zeros(size(A))
-        for (let row = 0; row < A.length; row++) {
-            for (let col = 0; col < A[0].length; col++) {
-                C[row][col]=A[row][col]/B[row][col];
-                
-            }
-            
+    if(typeof A == "number" && typeof B == "number" ){ return A/B}
+    if(isArray(A) && isArray(B) && A.length==B.length && typeof(A[0]) =="number" && typeof(B[0]) =="number"){
+        let C=new Array(A.length).fill(0);
+        for (let elem = 0; elem < A.length; elem++) {
+            C[elem]=A[elem]/B[elem];
         }
         return C;
     }
-    console.error('Matrix dimensions do not agree for dot division')
+    if(isArray(A) && isArray(B) && A.length==B.length && isArray(A[0]) && isArray(B[0]) && A[0].length==B[0].length){
+        let C=zeros(size(A))
+        for (let row = 0; row < A.length; row++) {
+                C[row]=dotdiv(A[row],B[row]);
+        }
+        return C;
+    }
+    console.error('Matrix dimensions do not agree for dot multiplication')
 }
 
 var deepcopy = function(A){

@@ -109,6 +109,7 @@ function run_tests() {
   // setdiff
   printLine("\nTesting setdiff");
   test("setdiff([4,3,1,5],[5,3,7,8])", "[1,4]");
+  test("setdiff([1,2,3],[3,2,1])", "[]");
 
   // max
   printLine("\nTesting max");
@@ -254,6 +255,11 @@ function run_tests() {
   // disp(randi(5,3,2))
   // 3x2 random in {1,2...5}
 
+  // randn
+  printLine("\nTesting randn");
+  test("typeof(randn()) === 'number'  ","true")
+  test(" (randn(1)) instanceof Array && (randn(1)[0]) instanceof Array && typeof(randn(1)[0][0]) == 'number' ","true")
+
   // diag
   printLine("\nTesting diag");
   // disp(diag([5,3,2]))
@@ -275,11 +281,20 @@ function run_tests() {
 
   // get values from arrays or matrices
   printLine("\nTesting get values from arrays or matrices");
-  var A = rand(10, 10); // disp(A)
-  var B = get(A, [1, 2, 3], [2, 5, 7]);
-  // disp(B)
-  var B = get(A, ":", [1, 2, 3]);
-  // disp(B) // gets all rows & first 3 cols
+  // var A = rand(10, 10); 
+  // var B = get(A, [1, 2, 3], [2, 5, 7]);
+  // var B = get(A, ":", [1, 2, 3]);
+  test("get([[1]],':',':')","[[1]]")
+  test("get([[1,1],[2,3]],':',':')","[[1,1],[2,3]]")
+  test("get([[1,1],[2,3]],[2],[2])","[[3]]")
+  test("get([1,2,3,4,5,6],[2,3])","[2,3]")
+  test("get([1,2,3,4,5,6],[6])","[6]")
+  test("get([1,2,3,4,5,6],':')","[1,2,3,4,5,6]")
+  test("get([1,2,3,4,5,6],[1,6])","[1,6]")
+  test("get([1,2,3,4,5,6],[0,-1])","[6,5]")
+  test("get([1,2,3,4,5,6],range(-2,0))","[4,5,6]")
+
+
 
   // set values in arrays or matrices
   printLine("\nTesting set values in arrays or matrices");
@@ -397,25 +412,23 @@ function run_tests() {
   printLine("\nTesting dotmul")
   var A = ones(4);
   var B = rand(4);
-  // disp(dotmul(rand(10,1),rand(10,1)))
-  // disp(dotmul(A,B))
-  // disp(dotmul(eye(4),B))
-
-  // disp(div(3,4))
-  // disp(div(ones(4,1),100))
-  // disp(div(100,rand(1,4)))
-  // disp(div(ones(4),100))
-  // disp(div(100,rand(4)))
-  // disp(div(ones(4),rand(4)))
+  test("dotmul(11,7)",77)
+  test("dotmul([11],[7])",[77])
+  test("dotmul([[11]],[[7]])","[[77]]")
+  test("dotmul([[[11]]],[[[7]]])","[[[77]]]")
+  test("dotmul([[[[11]]]],[[[[7]]]])","[[[[77]]]]")
+  test("dotmul([[[[11,10]]]],[[[[7,8]]]])","[[[[77,80]]]]")
+  test("dotmul([[[[11,10],[12,5]]]],[[[[7,8],[5,10]]]])","[[[[77,80],[60,50]]]]")
 
   // dotdiv
   printLine("\nTesting dotdiv")
-  var A = rand(1, 4);
-  var B = mul(100, ones(1, 4));
-  // disp(dotdiv(A,B))
-  C = add(rand(10), 1);
-  // disp(dotdiv(rand(10),C))
-  // disp(dotdiv(eye(4),rand(4)))
+  test("dotdiv(11,7)",11/7)
+  test("dotdiv([11],[7])",[11/7])
+  test("dotdiv([[11]],[[7]])","[[11/7]]")
+  test("dotdiv([[[11]]],[[[7]]])","[[[11/7]]]")
+  test("dotdiv([[[[11]]]],[[[[7]]]])","[[[[11/7]]]]")
+  test("dotdiv([[[[11,10]]]],[[[[7,8]]]])","[[[[11/7,10/8]]]]")
+  test("dotdiv([[[[11,10],[12,5]]]],[[[[7,8],[5,10]]]])","[[[[11/7,10/8],[12/5,5/10]]]]")
 
   // pow
   // disp(pow(3,4))
