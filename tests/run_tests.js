@@ -440,12 +440,8 @@ function run_tests() {
   // disp(colon(A))
 
   // linsolve
-  var A = [
-    [2, 3, 4],
-    [1, 1, 1],
-    [1, 0, 1],
-  ];
-  var b = [[9], [3], [2]];
+  printLine("\nTesting linsolve");
+    test("linsolve([[1,1,1],[1,2,3],[4,5,5]],[[3],[6],[14]])","[[1],[1],[1]]")
   //    var  x=linsolve(A,b)
   // disp(x)
   // disp(mul(A,x))
