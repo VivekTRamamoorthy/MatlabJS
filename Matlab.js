@@ -195,26 +195,6 @@ var sqrt = function(A){
 }
 
 var setdiff = function(arr1,arr2){
-    // let result=[arr1[0]], indices=[1];
-    // for (let i = 0; i < arr1.length; i++) {
-    //     let current=arr1[i];
-    //     let donotinclude=0;
-    //     // check to see if the current element exists in the result
-    //     for (let j = 0; j < result.length; j++) {
-    //         if(current==result[j]){donotinclude=1; break; }
-    //     }
-    //     if(donotinclude==1){break;}
-    //     // check to see if the current element exists in the array 2
-    //     for (let j = 0; j < arr2.length; j++) {
-    //         if(current==arr2[j]){donotinclude=1;break; }
-    //     }
-    //     // if(donotinclude==1){break;}
-    //     // if the element doesn't exist then push to the result and update the index
-    //     if(donotinclude==0){result.push(current); indices.push(i); }
-    // }
-    // // return [result,indices] // alternative two output argument result
-    // result.sort((a,b)=>a-b);
-    // return result
     return  arr1.filter(x=> !arr2.includes(x)).sort((a,b)=>a-b);
 }
 
@@ -390,7 +370,7 @@ var transpose = function(A){
         B=A.map(x=>[x]);
         return B;
     }
-    B= zeros(A[0].length,A.length);//new Array(A[0].length).fill(0).map(x=>new Array(A.length).fill(0).map(x=>0));
+    B= zeros(A[0].length,A.length);
     for(let row=0;row<A[0].length;row++){
         for(let col=0;col<A.length;col++){
             B[row][col]=A[col][row];
