@@ -1332,7 +1332,7 @@ var linsolve = function (A, B) {
     if (m !== n) return false; // non-square
     let X= new Float64Array(B.length) ;
     let L = zeros(m,m)
-    U = L;
+    let U = L;
     
     for (var i = 0; i < n; i++) {
         U[i][i]=1;
@@ -1381,7 +1381,7 @@ var linsolve = function (A, B) {
         X[y] = Y[y] - c;
     }
     
-    res = zeros(m,1);
+    let res = zeros(m,1);
     for (let index = 0; index < res.length; index++) {
         res[index] = [X[index]];
         
