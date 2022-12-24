@@ -843,6 +843,9 @@ class cx {
             return rpowa.mul(expithetapowa)
         }
     }
+    toString(){
+        return ""+this.re + " + i"+this.im;
+    }
     
 }
 var real = z=> z.re
