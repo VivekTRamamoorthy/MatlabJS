@@ -14,15 +14,13 @@
 function run_tests() {
 
   // tic and toc
-  printLine("\nTesting tic and toc");
+  printLine("\nTesting tic");
   tic();
   let t = toc();
   printLine("Elapsed time is " + t);
-  // disp({t})
 
   // linspace
   printLine("\nTesting linspace");
-
   test("linspace(0,1,2)", "[0,1]");
   test("linspace(0,0,5)", "[0,0,0,0,0]");
   test("linspace(0,-4,5)", "[0,-1,-2,-3,-4]");
@@ -99,7 +97,6 @@ function run_tests() {
 
   // universal sqrt
   printLine("\nTesting universal sqrt");
-  var A = [1, 4, 2];
   test("sqrt(4)", "2");
   test("sqrt([25])", "[5]");
   test("sqrt([9,25,625])", "[3,5,25]");
@@ -122,17 +119,6 @@ function run_tests() {
   test("min([1, 3, -5, 9])","-5")
   test("min([[1,2,3],[4,5,6],[7,8,9]] , [],1)","[[1,2,3]]" )
   test("min([[1,2,3],[4,5,6],[7,8,9]] , [],2)","[[1],[4],[7]]" )
-  var B = [
-    [1, 2, 3],
-    [4, 5, 6],
-    [7, 8, 9],
-  ];
-  // disp(B)
-  // disp(max(B,1)) // elemwise min
-  test("")
-  // disp(max(B,4)) //
-  // disp(max(B,[],1)) // column min
-  // disp(max(B,[],2)) // row min
 
   // range
   printLine("\nTesting range");
@@ -318,11 +304,6 @@ function run_tests() {
 
   // kron
   printLine("\nTesting kron");
-  var A = [
-    [1, 2, 3],
-    [2, 3, 4],
-  ];
-  var Y = [[1], [1], [1]];
   test(
     "kron([[1,2,3],[2,3,4]],[[1],[1],[1]])",
     "[[1,2,3],[1,2,3],[1,2,3],[2,3,4],[2,3,4],[2,3,4]]"
@@ -339,8 +320,7 @@ function run_tests() {
   test("unique([10,2,3,3,4])", "[2,3,4,10]");
 
   // sparse
-  var A = sparse([1, 2], [1, 2], [10, 10], 10, 10);
-  // disp(A)
+  printLine("\nTesting sparse")
   test("sparse([1,2],[1,2],[10,10],2,2)", "[[10,0],[0,10]]");
 
   // copy
