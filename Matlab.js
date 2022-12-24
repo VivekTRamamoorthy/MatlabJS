@@ -833,13 +833,13 @@ class cx {
     }
     pow = function(a){
         if(typeof a =="number"){
-            return new cx(Math.pow(this.abs(),a),this.angle()*a,polar=true)
+            return new cx(Math.pow(this.abs(),a),this.angle()*a,true)
         }
         if(a instanceof cx){
             let r = this.abs();
             let theta = this.angle();
-            let rpowa = new cx(Math.pow(r,a.re),a.im*Math.log(r),polar=true);
-            let expithetapowa = new cx(Math.exp(-a.im*theta),theta*a.re,polar=true)
+            let rpowa = new cx(Math.pow(r,a.re),a.im*Math.log(r),true);
+            let expithetapowa = new cx(Math.exp(-a.im*theta),theta*a.re,true)
             return rpowa.mul(expithetapowa)
         }
     }
