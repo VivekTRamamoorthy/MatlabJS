@@ -1,13 +1,14 @@
 # [MatlabJS](https://VivekTRamamoorthy.github.io/MatlabJS)
-## A  Javascript library for MATLAB users
+### A lightweight JavaScript library for MATLAB/Octave users
 
-This lightweight library gives you all the essential array and matrix functions written in JavaScript for easing your scientific computing projects or code conversion from Matlab or Octave.
+This library gives you some essential array and matrix functions written in JavaScript for easing your scientific computing projects or code conversion from Matlab or Octave to JavaScript.
 
 ## Documentation
 To see how it works, go to [https://VivekTRamamoorthy.github.io/MatlabJS](https://VivekTRamamoorthy.github.io/MatlabJS).
 The library is loaded on the webpage and you may start testing it in the console.
+The website also contains a cheatsheet.
 
-## Examples 
+### Examples 
 
 ```javascript
     tic()
@@ -19,6 +20,7 @@ The library is loaded on the webpage and you may start testing it in the console
     disp(d)
     toc();
 ```
+
 
 ## Using in your projects
 ### Method 1: CDN (Loads the latest update)
@@ -55,11 +57,19 @@ let A = add(linspace(0,1),200) // [ 200, 201.010101... , 202.020202... , ...]
 
 
 
+
+
 ## A note of caution
 - Operator overloading is not yet permitted in JavaScript and doesn't seem like it will be anytime soon. So it is not possible to write `c=A*b` for matrices in Javascript. Instead, one has to resort to the syntactically inconvenient universal functions, for example, `c=mul(A,b)`.
 - When using the script tag method, all functions are loaded into the global scope using `var`s and users may overwrite them if needed like in Matlab. If you prefer a namespace import, use it as a module.
 - The code may not be optimised for efficiency. For intensive computations, users can manually optimise the code for their use case if performance is an issue. 
-- This project is in its initial stage and meant to be lightweight. Additional essential functionalities may be included as time progresses. 
+- This project is in its initial stage. Additional functionalities may be included as time progresses. 
+
+## List of functions
+Matlab function	| MatlabJS equivalent |	Example usage	| Description
+:---------------|:--------------------|:---------------|:---------------
+`tic`             |	`tic()`             |                 | Starts recording time
+`toc`             |	`toc()`             |    `tic();` <br> `t=toc();` |	Prints elapsed time since start
 
 ## Contributing
 
@@ -79,6 +89,8 @@ You can contribute to this repository by following these steps:
 - Test on Node
     - To initiate the testing suite, execute `npm test` from the terminal.
 - If these tests pass, you may commit and raise a pull request to the `main` branch.
+
+
 
 
 ## License
