@@ -86,6 +86,8 @@ You can contribute to this repository by following these steps:
 
 
 ## List of functions
+Use left or right arrow keys to scroll if the the table is not fully visible.
+
 Matlab function	| MatlabJS equivalent |	Example usage	| Description
 :---------------|:--------------------|:---------------|:---------------
 `tic`           |	`tic()`           |                 | Starts recording time

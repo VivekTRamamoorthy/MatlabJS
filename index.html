@@ -35,7 +35,7 @@
     
     <header>
         <h1>MatlabJS</h1>
-        A Javascript mini-library
+        A Javascript library for Matlab/Octave users
         
     </header>
     
@@ -44,7 +44,7 @@
         <section >
             <h2>Description</h2>
             <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS</a>
-            is a mini-library with common functions for Matlab&reg; / GNU Octave users who are new to Javascript. This utility is currently at version <code id="version">loading..</code>
+            is a lightweight and easy-to-use library with essential functions for Matlab&reg; / GNU Octave users who are new to Javascript. It is meant for rapid prototyping of projects or code conversion from Matlab/Octave. This free and open source utility is currently at version <code id="version">loading..</code>.
             <br>
         </section>
         
@@ -52,8 +52,7 @@
         <section class="">
             <h2>Examples:</h2>
             The library is already loaded in this webpage. <br>
-            Open the browser console using <code>right-click</code>+<code>inspect</code>.<br>
-            Try out these examples: <br>
+            To try it out, open the browser console using <code>rightclick</code> + <code>inspect</code> and test these lines of code: <br>
             <pre>
                 <code>
     tic() 
@@ -64,11 +63,7 @@
     d=mul(b,c) 
     toc() 
                 </code>
-            </pre>
-            Perform a quick check to see if the current version is stable.
-            <div class="flex center">
-                <button id="test" onclick="run_tests_frontend()" class="runtest-button">Run tests</button>
-            </div>
+
             
         </section>  
         
@@ -76,17 +71,16 @@
         <section class="">
             <h2>How to use this in your project:</h2>
             
-            <h3>Method 1 - CDN (recommended):</h3>
+            <h3>Method 1 - CDN (recommended - to get the latest updates and bug fixes):</h3>
             Include the following script tag within your html head. 
             <pre><code>     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"&gt;&lt;/script&gt;
             </code></pre>
             This would only give the standard functions. <br>
-            To use plotting tools and <code>linsolve</code> function, additionally include plotlib.js and ndarray.js files.
-            <pre><code>     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/ndarray.js"&gt;&lt;/script&gt;   
-     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"&gt;&lt;/script&gt;
+            To use plotting tools, additionally include plotlib.js file.
+            <pre><code>     &lt;script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"&gt;&lt;/script&gt;
             </code></pre>
             
-            <h3>Method 2 - File inclusion (robust):</h3>
+            <h3>Method 2 - File inclusion (robust - to include a non-breaking local version):</h3>
             Download <code>Matlab.js</code> file  from the <a target="_blank" href="https://github.com/VivekTRamamoorthy/MatlabJS">MatlabJS repository</a> to your project and 
             and include it using a script tag as below.
             <pre>
@@ -94,13 +88,18 @@
                 </code>
             </pre>
             
-            <h3>Node</h3>
-            Install using the following command in your terminal and use <code>const MatlabJS = require("matlabjs")</code> in your modules.
+            <h3>Method 3 - Using NodeJS:</h3>
+            MatlabJS is also available as an npm package.
+            To use this method, it is presumed that Node is installed on your machine. If not, do this first.
+            Use the following command from a terminal within your project folder. 
             <pre>
                 <code>  npm install matlabjs</code>
             </pre>
-            
-
+            Use <code>const MatlabJS = require("matlabjs")</code> to include the namespace in your js modules.<br>
+            Then use the functions like below:
+            <pre>
+                <code>let A = MatlabJS.linspace(0,1)</code>
+            </pre>
         </section>
         
         
@@ -108,10 +107,10 @@
         <section class="">
             <h2>Limitations:</h2>
             <li> Unfortunately, operator overloading is not permitted in JavaScript, and we cannot yet write <code>c=A*b</code> for matrices and arrays. 
-                Instead we have to resort to using universal functions <code>c=mul(A,b)</code> that perform actions based on the input type. 
+                Instead we have to resort to using universal functions <code>c=mul(A,b)</code> that perform actions based on the input datatypes. 
             </li> <br>
-            <li> The code is not optimised for efficiency.</li> <br>
-            <li> This project is in its priliminary stage. More functionalities will be included as time permits. Use it with caution.</li>
+            <li> The code is not necessarily optimised for efficiency. For intensive computations, users can manually optimise the code for their use case if performance becomes an issue. </li> <br>
+            <li> This project is in its priliminary stage and many functions are not implemented. Additional functionalities will be included as time permits.</li>
             <br>
         </section>
         
@@ -659,8 +658,8 @@
                         mldivide <br>
                         solve a sys of <br>
                         linear equations<br>
-                        Uses <a href="https://www.npmjs.com/package/ndarray">ndarray js</a> <br>
-                        Include ndarray.js file in your project.
+                        <!-- Uses <a href="https://www.npmjs.com/package/ndarray">ndarray js</a> <br> -->
+                        <!-- Include ndarray.js file in your project. -->
                     </td>
                 </tr>
                 <tr>
@@ -716,13 +715,75 @@
             
         </section>
         
+       
+        <section>
+            <h2>Contributing</h2>
+            <p>Your contributions are welcome. Please follow the instructions below to contribute. </p>
+            
+You can contribute to this repository by following these steps:
+
+- Fork the repository and clone it locally, and create a new branch.
+- Include your contribution in the <code>Matlab.js</code> file. For example:
+<pre><code>
+        var add2 = function(a){
+            return a+2;
+        }
+    </code></pre>
+<ul>
+    <li>Write testing scripts for the new function in <code>tests/run_tests.js</code> file by including <code>test("your_function_name(args)","expectedoutput")</code>.
+        <ul>
+            <li>
+                An example would be <code>test("add2(4)",6)</code>
+            </li>
+        </ul>
+    </li>
+    <li>Test on the browser
+        <ul>
+            <li>
+                Serve and open <code>index.html</code> and click the "Run tests" button on the web page displayed. This will call <code>run_tests.js</code> and print results in a popup.
+            </li>
+        </ul>
+    </li>
+    <li>Test on Node
+        <ul>
+            <li>
+                To initiate the testing suite, execute <code>npm test</code> from the terminal.
+            </li>
+        </ul>
+    </li>
+    <li>If these tests pass, you may commit and raise a pull request to the <code>main</code> branch.</li>
+</ul>
+
+        </section>
+        <section>
+            <h2>Unit testing</h2>
+            <p>
+            </pre>
+            To perform a quick check, you can run some unit tests on the browser by clicking the "Run tests" button.
+            <div class="flex center">
+                <button id="test" onclick="run_tests_frontend()" class="runtest-button">Run tests</button>
+            </div>
+            </p>
+        </section>
+        <section>
+            <h2>Issues</h2>
+            <p>For bugs, feedback and feature requests, raise an Issue in the <a href="https://github.com/VivekTRamamoorthy/MatlabJS/issues">GitHub</a> repository</p>
+        </section>
+        <section>
+            <h2>License</h2>
+            <p>MIT License<br>
+
+                Copyright (c) 2021 Vivek T Ramamoorthy</p>
+        </section>
     </div>
     
     
     <footer>
-        MIT License 2.0 |
-        Vivek T. Ramamoorthy
-        | <a href="https://github.com/VivekTRamamoorthy/MatlabJS" target="_blank">Source</a> 
+        <a href="https://github.com/VivekTRamamoorthy/MatlabJS" target="_blank">GitHub</a> 
+        | <a href="https://www.npmjs.com/package/matlabjs">npm</a> |
+        MIT License 2.0 
+        <a href="https://VivekTRamamoorthy.github.io"> Vivek T. Ramamoorthy</a>
+        
     </footer>
     
 </body>
