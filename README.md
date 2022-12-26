@@ -29,7 +29,10 @@ The website also contains a cheatsheet.
 <script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/Matlab.js"></script>
 ```
 This would only give the standard functions.
-To use plotting tools and linsolve function, additionally include`plotlib.js` and`ndarray.js` files.
+To use plotting tools, additionally include`plotlib.js` file:
+```html
+<script src="https://cdn.jsdelivr.net/gh/VivekTRamamoorthy/MatlabJS/plotlib.js"></script>
+```
 
 ### Method 2: Including file using script tag
 - Download the`Matlab.js`file to your project folder.
